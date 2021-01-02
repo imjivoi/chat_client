@@ -1,4 +1,5 @@
 body,
+p,
 ul,
 h1,
 h2,
@@ -9,6 +10,7 @@ h3 {
 
 a {
   text-decoration: none;
+  color: unset;
 }
 
 li {

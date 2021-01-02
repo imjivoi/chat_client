@@ -18,6 +18,6 @@ export default defineComponent({
 <style lang='scss' scoped>
 .container {
   padding: 5px 5px 5px 60px;
-  height: calc(100vh - 51px);
+  height: calc(100vh - 48px);
 }
 </style>

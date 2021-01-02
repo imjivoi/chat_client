@@ -14,7 +14,9 @@
           />
         </span>
       </div>
-      <div class="chats__items"><ChatItem /></div>
+      <ul class="chats__items">
+        <ChatItem />
+      </ul>
     </div>
   </section>
 </template>
@@ -40,7 +42,7 @@ export default defineComponent({
   height: 100%;
 
   &__list {
-    min-width: 300px;
+    width: 300px;
     @include block_mixin;
     h2 {
       font-size: 1.2em;
