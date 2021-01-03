@@ -1,8 +1,10 @@
+import { IAuthState } from "@/store/interfaces/auth-state";
 import { IUserData } from "@/store/interfaces/user";
 import { Module } from "vuex";
 
-export const state: IUserData = {
-  id: "35435dgfdg",
-  nickname: "useruser",
-  email: "dsdfsg@dfgdf.com",
+export const state: IAuthState = {
+  userData: null,
+  isLoading: false,
+  isLogged: false,
+  token: null,
 };

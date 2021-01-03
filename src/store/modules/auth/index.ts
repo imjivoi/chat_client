@@ -5,7 +5,8 @@ import { state } from "./state";
 import { getters } from "./getters";
 import { actions } from "./actions";
 import { mutations } from "./mutations";
-const AuthModule: Module<IUserData, IRootState> = {
+import { IAuthState } from "@/store/interfaces/auth-state";
+const AuthModule: Module<IAuthState, IRootState> = {
   state,
   actions,
   mutations,

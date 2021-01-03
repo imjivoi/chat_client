@@ -1,10 +1,38 @@
+import { IAuthState } from "@/store/interfaces/auth-state";
 import { IRootState } from "@/store/interfaces/root";
-import { IUserData } from "@/store/interfaces/user";
+import authAPI from "@/utils/api/authAPI";
 import { ActionTree } from "vuex";
 import { AuthActionsTypes } from "./actions.type";
+import { MutationTypes } from "./mutations.types";
+import { VueCookieNext } from "vue-cookie-next";
+import router from "@/router";
 
-export const actions: ActionTree<IUserData, IRootState> & AuthActionsTypes = {
-  GET_AUTH({ commit }) {
-    return new Promise(() => {});
+export const actions: ActionTree<IAuthState, IRootState> & AuthActionsTypes = {
+  async GET_AUTH({ dispatch, commit }, payload) {
+    try {
+      commit(MutationTypes.SET_LOADING, true);
+      const res = await authAPI.getToken(payload);
+      commit(MutationTypes.SET_TOKEN, res.data);
+      dispatch("GET_USER_DATA");
+    } catch (error) {}
+  },
+  GET_USER_DATA({ commit, dispatch }) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const token = await dispatch("CHECK_TOKEN");
+        if (!token) router.push("/auth/login");
+        const res = await authAPI.getUser(token);
+        commit(MutationTypes.SET_USER_DATA, res.data);
+        resolve(res.data);
+      } catch (error) {
+        reject(error);
+      }
+      commit(MutationTypes.SET_LOADING, false);
+    });
+  },
+  CHECK_TOKEN({ commit, state }): string {
+    const token = state.token || VueCookieNext.getCookie("auth_token");
+    if (token) commit(MutationTypes.SET_TOKEN, token);
+    return token;
   },
 };

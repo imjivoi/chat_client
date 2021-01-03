@@ -9,7 +9,6 @@
           v-model="email"
           style="width: 100%"
         />
-        <label for="email">Email</label>
       </span>
       <span class="p-float-label p-mb-3">
         <InputText
@@ -20,7 +19,7 @@
         />
         <label for="password">Password</label>
       </span>
-      <Button label="Login" width="100%" />
+      <Button label="Login" width="100%" @click="login" />
     </div>
     <p>
       Don't registered yet? <router-link to="/auth/signup/">Signup</router-link>
@@ -33,13 +32,30 @@ import Button from "../../components/Button.vue";
 
 import InputText from "primevue/inputtext";
 
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import { useStore } from "@/composition-api/useStore";
+import { AllActionTypes } from "@/store/types/actions.types";
 export default defineComponent({
   components: { InputText, Button },
-  data: () => ({
-    email: "",
-    password: "",
-  }),
+
+  setup(_, ctx) {
+    const email = ref("");
+    const password = ref("");
+    const store = useStore();
+
+    function login() {
+      store.dispatch(AllActionTypes.GET_AUTH, {
+        email: email.value,
+        password: password.value,
+      });
+    }
+
+    return {
+      email,
+      password,
+      login,
+    };
+  },
 });
 </script>
 

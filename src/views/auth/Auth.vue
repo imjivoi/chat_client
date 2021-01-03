@@ -1,17 +1,23 @@
 <template>
   <section class="auth">
+    <p><router-link to="/">Back to main page</router-link></p>
     <div class="auth__block">
       <router-view />
     </div>
   </section>
 </template>
 
-
 <style scoped lang='scss'>
 .auth {
   height: 100%;
   width: 100vw;
   background: #fff;
+
+  p {
+    position: absolute;
+    left: 50px;
+    top: 70px;
+  }
   &__block {
     @include block_mixin;
     width: 300px;
