@@ -1,22 +1,14 @@
 <template>
   <header>
     <div class="header__right">
-      <Button
-        type="button"
-        label="Login"
-        style="margin-right: 10px"
-        class="p-button-raised p-button-rounded p-button-sm"
-      />
-      <Button
-        label="Sign up"
-        class="p-button-outlined p-button-raised p-button-rounded p-button-sm"
-      />
+      <Button label="Login" style="margin-right: 10px" />
+      <Button label="Sign up" outline />
     </div>
   </header>
 </template>
 
 <script>
-import Button from "primevue/button";
+import Button from "./Button";
 export default {
   components: {
     Button,

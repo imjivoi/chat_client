@@ -1,5 +1,5 @@
 <template>
-  <section class="chats p-d-flex">
+  <section class="chats p-d-flex p-jc-between">
     <div class="chats__list">
       <h2 class="p-mb-2">Chats</h2>
       <div class="chats__search p-mb-3" style="text-align: left">
@@ -18,10 +18,15 @@
         <ChatItem />
       </ul>
     </div>
+    <div class="chat__content">
+      <!-- <router-view /> -->
+      <Chat />
+    </div>
   </section>
 </template>
 
 <script lang='ts'>
+import Chat from "./Chat.vue";
 import ChatItem from "../components/chat/ChatItem.vue";
 
 import InputText from "primevue/inputtext";
@@ -29,7 +34,7 @@ import InputText from "primevue/inputtext";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  components: { InputText, ChatItem },
+  components: { InputText, ChatItem, Chat },
   name: "Chats",
   data: () => ({
     search: "",
@@ -49,5 +54,11 @@ export default defineComponent({
       text-align: left;
     }
   }
+}
+
+.chat__content {
+  @include block_mixin;
+  min-width: 600px;
+  position: relative;
 }
 </style>

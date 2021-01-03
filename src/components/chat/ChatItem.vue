@@ -1,7 +1,11 @@
 <template>
   <router-link to="">
     <li class="p-mb-2">
-      <Avatar label="P" class="p-avatar-circle" />
+      <Badge color="#1ee952">
+        <template v-slot:content
+          ><Avatar label="P" class="p-avatar-circle"
+        /></template>
+      </Badge>
       <div class="chat__info">
         <div class="chat__name p-text-bold p-text-left">User bla bla</div>
         <div class="chat__last-message">
@@ -10,15 +14,15 @@
           />
         </div>
       </div>
-      <Badge value="2" size="small"></Badge>
+      <Badge value="2" :fontSize="0.7" :size="15" />
     </li>
   </router-link>
 </template>
 
 <script lang='ts'>
 import MessageText from "./MessageText";
+import Badge from "../Badge.vue";
 
-import Badge from "primevue/badge";
 import Avatar from "primevue/avatar";
 
 import { defineComponent } from "vue";
