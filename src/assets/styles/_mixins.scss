@@ -3,3 +3,17 @@
   padding: 20px 10px;
   background: #fff;
 }
+
+@mixin list_item_mixin {
+  height: 60px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: $BR;
+
+  &:hover {
+    background: #bab4cf;
+  }
+  .active {
+    background: #bab4cf;
+  }
+}

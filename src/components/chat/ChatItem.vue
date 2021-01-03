@@ -1,6 +1,6 @@
 <template>
   <router-link to="">
-    <li class="p-mb-2">
+    <li class="p-mb-2 p-p-2">
       <Badge color="#1ee952">
         <template v-slot:content
           ><Avatar label="P" class="p-avatar-circle"
@@ -34,19 +34,10 @@ export default defineComponent({
 
 <style scoped lang='scss'>
 li {
-  height: 60px;
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
-
-  &:hover {
-    background: #bab4cf;
-  }
-  .active {
-    background: #bab4cf;
-  }
+  @include list_item_mixin;
 
   .chat__info {
     width: 70%;

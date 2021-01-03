@@ -26,6 +26,7 @@ import Message from "../components/chat/Message.vue";
 import Button from "../components/Button.vue";
 import ChatInput from "../components/chat/ChatInput.vue";
 
+import { useStore } from "@/composition-api/useStore";
 import { IMessage } from "../store/interfaces/message";
 
 import Avatar from "primevue/avatar";
@@ -47,7 +48,7 @@ export default defineComponent({
         attachments: null,
         chat: "fsdfd453",
         is_readed: false,
-        created: new Date().toString(),
+        created: new Date(2014, 6, 2).toString(),
       },
       {
         id: "435345gdfgdfg",
@@ -61,25 +62,13 @@ export default defineComponent({
         attachments: null,
         chat: "fsdfd453",
         is_readed: false,
-        created: new Date().toString(),
-      },
-
-      {
-        id: "435345gdfgdfg",
-        text: "bla lba lba",
-        user: {
-          id: "535345",
-          nickname: "user",
-          email: "gsgsdg@fsd.com",
-          avatar: "dfsdfs",
-        },
-        attachments: null,
-        chat: "fsdfd453",
-        is_readed: false,
-        created: new Date().toString(),
+        created: new Date(2014, 6, 2).toString(),
       },
     ] as Array<IMessage>,
   }),
+  setup() {
+    const store = useStore();
+  },
 });
 </script>
 
@@ -108,5 +97,12 @@ export default defineComponent({
 
   .chat__options {
   }
+}
+.chat__messages {
+  overflow-y: scroll;
+  margin: 40px 0 0px;
+  height: calc(100vh - 154px);
+  padding: 0 0 20px;
+  overflow-x: hidden;
 }
 </style>

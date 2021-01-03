@@ -1,6 +1,12 @@
 <template>
   <button
-    :class="{ outline: outline, icon: icon.length, ripple: !icon.length }"
+    :class="{
+      outline: outline,
+      icon: icon.length,
+      ripple: !icon.length,
+      link: link,
+    }"
+    :style="{ width: width }"
   >
     {{ label }}
     <slot v-if="icon">
@@ -10,6 +16,9 @@
         data-eva-height="20"
         data-eva-width="20"
       ></i>
+    </slot>
+    <slot v-else-if="link">
+      <router-link :to="link"></router-link>
     </slot>
   </button>
 </template>
@@ -36,6 +45,12 @@ export default defineComponent({
     rounded: {
       type: Boolean,
       default: false,
+    },
+    link: {
+      type: String,
+    },
+    width: {
+      type: String,
     },
   },
   data: () => ({}),
@@ -87,6 +102,15 @@ button {
     width: 30px;
     height: 30px;
     border-radius: 50%;
+  }
+
+  a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
   }
 }
 

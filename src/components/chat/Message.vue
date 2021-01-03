@@ -1,23 +1,16 @@
 <template>
-  <div
-    class="message"
-    :class="{ messageMe: messageData.user.id === this.$store.state.user.id }"
-  >
+  <div class="message" :class="{ messageMe: isMe }">
     <div class="message__options" v-click-outside="hideMessageOptions">
-      <vs-button
+      <!-- <vs-button
         icon
         shadow
         @click="activeMessageOptions = !activeMessageOptions"
         ><i class="bx bx-dots-horizontal-rounded"></i
-      ></vs-button>
+      ></vs-button> -->
       <transition name="fade-bottom">
         <Modal
           v-if="activeMessageOptions"
-          :style="[
-            messageData.user.id === this.$store.state.user.id
-              ? { left: '-200px' }
-              : { right: '-200px' },
-          ]"
+          :style="[isMe ? { left: '-200px' } : { right: '-200px' }]"
         >
           <ul class="options__list">
             <li @click="deleteMessage">delete</li>
@@ -29,12 +22,12 @@
     <div class="message__content">
       <div
         class="message__text"
-        :style="messageData.attachments.length ? `margin-bottom:10px` : ''"
+        :style="messageData.attachments !== null ? `margin-bottom:10px` : ''"
         v-if="messageData.text"
       >
         <MessageText :messageText="messageData.text" />
       </div>
-      <div class="message__attachments" v-if="messageData.attachments.length">
+      <div class="message__attachments" v-if="messageData.attachments !== null">
         <ul>
           <li v-for="i in messageData.attachments" :key="i.id">
             <i class="bx bxs-file" v-if="i.type === 'File'"></i>
@@ -49,10 +42,10 @@
       </div>
     </div>
     <div class="message__time">
-      {{ time }}
+      {{ createdAt }}
     </div>
     <div class="message__user-avatar">
-      <Avatar label="A" />
+      <Avatar label="A" class="p-avatar-circle" />
     </div>
     <div class="message__readed">
       <i
@@ -69,7 +62,9 @@
 <script lang='ts'>
 import Modal from "../Modal.vue";
 import MessageText from "./MessageText";
+import { useStore } from "@/composition-api/useStore";
 
+import { formatDistanceToNow, parseISO } from "date-fns";
 import Avatar from "primevue/avatar"; //@ts-ignore
 import ClickOutside from "vue-click-outside";
 
@@ -81,6 +76,11 @@ export default defineComponent({
     messageData: {
       type: Object,
       required: true,
+    },
+    isMe: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   data: () => ({
@@ -102,6 +102,9 @@ export default defineComponent({
     baseUrl() {
       return process.env.VUE_APP_BASE_URL;
     },
+    createdAt(): string {
+      return formatDistanceToNow(new Date(this.messageData.created));
+    },
   },
   directives: {
     ClickOutside,
@@ -120,7 +123,7 @@ export default defineComponent({
   position: relative;
 
   &.messageMe {
-    margin: 0 0 35px auto;
+    margin: 0 5px 35px auto;
     flex-direction: row;
 
     .message__content {
@@ -130,7 +133,7 @@ export default defineComponent({
       border-bottom-right-radius: 0;
       box-shadow: 1px 1px 6px 0px #9e9e9e;
       .message__text {
-        // color: $color1;
+        color: #131313;
       }
     }
     .message__user-avatar {
@@ -155,7 +158,7 @@ export default defineComponent({
     border-radius: 10px;
     border-bottom-left-radius: 0;
     color: #fff;
-    // box-shadow: 1px 1px 6px 0px $color2;
+    box-shadow: 1px 1px 6px 0px #9e9e9e;
     max-width: 90%;
     position: relative;
   }
@@ -190,17 +193,16 @@ export default defineComponent({
 
   &__text {
     text-align: left;
-    font-size: 16px;
+    font-size: 0.8em;
     font-weight: 500;
     overflow-wrap: break-word;
   }
   &__time {
-    font-size: 12px;
+    font-size: 0.6em;
     font-weight: 500;
-    // color: $color1;
+    color: #9e9e9e;
     bottom: -25px;
     position: absolute;
-    right: -40px;
     transform: translate(-50%, 0);
     min-width: fit-content;
   }

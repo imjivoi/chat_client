@@ -1,4 +1,4 @@
-import { defineComponent } from "vue";
+import { defineComponent } from "vue";//@ts-ignore
 import { Emoji } from "emoji-mart-vue";
 
 const re = /(:.+?:)/g;
@@ -9,10 +9,10 @@ export default defineComponent({
       type: String,
     },
   },
-  render(h) {
+  render() {
     return (
       <p>
-        {this.messageText.split(re).map((item, i) => {
+        {this.messageText?.split(re).map((item, i) => {
           if (item.match(re)) {
             return <Emoji key={i} emoji={item} set="apple" size={16} />;
           } else {

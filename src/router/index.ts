@@ -5,17 +5,32 @@ import {
   RouteRecordRaw,
 } from "vue-router";
 
-const Home = () => import("../views/Home.vue");
-const Chats = () => import("../views/Chats.vue");
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    component: Home,
+    component: () => import("../views/Home.vue"),
     children: [
       {
         path: "/chats/",
-        component: Chats,
+        component: () => import("../views/Chats.vue"),
+      },
+      {
+        path: "/friends/",
+        component: () => import("../views/Friends.vue"),
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    component: () => import("../views/auth/Auth.vue"),
+    children: [
+      {
+        path: "/auth/login/",
+        component: () => import("../views/auth/Login.vue"),
+      },
+      {
+        path: "/auth/signup/",
+        component: () => import("../views/auth/Signup.vue"),
       },
     ],
   },

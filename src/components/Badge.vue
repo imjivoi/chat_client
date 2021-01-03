@@ -50,6 +50,7 @@ export default {
 <style scoped lang='scss'>
 div {
   position: relative;
+  width: 2rem;
 }
 .badge {
   border-radius: 50%;
@@ -65,6 +66,7 @@ div {
     right: 0;
     width: 10px;
     height: 10px;
+    z-index: 10;
   }
 }
 </style>

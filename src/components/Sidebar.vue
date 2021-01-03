@@ -5,7 +5,7 @@
         <router-link to=""><i class="pi pi-user"></i></router-link>
       </li>
       <li class="p-mb-5" v-tooltip.right="'Friends'">
-        <router-link to=""><i class="pi pi-users"></i></router-link>
+        <router-link to="/friends"><i class="pi pi-users"></i></router-link>
       </li>
 
       <li class="p-mb-5" v-tooltip.right="'Chats'">

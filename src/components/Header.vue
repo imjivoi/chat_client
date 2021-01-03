@@ -1,8 +1,8 @@
 <template>
   <header>
     <div class="header__right">
-      <Button label="Login" style="margin-right: 10px" />
-      <Button label="Sign up" outline />
+      <Button label="Login" link="/auth/login" style="margin-right: 10px" />
+      <Button label="Sign up" link="/auth/signup" outline />
     </div>
   </header>
 </template>

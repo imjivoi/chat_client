@@ -9,7 +9,7 @@
       style="position: absolute; left: 35px; bottom: 7px"
     />
 
-    <textarea type="text" placeholder="Type your message" v-model="text" />
+    <textarea placeholder="Type your message" v-model="text" />
     <Btn
       outline
       label="Send"
