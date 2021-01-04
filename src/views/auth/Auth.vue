@@ -6,6 +6,9 @@
     </div>
   </section>
 </template>
+<script>
+export default {};
+</script>
 
 <style scoped lang='scss'>
 .auth {
@@ -17,6 +20,7 @@
     position: absolute;
     left: 50px;
     top: 70px;
+    font-size: 0.8em;
   }
   &__block {
     @include block_mixin;

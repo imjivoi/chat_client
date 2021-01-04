@@ -5,8 +5,10 @@
       icon: icon.length,
       ripple: !icon.length,
       link: link,
+      disabled: disabled,
     }"
     :style="{ width: width }"
+    :disabled="disabled"
   >
     {{ label }}
     <slot v-if="icon">
@@ -52,6 +54,9 @@ export default defineComponent({
     width: {
       type: String,
     },
+    disabled: {
+      type: Boolean,
+    },
   },
   data: () => ({}),
   computed: {},
@@ -74,6 +79,9 @@ button {
   position: relative;
   overflow: hidden;
   transition-duration: 0.4s;
+  &.disabled {
+    background: $color_gray2;
+  }
   svg {
     width: 80%;
     position: absolute;

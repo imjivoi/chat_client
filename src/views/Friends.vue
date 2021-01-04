@@ -29,6 +29,9 @@ import InputText from "primevue/inputtext";
 import { defineComponent } from "vue";
 export default defineComponent({
   components: { InputText, UserItem },
+  data: () => ({
+    search: "",
+  }),
 });
 </script>
 

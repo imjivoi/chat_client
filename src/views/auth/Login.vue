@@ -9,6 +9,7 @@
           v-model="email"
           style="width: 100%"
         />
+        <label for="email">Email</label>
       </span>
       <span class="p-float-label p-mb-3">
         <InputText
@@ -19,7 +20,12 @@
         />
         <label for="password">Password</label>
       </span>
-      <Button label="Login" width="100%" @click="login" />
+      <Button
+        label="Login"
+        width="100%"
+        @click="login"
+        :disabled="!email.length || !password.length"
+      />
     </div>
     <p>
       Don't registered yet? <router-link to="/auth/signup/">Signup</router-link>
@@ -35,6 +41,7 @@ import InputText from "primevue/inputtext";
 import { defineComponent, ref } from "vue";
 import { useStore } from "@/composition-api/useStore";
 import { AllActionTypes } from "@/store/types/actions.types";
+import notificationService from "@/services/notificationService";
 export default defineComponent({
   components: { InputText, Button },
 
@@ -44,10 +51,12 @@ export default defineComponent({
     const store = useStore();
 
     function login() {
-      store.dispatch(AllActionTypes.GET_AUTH, {
-        email: email.value,
-        password: password.value,
-      });
+      store
+        .dispatch(AllActionTypes.GET_AUTH, {
+          email: email.value,
+          password: password.value,
+        })
+        .then((res) => notificationService.success("Authorized"));
     }
 
     return {
