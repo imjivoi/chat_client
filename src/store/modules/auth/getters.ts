@@ -4,5 +4,6 @@ import { IUserData } from "@/store/interfaces/user";
 import { GetterTree } from "vuex";
 import { AuthGettersTypes } from "./getters.types";
 
-export const getters: GetterTree<IAuthState, IRootState> &
-  AuthGettersTypes = {};
+export const getters: GetterTree<IAuthState, IRootState> & AuthGettersTypes = {
+  isLogged: (state) => state.isLogged,
+};

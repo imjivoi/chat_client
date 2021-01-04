@@ -1,10 +1,11 @@
+import { IAuthState } from "@/store/interfaces/auth-state";
 import { IUserData } from "@/store/interfaces/user";
 import { Store as VuexStore, CommitOptions, DispatchOptions } from "vuex";
 import { AuthActionsTypes } from "./actions.type";
 import { AuthGettersTypes } from "./getters.types";
 import { AuthMutationsTypes } from "./mutations.types";
 
-export type AuthStoreModuleTypes<S = IUserData> = Omit<
+export type AuthStoreModuleTypes<S = IAuthState> = Omit<
   VuexStore<S>,
   "commit" | "getters" | "dispatch"
 > & {

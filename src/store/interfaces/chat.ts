@@ -8,17 +8,17 @@ export interface IChatItem {
   messages: Array<IMessage>;
   type: "Dialog" | "Chat";
   admin: string;
-  title?: string | null;
-  image?: string | null;
+  title: string | null;
+  image: string | null;
   typing: {
     status: boolean;
     nickname: string;
   } | null;
 }
 
-export interface IChats {
+export interface IChatState {
   chats: Array<IChatItem> | [];
-  loading: boolean;
+  isLoading: boolean;
   activeChatId: string | null;
   socket: WebSocket | null;
   socketStatus: "OPEN" | "CONNECTING" | "CLOSING" | "CLOSED";

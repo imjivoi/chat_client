@@ -16,4 +16,11 @@ export const mutations: MutationTree<IAuthState> & AuthMutationsTypes = {
     state.userData = payload;
     state.isLogged = true;
   },
+  CLEAR_STATE(state) {
+    state.userData = null;
+    state.isLogged = false;
+    state.token = null;
+    VueCookieNext.removeCookie("auth_token");
+    VueCookieNext.removeCookie("refresh_token");
+  },
 };

@@ -41,10 +41,14 @@ export const actions: ActionTree<IAuthState, IRootState> & AuthActionsTypes = {
       commit(MutationTypes.SET_LOADING, false);
     });
   },
-  CHECK_TOKEN({ commit, state }): string {
+  GET_TOKEN({ commit, state }): string {
     const token = state.token || VueCookieNext.getCookie("auth_token");
     if (state.token && !VueCookieNext.getCookie("auth_token"))
       commit(MutationTypes.SET_TOKEN, { access: token, refresh: "" });
     return token;
+  },
+  LOGOUT({ commit }) {
+    commit(MutationTypes.CLEAR_STATE);
+    router.push({ name: "Login" });
   },
 };

@@ -2,10 +2,12 @@ import { IRootState } from "@/store/interfaces/root";
 import { Module, ModuleTree } from "vuex";
 import { Store as VuexStore, CommitOptions, DispatchOptions } from "vuex";
 
-import AuthModule from "../auth";
+import auth from "../auth";
+import chat from "../chat";
 
 const modules: ModuleTree<IRootState> = {
-  AuthModule,
+  auth,
+  chat,
 };
 
 export const root: Module<IRootState, IRootState> = {
