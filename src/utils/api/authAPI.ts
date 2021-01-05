@@ -25,4 +25,12 @@ export default {
   getUser(token: TokenType) {
     return HTTP.get("auth/users/me/", headers(token));
   },
+  register(data: IAuth) {
+    return HTTP.post("auth/users/", {
+      nickname: data.nickname,
+      email: data.email,
+      password: data.password,
+      re_password: data.password,
+    });
+  },
 };

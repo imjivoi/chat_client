@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="header__right">
-      <div v-if="isLogged">
+      <div v-if="!isLogged">
         <Button label="Login" link="/auth/login" style="margin-right: 10px" />
         <Button label="Sign up" link="/auth/signup" outline />
       </div>
@@ -15,7 +15,7 @@
 <script lang='ts'>
 import Button from "./Button.vue";
 
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { useStore } from "@/composition-api/useStore";
 import { AllActionTypes } from "@/store/types/actions.types";
 export default defineComponent({
@@ -24,7 +24,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const isLogged = store.getters.isLogged;
+    const isLogged = computed(() => store.getters.isLogged);
     function logout() {
       store.dispatch(AllActionTypes.LOGOUT);
     }

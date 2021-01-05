@@ -6,4 +6,5 @@ import { AuthGettersTypes } from "./getters.types";
 
 export const getters: GetterTree<IAuthState, IRootState> & AuthGettersTypes = {
   isLogged: (state) => state.isLogged,
+  isLoading: (state) => state.isLoading,
 };

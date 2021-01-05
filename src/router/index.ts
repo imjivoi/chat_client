@@ -45,19 +45,9 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.name !== "Login" && !state.isLogged) {
-    store
-      .dispatch("GET_USER_DATA")
-      .then((res) => next())
-      .catch((e) => next({ name: "Login" }));
-  } else if (to.name === "Login" || (to.name === "Signup" && state.isLogged)) {
-    next("/");
-  } else if (to.name === "Auth") {
-    next({ name: "Login" });
-  } else {
-    next();
-  }
+router.beforeResolve((to, from, next) => {
+  if (!to.path.includes("auth") && !state.isLogged) next({ name: "Login" });
+  else next();
 });
 
 export default router;

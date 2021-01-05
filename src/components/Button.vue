@@ -2,32 +2,23 @@
   <button
     :class="{
       outline: outline,
-      icon: icon.length,
-      ripple: !icon.length,
       link: link,
       disabled: disabled,
+      icon: isIcon,
     }"
     :style="{ width: width }"
     :disabled="disabled"
   >
     {{ label }}
-    <slot v-if="icon">
-      <i
-        :data-eva="icon"
-        :data-eva-fill="iconColor"
-        data-eva-height="20"
-        data-eva-width="20"
-      ></i>
-    </slot>
-    <slot v-else-if="link">
+    <slot name="icon" class="svg"></slot>
+    <template v-if="link">
       <router-link :to="link"></router-link>
-    </slot>
+    </template>
   </button>
 </template>
 
-<script lang='ts'>
-import { defineComponent } from "vue";
-export default defineComponent({
+<script >
+export default {
   props: {
     label: {
       type: String,
@@ -38,7 +29,6 @@ export default defineComponent({
     },
     icon: {
       type: String,
-      default: "",
     },
     iconColor: {
       type: String,
@@ -58,13 +48,15 @@ export default defineComponent({
       type: Boolean,
     },
   },
-  data: () => ({}),
-  computed: {},
+  data: () => ({
+    isIcon: false,
+  }),
   mounted() {
-    //@ts-ignore
-    eva.replace();
+    if (this.$slots.icon) {
+      this.isIcon = true;
+    }
   },
-});
+};
 </script>
 
 <style scoped lang='scss'>
@@ -78,16 +70,19 @@ button {
   color: #fff;
   position: relative;
   overflow: hidden;
-  transition-duration: 0.4s;
+  transition: 0.4s;
+
   &.disabled {
     background: $color_gray2;
   }
-  svg {
-    width: 80%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  &.icon {
+    width: 40px;
+    padding: 5px 10px;
+    background: transparent;
+
+    &:after {
+      transform: none;
+    }
   }
 
   &.outline {
@@ -104,14 +99,6 @@ button {
     padding: 10px;
   }
 
-  &.icon {
-    color: #131313;
-    background: transparent;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-  }
-
   a {
     position: absolute;
     width: 100%;
@@ -120,26 +107,29 @@ button {
     left: 0;
     z-index: 10;
   }
-}
 
-button.ripple:after {
-  content: "";
-  background: #90b9ee;
-  display: block;
-  position: absolute;
-  padding-top: 300%;
-  padding-left: 350%;
-  margin-left: -20px !important;
-  margin-top: -120%;
-  opacity: 0;
-  transition: all 0.8s;
-  border-radius: 5px;
-}
-
-button:active:after {
-  padding: 0;
-  margin: 0;
-  opacity: 1;
-  transition: 0s;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 50%;
+    left: 50%;
+    transform-style: flat;
+    transform: translate3d(-50%, -50%, 0);
+    background: rgba(white, 0.1);
+    border-radius: 100%;
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+  &.outline:after {
+    background: rgba(rgb(175, 188, 228), 0.1);
+  }
+  &:focus,
+  &:active {
+    &:after {
+      width: 200px;
+      height: 200px;
+    }
+  }
 }
 </style>

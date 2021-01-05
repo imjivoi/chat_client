@@ -10,6 +10,7 @@ export enum ActionTypes {
   GET_USER_DATA = "GET_USER_DATA",
   GET_AUTH = "GET_AUTH",
   LOGOUT = "LOGOUT",
+  REGISTER = "REGISTER",
 }
 
 export type AugmentedActionContext = {
@@ -29,4 +30,8 @@ export type AuthActionsTypes = {
   }: AugmentedActionContext): Promise<IUserData>;
   [ActionTypes.GET_TOKEN]({ commit }: AugmentedActionContext): string;
   [ActionTypes.LOGOUT]({ commit }: AugmentedActionContext): void;
+  [ActionTypes.REGISTER](
+    { commit }: AugmentedActionContext,
+    payload: IAuth
+  ): Promise<IUserData>;
 };

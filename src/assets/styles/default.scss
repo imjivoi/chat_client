@@ -47,3 +47,13 @@ h2 {
   font-size: 1.2em;
   text-align: left;
 }
+
+svg {
+  transition: $transition;
+  fill: $color_gray;
+  &:hover {
+    transition: $transition;
+
+    fill: var(--primary-color);
+  }
+}

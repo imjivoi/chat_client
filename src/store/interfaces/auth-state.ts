@@ -2,7 +2,7 @@ import { IUserData } from "./user";
 
 export interface IAuthState {
   userData: IUserData | null;
-  isLoading?: boolean;
+  isLoading: boolean;
   isLogged: boolean;
   token?: string | null;
 }
