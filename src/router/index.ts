@@ -12,6 +12,13 @@ const routes: Array<RouteRecordRaw> = [
         path: "/chats/",
         name: "Chats",
         component: () => import("../views/Chats.vue"),
+        children: [
+          {
+            path: "/chats/:id",
+            name: "Chat",
+            component: () => import("../views/Chat.vue"),
+          },
+        ],
       },
       {
         path: "/friends/",

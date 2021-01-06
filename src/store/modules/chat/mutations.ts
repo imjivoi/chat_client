@@ -9,4 +9,13 @@ export const mutations: MutationTree<IChatState> & ChatMutationsTypes = {
   SET_CHATS(state, payload) {
     state.chats = payload;
   },
+  SET_ACTIVE_CHAT(state, payload) {},
+  SET_DELETED_USER(state, payload) {},
+  SET_DELETE_CHAT(state, payload) {},
+  SET_DELETE_MESSAGE(state, payload) {},
+  SET_MESSAGES(state, payload) {},
+  SET_NEW_MESSAGE(state, payload) {},
+  SET_ONE_NEW_CHAT(state, payload) {},
+  SET_READ(state, payload) {},
+  SET_TYPING(state, payload) {},
 };

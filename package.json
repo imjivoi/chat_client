@@ -11,6 +11,7 @@
     "core-js": "^3.6.5",
     "date-fns": "^2.16.1",
     "emoji-mart-vue": "^2.6.6",
+    "equal-vue": "^0.7.19",
     "mitt": "^2.1.0",
     "primeflex": "^2.0.0",
     "primeicons": "^4.1.0",

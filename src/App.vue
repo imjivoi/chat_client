@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="content" v-if="!isLoading">
-      <Header />
+      <Header @logout="logout" :isLogged="isLogged" />
       <router-view />
     </div>
     <Spinner text="Loading..." v-else />
@@ -11,7 +11,8 @@
 import Spinner from "./components/Spinner.vue";
 import Header from "./components/Header.vue";
 
-import { computed, defineComponent, onBeforeMount } from "vue";
+import useChatSocket from "./composition-api/sockets/useChatSocket";
+import { computed, defineComponent, onBeforeMount, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "./composition-api/useStore";
 import { AllActionTypes } from "./store/types/actions.types";
@@ -19,15 +20,26 @@ export default defineComponent({
   components: { Header, Spinner },
 
   setup() {
-    const router = useRouter();
     const store = useStore();
+    const { disconnect_socket } = useChatSocket();
 
     const isLoading = computed(() => store.getters.isLoading);
+    const isLogged = computed(() => store.getters.isLogged);
 
-    onBeforeMount(() => store.dispatch(AllActionTypes.GET_USER_DATA));
+    function logout() {
+      store.dispatch(AllActionTypes.LOGOUT);
+      disconnect_socket();
+    }
+
+    onBeforeMount(async () => {
+      await store.dispatch(AllActionTypes.GET_USER_DATA);
+      await store.dispatch(AllActionTypes.GET_CHATS);
+    });
 
     return {
       isLoading,
+      isLogged,
+      logout,
     };
   },
 });

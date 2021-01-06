@@ -16,6 +16,8 @@ export const actions: ActionTree<IAuthState, IRootState> & AuthActionsTypes = {
         const res = await authAPI.getToken(payload);
         commit(MutationTypes.SET_TOKEN, res.data);
         resolve(res.data);
+        router.push("/");
+
         if (state.userData === null) dispatch("GET_USER_DATA");
       } catch (error) {
         notificationService.error(error.response.data.detail);
@@ -32,9 +34,8 @@ export const actions: ActionTree<IAuthState, IRootState> & AuthActionsTypes = {
 
           return router.push("/auth/login");
         }
-        const res = await authAPI.getUser(token);
+        const res = await authAPI.getUser();
         commit(MutationTypes.SET_USER_DATA, res.data);
-        router.push("/");
         resolve(res.data);
       } catch (error) {
         router.push("/auth/login");

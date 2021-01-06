@@ -1,6 +1,4 @@
-import { TokenType } from "@/store/modules/user";
 import { HTTP } from "../axios";
-import { headers } from "./userAPI";
 
 const url = "api/v1/chat/";
 
@@ -13,56 +11,38 @@ export interface ICreateChatData {
 }
 
 export default {
-  getChats(token: TokenType) {
-    return HTTP.get(url, headers(token));
+  getChats() {
+    return HTTP.get(url);
   },
-  createChat(token: TokenType, data: ICreateChatData) {
-    return HTTP.post(
-      url,
-      {
-        participants: data.participants,
-        type: data.type,
-        title: data.title,
-      },
-      headers(token)
-    );
+  createChat(data: ICreateChatData) {
+    return HTTP.post(url, {
+      participants: data.participants,
+      type: data.type,
+      title: data.title,
+    });
   },
-  deleteChat(token: TokenType, id: string | null) {
-    return HTTP.delete(`${url}?id=${id}`, headers(token));
+  deleteChat(id: string | null) {
+    return HTTP.delete(`${url}?id=${id}`);
   },
-  exitFromChat(token: TokenType, chat_id: string | null) {
-    return HTTP.put(url + "exit/", { chat_id: chat_id }, headers(token));
+  exitFromChat(chat_id: string | null) {
+    return HTTP.put(url + "exit/", { chat_id: chat_id });
   },
-  deleteUserFromChat(token: TokenType, chat_id: string, user_id: string) {
-    return HTTP.delete(
-      `${url}+delete/?chat_id=${chat_id}&user_id=${user_id}`,
-      headers(token)
-    );
+  deleteUserFromChat(chat_id: string, user_id: string) {
+    return HTTP.delete(`${url}+delete/?chat_id=${chat_id}&user_id=${user_id}`);
   },
-  addUserToChat(token: TokenType, chat_id: string, user_id: string) {
-    return HTTP.put(
-      url + "add/",
-      {
-        user_id: user_id,
-        chat_id: chat_id,
-      },
-      headers(token)
-    );
+  addUserToChat(chat_id: string, user_id: string) {
+    return HTTP.put(url + "add/", {
+      user_id: user_id,
+      chat_id: chat_id,
+    });
   },
-  changeChatTitle(token: TokenType, chat_id: string, title: string) {
-    return HTTP.put(
-      url,
-      {
-        title: title,
-        chat_id: chat_id,
-      },
-      headers(token)
-    );
+  changeChatTitle(chat_id: string, title: string) {
+    return HTTP.put(url, {
+      title: title,
+      chat_id: chat_id,
+    });
   },
-  getMessages(token: TokenType, chat_id: string | null, date: string) {
-    return HTTP.get(
-      `${url}messages/?chat_id=${chat_id}&date=${date}`,
-      headers(token)
-    );
+  getMessages(chat_id: string | null, date: string) {
+    return HTTP.get(`${url}messages/?chat_id=${chat_id}&date=${date}`);
   },
 };

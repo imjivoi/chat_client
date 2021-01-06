@@ -6,7 +6,7 @@
         <Button label="Sign up" link="/auth/signup" outline />
       </div>
       <div v-else>
-        <Button label="Sign out" outline @click="logout" />
+        <Button label="Sign out" outline @click="$emit('logout')" />
       </div>
     </div>
   </header>
@@ -18,19 +18,18 @@ import Button from "./Button.vue";
 import { computed, defineComponent } from "vue";
 import { useStore } from "@/composition-api/useStore";
 import { AllActionTypes } from "@/store/types/actions.types";
+import useChatSocket from "@/composition-api/sockets/useChatSocket";
 export default defineComponent({
+  props: {
+    isLogged: {
+      type: Boolean,
+      required: true,
+    },
+  },
   components: {
     Button,
   },
-  setup() {
-    const store = useStore();
-    const isLogged = computed(() => store.getters.isLogged);
-    function logout() {
-      store.dispatch(AllActionTypes.LOGOUT);
-    }
-
-    return { isLogged, logout };
-  },
+  emit: ["logout"],
 });
 </script>
 

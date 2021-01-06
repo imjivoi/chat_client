@@ -3,14 +3,12 @@
     <span
       class="badge"
       :style="{
-        background: color,
-        width: [hasContent ? '' : `${size}px`],
-        height: [hasContent ? '' : `${size}px`],
+        background: active ? color : 'transparent',
         fontSize: `${fontSize}em`,
       }"
-      :class="{ positioned: hasContent }"
+      :class="{ positioned: hasContent, sized: value >= 100 }"
     >
-      {{ value }}
+      <p>{{ value }}</p>
     </span>
     <slot name="content"></slot>
   </div>
@@ -20,12 +18,11 @@
 export default {
   props: {
     value: {
-      type: String,
-      default: "",
+      type: Number,
     },
     color: {
       type: String,
-      default: "#e91e63",
+      default: "rgb(156 39 176 / 60%)",
     },
     size: {
       type: Number,
@@ -34,6 +31,10 @@ export default {
     fontSize: {
       type: Number,
       default: 1,
+    },
+    active: {
+      type: Boolean,
+      required: true,
     },
   },
   data: () => ({
@@ -59,6 +60,15 @@ div {
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 32px;
+  padding: 3px;
+  width: fit-content;
+
+  p {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 
   &.positioned {
     position: absolute;
@@ -67,6 +77,14 @@ div {
     width: 10px;
     height: 10px;
     z-index: 10;
+  }
+
+  &.sized {
+    border-radius: 5px;
+    padding: 2px;
+    width: auto !important;
+    height: auto !important;
+    max-width: 28px !important;
   }
 }
 </style>

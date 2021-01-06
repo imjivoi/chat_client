@@ -1,9 +1,10 @@
 export interface IUserData {
-  nickname: string | null;
-  id: string | null;
-  email: string | null;
-  avatar?: string | null;
+  nickname: string;
+  id: string;
+  email: string;
+  avatar?: string;
   last_login: string;
+  is_online: boolean;
 }
 
 export interface IAuth {

@@ -15,12 +15,17 @@
         </span>
       </div>
       <ul class="chats__items">
-        <ChatItem />
+        <ChatItem
+          v-for="chat in chats"
+          :key="chat.id"
+          :chat="chat"
+          :userId="userId"
+        />
       </ul>
     </div>
     <div class="chat__content">
-      <!-- <router-view /> -->
-      <Chat />
+      <router-view />
+      <p v-if="!route.params.id">Choose a chat</p>
     </div>
   </section>
 </template>
@@ -31,14 +36,29 @@ import ChatItem from "../components/chat/ChatItem.vue";
 
 import InputText from "primevue/inputtext";
 
-import { defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
+import { useStore } from "@/composition-api/useStore";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   components: { InputText, ChatItem, Chat },
   name: "Chats",
-  data: () => ({
-    search: "",
-  }),
+  setup() {
+    const search = ref("");
+
+    const route = useRoute();
+
+    const store = useStore();
+    const chats = computed(() => store.getters.chats);
+    const userId = store.getters.userId;
+
+    return {
+      chats,
+      search,
+      userId,
+      route,
+    };
+  },
 });
 </script>
 
@@ -56,5 +76,14 @@ export default defineComponent({
   @include block_mixin;
   min-width: 600px;
   position: relative;
+
+  p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--primary-color);
+    font-size: 2em;
+  }
 }
 </style>

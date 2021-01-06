@@ -8,11 +8,23 @@
 <script lang="ts">
 import Sidebar from "../components/Sidebar.vue";
 
-import { defineComponent } from "vue";
+import { defineComponent, onBeforeMount, onUnmounted } from "vue";
+import { AllActionTypes } from "@/store/types/actions.types";
+import { useStore } from "@/composition-api/useStore";
+import useChatSocket from "@/composition-api/sockets/useChatSocket";
 
 export default defineComponent({
   name: "Home",
   components: { Sidebar },
+  setup() {
+    const { connect_socket, disconnect_socket } = useChatSocket();
+
+    onBeforeMount(async () => {
+      await connect_socket();
+    });
+
+    onUnmounted(() => disconnect_socket());
+  },
 });
 </script>
 <style lang='scss' scoped>

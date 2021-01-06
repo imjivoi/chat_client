@@ -5,6 +5,9 @@ import { ChatMutationsTypes } from "./mutatios.types";
 
 export enum ActionTypes {
   GET_CHATS = "GET_CHATS",
+  SEND_MESSAGE = "SEND_MESSAGE",
+  DELETE_MESSAGE = "DELETE_MESSAGE",
+  DELETE_USER = "DELETE_USER",
 }
 
 type AugmentedActionContext = {
@@ -18,4 +21,7 @@ export type ChatActionsTypes = {
   [ActionTypes.GET_CHATS]({
     commit,
   }: AugmentedActionContext): Promise<Array<IChatItem>>;
+  // [ActionTypes.SEND_MESSAGE](payload: ISocketResponseData): void;
+  // [ActionTypes.DELETE_USER](payload: ISocketResponseData): void;
+  // [ActionTypes.DELETE_MESSAGE](payload: ISocketResponseData): void;
 };

@@ -4,6 +4,4 @@ export const state: IChatState = {
   chats: [],
   isLoading: false,
   activeChatId: null,
-  socket: null,
-  socketStatus: "CLOSED",
 };

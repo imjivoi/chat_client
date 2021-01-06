@@ -92,6 +92,7 @@ export default {
     -ms-overflow-style: none;
     scrollbar-width: none;
     overflow: hidden;
+    border: 1px solid #ced4da;
 
     ::-webkit-scrollbar {
       display: none !important;
@@ -103,7 +104,8 @@ export default {
 
     &:focus {
       transition: 0.2s;
-      box-shadow: 0 0 10px 1px rgb(184, 184, 184);
+      box-shadow: 0 0 0 0.2rem #a6d5fa;
+      border-color: #2196f3;
     }
   }
 }
