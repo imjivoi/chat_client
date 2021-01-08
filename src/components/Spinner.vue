@@ -1,9 +1,9 @@
 <template>
-  <div class="loading">
+  <div class="loading" :style="{ width: width, height: height }">
     <div class="spinner" :style="{ height: height + 'px' }">
       <div class="spinner__content"></div>
     </div>
-    <p class="p-mt-4">{{ text }}</p>
+    <p class="p-mt-6" :style="{ fontSize: textSize + 'em' }">{{ text }}</p>
   </div>
 </template>
 
@@ -17,14 +17,22 @@ export default {
     text: {
       type: String,
     },
+    textSize: {
+      type: Number,
+      default: 1,
+    },
+    width: {
+      type: String,
+    },
+    height: {
+      type: String,
+    },
   },
 };
 </script>
 
 <style scoped lang='scss'>
 .loading {
-  width: 100vw;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

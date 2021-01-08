@@ -11,9 +11,8 @@ import { ChatActionsTypes } from "./actions.types";
 import { MutationTypes } from "./mutatios.types";
 
 export const actions: ActionTree<IChatState, IRootState> & ChatActionsTypes = {
-  GET_CHATS({ commit, dispatch }) {
+  GET_CHATS({ commit }) {
     return new Promise(async (resolve, reject) => {
-      commit(MutationTypes.SET_LOADING, true);
       try {
         const { data } = await chatAPI.getChats();
         commit(MutationTypes.SET_CHATS, data);
@@ -21,7 +20,12 @@ export const actions: ActionTree<IChatState, IRootState> & ChatActionsTypes = {
       } catch (error) {
         reject(error);
       }
-      commit(MutationTypes.SET_LOADING, false);
     });
+  },
+  async GET_MESSAGES({ commit }, payload) {
+    try {
+      const { data } = await chatAPI.getMessages(payload);
+      commit(MutationTypes.SET_MESSAGES, { chat_id: payload, messages: data });
+    } catch (error) {}
   },
 };

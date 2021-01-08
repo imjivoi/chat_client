@@ -30,12 +30,13 @@
       ></template>
     </Btn>
 
-    <textarea placeholder="Type your message" v-model="text" />
+    <textarea placeholder="Type your message" v-model="message" />
     <Btn
       outline
       label="Send"
       style="position: absolute; right: 5px; bottom: 7px"
-      v-if="text.length"
+      v-if="message"
+      @click="sendMessage($event, chatId)"
     />
     <Btn style="position: absolute; right: 5px; bottom: 7px" v-else>
       <template v-slot:icon>
@@ -57,15 +58,59 @@
   </div>
 </template>
 
-<script>
-import Btn from "../Button";
+<script lang='ts'>
+import Btn from "../Button.vue";
 
-export default {
+//@ts-ignore
+import { computed, defineComponent, inject, PropType, ref, watch } from "vue";
+import useChatinput from "@/composition-api/useChatInput";
+import { AllActionTypes } from "@/store/types/actions.types";
+import { ChatSocketEvents } from "@/store/interfaces/chat";
+import { IUserData } from "@/store/interfaces/user";
+export default defineComponent({
+  props: {
+    chatId: {
+      type: String,
+      required: true,
+    },
+    user: {
+      type: Object as PropType<IUserData>,
+      required: true,
+    },
+  },
+
   components: { Btn },
-  data: () => ({
-    text: "",
-  }),
-};
+  setup({ chatId, user }, ctx) {
+    const {
+      sendMessage,
+      sendTyping,
+      setAttachments,
+      message,
+      attachments,
+      timeout,
+      typing,
+    } = useChatinput(inject("socket"));
+
+    watch(message, () => {
+      message.value === "" ? (message.value = null) : message.value;
+      clearInterval(timeout.value);
+      if (!typing.value) {
+        sendTyping(true, chatId, user?.id);
+      }
+
+      typing.value = true;
+      timeout.value = setTimeout(() => {
+        typing.value = false;
+        sendTyping(false, chatId, user?.id);
+      }, 3000);
+    });
+    return {
+      sendMessage,
+      setAttachments,
+      message,
+    };
+  },
+});
 </script>
 
 <style scoped lang='scss'>

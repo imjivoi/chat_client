@@ -8,7 +8,7 @@ export const store = createStore<IRootState>(root);
 type StoreModules = {
   chat: ChatStoreModuleTypes;
   auth: AuthStoreModuleTypes;
-  root: typeof root;
+  root: RootStoreModuleTypes;
 };
 
 export type Store = ChatStoreModuleTypes<Pick<StoreModules, "chat">> &

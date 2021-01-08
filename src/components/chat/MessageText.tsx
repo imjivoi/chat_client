@@ -13,7 +13,9 @@ export default defineComponent({
     return (
       <p>
         {this.messageText?.split(re).map((item, i) => {
+          
           if (item.match(re)) {
+            console.log(item);
             return <Emoji key={i} emoji={item} set="apple" size={16} />;
           } else {
             return item;

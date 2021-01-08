@@ -1,7 +1,9 @@
 import { IAuthState } from "@/store/interfaces/auth-state";
+import { IUserData } from "@/store/interfaces/user";
 
 export interface AuthGettersTypes {
   isLogged(state: IAuthState): boolean;
-  isLoading(state: IAuthState): boolean;
-  userId(state: IAuthState): string | undefined;
+  isLoadingAuth(state: IAuthState): boolean;
+  userData(state: IAuthState): IUserData | null;
+  token(state: IAuthState): string | null | undefined;
 }

@@ -31,6 +31,9 @@ const routes: Array<RouteRecordRaw> = [
     path: "/auth",
     component: () => import("../views/auth/Auth.vue"),
     name: "Auth",
+    redirect: (to) => {
+      return { path: "/auth/login/" };
+    },
     children: [
       {
         path: "/auth/login/",

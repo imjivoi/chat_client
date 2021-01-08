@@ -1,18 +1,23 @@
 <template>
   <div>
     <div class="content" v-if="!isLoading">
-      <Header @logout="logout" :isLogged="isLogged" />
+      <Header @logout="logout" :isLogged="isLogged" :isLoading="isLoading" />
       <router-view />
     </div>
-    <Spinner text="Loading..." v-else />
+    <Spinner height="100vh" width="100vw" text="Loading..." v-else />
   </div>
 </template>
 <script lang='ts'>
 import Spinner from "./components/Spinner.vue";
 import Header from "./components/Header.vue";
 
-import useChatSocket from "./composition-api/sockets/useChatSocket";
-import { computed, defineComponent, onBeforeMount, onUnmounted } from "vue";
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onUnmounted,
+  ref,
+} from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "./composition-api/useStore";
 import { AllActionTypes } from "./store/types/actions.types";
@@ -21,19 +26,22 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
-    const { disconnect_socket } = useChatSocket();
 
-    const isLoading = computed(() => store.getters.isLoading);
+    const isLoading = ref(true);
     const isLogged = computed(() => store.getters.isLogged);
 
     function logout() {
       store.dispatch(AllActionTypes.LOGOUT);
-      disconnect_socket();
     }
 
     onBeforeMount(async () => {
-      await store.dispatch(AllActionTypes.GET_USER_DATA);
-      await store.dispatch(AllActionTypes.GET_CHATS);
+      store
+        .dispatch(AllActionTypes.GET_USER_DATA)
+        .then(async (res) => {
+          await store.dispatch(AllActionTypes.GET_CHATS);
+          isLoading.value = false;
+        })
+        .catch((e) => (isLoading.value = false));
     });
 
     return {

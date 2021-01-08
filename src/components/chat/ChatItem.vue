@@ -14,13 +14,13 @@
           {{ chat.type === "D" ? participants[0].nickname : chat.title }}
         </div>
         <div class="chat__last-message">
-          <MessageText
-            :messageText="
+          <p>
+            {{
               chat.last_message.user.id === userId
                 ? `You: ${chat.last_message.text}`
                 : chat.last_message.text
-            "
-          />
+            }}
+          </p>
         </div>
       </div>
       <Badge
@@ -34,7 +34,6 @@
 </template>
 
 <script lang='ts'>
-import MessageText from "./MessageText";
 import Badge from "../Badge.vue";
 
 import Avatar from "primevue/avatar";
@@ -43,7 +42,7 @@ import { defineComponent, PropType } from "vue";
 import { IChatItem } from "@/store/interfaces/chat";
 import { IUserData } from "@/store/interfaces/user";
 export default defineComponent({
-  components: { Avatar, Badge, MessageText },
+  components: { Avatar, Badge },
   props: {
     chat: {
       type: Object as PropType<IChatItem>,

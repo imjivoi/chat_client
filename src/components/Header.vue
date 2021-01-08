@@ -1,6 +1,6 @@
 <template>
   <header>
-    <div class="header__right">
+    <div class="header__right" v-if="!isLoading">
       <div v-if="!isLogged">
         <Button label="Login" link="/auth/login" style="margin-right: 10px" />
         <Button label="Sign up" link="/auth/signup" outline />
@@ -18,10 +18,13 @@ import Button from "./Button.vue";
 import { computed, defineComponent } from "vue";
 import { useStore } from "@/composition-api/useStore";
 import { AllActionTypes } from "@/store/types/actions.types";
-import useChatSocket from "@/composition-api/sockets/useChatSocket";
 export default defineComponent({
   props: {
     isLogged: {
+      type: Boolean,
+      required: true,
+    },
+    isLoading: {
       type: Boolean,
       required: true,
     },

@@ -21,13 +21,11 @@ export interface IChatItem {
 
 export interface IChatState {
   chats: Array<IChatItem> | [];
-  isLoading: boolean;
-  activeChatId: string | null;
 }
 
 export interface IChatSocketState {
-  socket: WebSocket | null;
-  socketStatus: SocketStatusConnect;
+  ws: WebSocket | null;
+  status: SocketStatusConnect;
   quantityConnectErrors: number;
 }
 
@@ -47,7 +45,11 @@ export enum SocketStatusConnect {
 
 export interface ISocketResponseData {
   event: ChatSocketEvents;
-  message: IChatSocketUserData | IChatSocketDeleteMessageData;
+  data:
+    | IChatSocketUserData
+    | IChatSocketDeleteMessageData
+    | IChatSocketMessageData
+    | IChatSocketTypingData;
 }
 
 interface IChatSocketUserData {
@@ -57,4 +59,21 @@ interface IChatSocketUserData {
 interface IChatSocketDeleteMessageData {
   chat_id: string;
   message_id: string;
+}
+
+interface IChatSocketMessageData {
+  text: string | null;
+  attachments: Array<IAttachments> | null;
+  chat_id: string;
+}
+
+interface IChatSocketTypingData {
+  chat_id: string;
+  status: boolean;
+  nickname: string;
+}
+
+export interface IAttachments {
+  file: string | ArrayBuffer | null;
+  title: string;
 }

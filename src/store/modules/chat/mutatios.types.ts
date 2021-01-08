@@ -6,7 +6,6 @@ import {
 import { IMessage } from "@/store/interfaces/message";
 
 export enum MutationTypes {
-  SET_LOADING = "SET_LOADING",
   SET_CHATS = "SET_CHATS",
   SET_ACTIVE_CHAT = "SET_ACTIVE_CHAT",
   SET_ONE_NEW_CHAT = "SET_ONE_NEW_CHAT",
@@ -20,7 +19,6 @@ export enum MutationTypes {
 }
 
 export type ChatMutationsTypes<S = IChatState> = {
-  [MutationTypes.SET_LOADING](state: S, payload: boolean): void;
   [MutationTypes.SET_CHATS](state: S, payload: IChatItem[]): void;
   [MutationTypes.SET_ACTIVE_CHAT](state: S, payload: string): void;
   [MutationTypes.SET_ONE_NEW_CHAT](state: S, payload: IChatItem): void;

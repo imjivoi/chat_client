@@ -11,7 +11,8 @@ export interface ICreateChatData {
 }
 
 export default {
-  getChats() {
+  getChats(id?: string) {
+    if (id) return HTTP.get(`${url}?id=${id}`);
     return HTTP.get(url);
   },
   createChat(data: ICreateChatData) {
@@ -42,7 +43,7 @@ export default {
       chat_id: chat_id,
     });
   },
-  getMessages(chat_id: string | null, date: string) {
-    return HTTP.get(`${url}messages/?chat_id=${chat_id}&date=${date}`);
+  getMessages(chat_id: string | null) {
+    return HTTP.get(`${url}messages/?chat_id=${chat_id}`);
   },
 };

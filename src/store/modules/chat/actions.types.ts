@@ -8,6 +8,7 @@ export enum ActionTypes {
   SEND_MESSAGE = "SEND_MESSAGE",
   DELETE_MESSAGE = "DELETE_MESSAGE",
   DELETE_USER = "DELETE_USER",
+  GET_MESSAGES = "GET_MESSAGES",
 }
 
 type AugmentedActionContext = {
@@ -24,4 +25,8 @@ export type ChatActionsTypes = {
   // [ActionTypes.SEND_MESSAGE](payload: ISocketResponseData): void;
   // [ActionTypes.DELETE_USER](payload: ISocketResponseData): void;
   // [ActionTypes.DELETE_MESSAGE](payload: ISocketResponseData): void;
+  [ActionTypes.GET_MESSAGES](
+    { commit }: AugmentedActionContext,
+    payload: string
+  ): void;
 };

@@ -50,7 +50,7 @@ export default defineComponent({
 
     const store = useStore();
     const chats = computed(() => store.getters.chats);
-    const userId = store.getters.userId;
+    const userId = store.getters.userData?.id;
 
     return {
       chats,
@@ -76,6 +76,8 @@ export default defineComponent({
   @include block_mixin;
   min-width: 600px;
   position: relative;
+  padding: 20px 3px 20px 10px;
+  width: 60%;
 
   p {
     position: absolute;

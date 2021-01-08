@@ -27,7 +27,7 @@ export type AuthActionsTypes = {
   ): Promise<ITokensResponse>;
   [ActionTypes.GET_USER_DATA]({
     commit,
-  }: AugmentedActionContext): Promise<IUserData>;
+  }: AugmentedActionContext): Promise<IUserData | boolean>;
   [ActionTypes.GET_TOKEN]({ commit }: AugmentedActionContext): string;
   [ActionTypes.LOGOUT]({ commit }: AugmentedActionContext): void;
   [ActionTypes.REGISTER](

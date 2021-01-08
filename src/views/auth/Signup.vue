@@ -54,10 +54,8 @@ import { AllActionTypes } from "@/store/types/actions.types";
 import notificationService from "@/services/notificationService";
 import { validator } from "../../utils/validators/registerValidator";
 
-import { Field, Form } from "vee-validate";
-
 export default defineComponent({
-  components: { InputText, Button, Field, Form },
+  components: { InputText, Button },
   setup(_, ctx) {
     const nickname = ref("");
     const email = ref("");
