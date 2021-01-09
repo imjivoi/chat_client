@@ -26,12 +26,25 @@ import UserItem from "../components/UserItem.vue";
 
 import InputText from "primevue/inputtext";
 
-import { defineComponent } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
+import { useStore } from "@/composition-api/useStore";
+import { AllActionTypes } from "@/store/types/actions.types";
 export default defineComponent({
   components: { InputText, UserItem },
-  data: () => ({
-    search: "",
-  }),
+  setup() {
+    const store = useStore();
+
+    const search = ref("");
+    const isLoading = ref(false);
+    const friends = computed(() => store.getters.friends);
+
+    onMounted(async () => {
+      await store.dispatch(AllActionTypes.GET_FRIENDS);
+      isLoading.value = true;
+    });
+
+    return { search, isLoading, friends };
+  },
 });
 </script>
 

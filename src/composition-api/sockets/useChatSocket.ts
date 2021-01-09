@@ -5,6 +5,7 @@ import {
   SocketStatusConnect,
 } from "@/store/interfaces/chat";
 import { AllActionTypes } from "@/store/types/actions.types";
+import { AllMutationTypes } from "@/store/types/mutations.types";
 import { onMounted, reactive, readonly, ref } from "vue";
 import { useStore } from "../useStore";
 
@@ -101,9 +102,10 @@ async function connect_socket() {
   state.ws.onmessage = ({ data }) => {
     console.log("socket chatItem onmessage");
 
-    const payload = JSON.parse(data) as ISocketResponseData;
+    const payload = JSON.parse(data);
     switch (payload.event) {
       case ChatSocketEvents.NEW_MESSAGE:
+        store.commit(AllMutationTypes.SET_NEW_MESSAGE, payload.data);
         break;
       case ChatSocketEvents.MESSAGE_STATUS:
         break;
@@ -115,7 +117,7 @@ async function connect_socket() {
         break;
     }
   };
-   state.ws.onerror = () => {
+  state.ws.onerror = () => {
     state.quantityConnectErrors += 1;
     setTimeout(() => connect_socket(), 5000);
     state.status = SocketStatusConnect.CONNECTING;

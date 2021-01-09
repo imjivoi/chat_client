@@ -30,7 +30,11 @@
       ></template>
     </Btn>
 
-    <textarea placeholder="Type your message" v-model="message" />
+    <textarea
+      placeholder="Type your message"
+      v-model="message"
+      @keydown.enter="sendMessage($event, chatId)"
+    />
     <Btn
       outline
       label="Send"

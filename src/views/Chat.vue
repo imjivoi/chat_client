@@ -1,12 +1,5 @@
 <template>
-  <Spinner
-    height="100%"
-    :textSize="0.6"
-    text="Loading messages..."
-    v-if="isLoading"
-  />
-
-  <div v-else>
+  <div v-show="!isLoading">
     <div class="chat__header">
       <div class="chat__header-left">
         <Avatar label="P" class="p-avatar-circle p-mr-2" />
@@ -51,6 +44,12 @@
     </div>
     <ChatInput :chatId="chatId" :user="user" />
   </div>
+  <Spinner
+    height="100%"
+    :textSize="0.6"
+    text="Loading messages..."
+    v-if="isLoading"
+  />
 </template>
 
 <script lang='ts'>
@@ -133,7 +132,7 @@ export default defineComponent({
       }
     });
 
-    watch(chat, () => setTimeout(() => toBottom(), 210));
+    watch(chat, () => toBottom(), { deep: true });
 
     return {
       isLoading,

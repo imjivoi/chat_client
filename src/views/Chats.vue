@@ -1,7 +1,9 @@
 <template>
   <section class="chats p-d-flex p-jc-between">
     <div class="chats__list">
-      <h2 class="p-mb-2">Chats</h2>
+      <div class="chats__header p-mb-2">
+        <h2>Chats</h2>
+      </div>
       <div class="chats__search p-mb-3" style="text-align: left">
         <span class="p-input-icon-left" style="width: 100%">
           <i class="pi pi-search" />

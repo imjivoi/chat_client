@@ -1,14 +1,13 @@
 import { IChatItem, IChatState } from "@/store/interfaces/chat";
 import { IRootState } from "@/store/interfaces/root";
+import { ICreateChatData } from "@/utils/api/chatAPI";
 import { ActionContext } from "vuex";
 import { ChatMutationsTypes } from "./mutatios.types";
 
 export enum ActionTypes {
   GET_CHATS = "GET_CHATS",
-  SEND_MESSAGE = "SEND_MESSAGE",
-  DELETE_MESSAGE = "DELETE_MESSAGE",
-  DELETE_USER = "DELETE_USER",
   GET_MESSAGES = "GET_MESSAGES",
+  CREATE_CHAT = "CREATE_CHAT",
 }
 
 type AugmentedActionContext = {
@@ -22,11 +21,12 @@ export type ChatActionsTypes = {
   [ActionTypes.GET_CHATS]({
     commit,
   }: AugmentedActionContext): Promise<Array<IChatItem>>;
-  // [ActionTypes.SEND_MESSAGE](payload: ISocketResponseData): void;
-  // [ActionTypes.DELETE_USER](payload: ISocketResponseData): void;
-  // [ActionTypes.DELETE_MESSAGE](payload: ISocketResponseData): void;
   [ActionTypes.GET_MESSAGES](
     { commit }: AugmentedActionContext,
     payload: string
   ): void;
+  [ActionTypes.CREATE_CHAT](
+    { commit }: AugmentedActionContext,
+    payload: ICreateChatData
+  ): Promise<IChatItem>;
 };

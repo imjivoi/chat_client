@@ -28,4 +28,15 @@ export const actions: ActionTree<IChatState, IRootState> & ChatActionsTypes = {
       commit(MutationTypes.SET_MESSAGES, { chat_id: payload, messages: data });
     } catch (error) {}
   },
+  CREATE_CHAT({ commit }, payload) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { data } = await chatAPI.createChat(payload);
+        commit(MutationTypes.SET_CHATS, data);
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
 };

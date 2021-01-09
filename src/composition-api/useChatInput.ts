@@ -33,7 +33,7 @@ export default function useChatInput(socket: any) {
       e.preventDefault();
     }
     if (
-      (message.value !== null && message.value !== "\n") ||
+      (message.value && message.value !== "\n") ||
       !!attachments.value.length
     ) {
       typing.value = false;

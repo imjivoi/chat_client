@@ -1,43 +1,30 @@
-import { TokenType } from "@/store/modules/user";
 import { HTTP } from "../axios";
-import { headers } from "./userAPI";
 
 const url = "api/v1/users/relationship";
 
 export default {
-  search(token: TokenType, q: string) {
-    return HTTP.get(`api/v1/users?q=${q}`, headers(token));
+  search(q: string) {
+    return HTTP.get(`api/v1/users?q=${q}`);
   },
-  get(token: TokenType) {
-    return HTTP.get(url, headers(token));
+  get() {
+    return HTTP.get(url);
   },
-  create(token: TokenType, to_user: string) {
-    return HTTP.post(url, { to_user: to_user }, headers(token));
+  create(to_user: string) {
+    return HTTP.post(url, { to_user: to_user });
   },
-  putRead(token: TokenType, from_user: string) {
-    return HTTP.put(
-      url,
-      {
-        from_user,
-        type: "read",
-      },
-      headers(token)
-    );
+  putRead(from_user: string) {
+    return HTTP.put(url, {
+      from_user,
+      type: "read",
+    });
   },
-  putAccept(token: TokenType, from_user: string) {
-    return HTTP.put(
-      url,
-      {
-        from_user,
-        type: "accept",
-      },
-      headers(token)
-    );
+  putAccept(from_user: string) {
+    return HTTP.put(url, {
+      from_user,
+      type: "accept",
+    });
   },
-  delete(token: TokenType, user_to_delete: string) {
-    return HTTP.delete(
-      `${url}?user_to_delete=${user_to_delete}`,
-      headers(token)
-    );
+  delete(user_to_delete: string) {
+    return HTTP.delete(`${url}?user_to_delete=${user_to_delete}`);
   },
 };

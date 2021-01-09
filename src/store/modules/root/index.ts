@@ -4,10 +4,12 @@ import { Store as VuexStore, CommitOptions, DispatchOptions } from "vuex";
 
 import auth from "../auth";
 import chat from "../chat";
+import friends from "../friends";
 
 const modules: ModuleTree<IRootState> = {
   auth,
   chat,
+  friends,
 };
 
 export const root: Module<IRootState, IRootState> = {

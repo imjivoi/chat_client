@@ -12,8 +12,10 @@ import "primeflex/primeflex.css";
 import App from "./App.vue";
 import router from "./router";
 import { store } from "./store";
+import ErrorService from "./services/errorService";
 
-createApp(App)
+const app = createApp(App);
+app
   .use(Toast, {
     transition: "Vue-Toastification__fade",
     maxToasts: 8,
@@ -24,3 +26,5 @@ createApp(App)
   .use(store)
   .use(router)
   .mount("#app");
+
+app.config.errorHandler = (error) => ErrorService.onError(error);
