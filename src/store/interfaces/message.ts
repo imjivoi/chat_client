@@ -2,7 +2,7 @@ import { IUserData } from "./user";
 
 export interface IMessage {
   user?: IUserData;
-  chat?: string | null;
+  chat: string;
   created?: string;
   text: string | null;
   attachments?: any | null;

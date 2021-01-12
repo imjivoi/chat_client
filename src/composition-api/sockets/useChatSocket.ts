@@ -1,81 +1,15 @@
 import {
   ChatSocketEvents,
+  ChatSocketResponse,
+  ChatSocketSendDataType,
   IChatSocketState,
-  ISocketResponseData,
   SocketStatusConnect,
-} from "@/store/interfaces/chat";
+} from "@/store/interfaces/chat-socket";
 import { AllActionTypes } from "@/store/types/actions.types";
 import { AllMutationTypes } from "@/store/types/mutations.types";
-import { onMounted, reactive, readonly, ref } from "vue";
+import { reactive, readonly } from "vue";
+import { useRoute } from "vue-router";
 import { useStore } from "../useStore";
-
-// export function useChatSocket() {
-//   const store = useStore();
-
-//   let ws: WebSocket;
-//   const socketStatus = ref<SocketStatusConnect>(SocketStatusConnect.CLOSED);
-//   const quantityConnectErrors = ref<number>(0);
-
-//   async function connect_socket() {
-//     if (quantityConnectErrors.value === 10) {
-//       socketStatus.value = SocketStatusConnect.CLOSED;
-//       return false;
-//     }
-//     const token = await store.dispatch(AllActionTypes.GET_TOKEN);
-//     if (!token) return false;
-//     const socket_url = `${process.env.VUE_APP_SOCKET_URL}chat/${token}/`;
-//     ws = new WebSocket(socket_url);
-//     ws.onopen = () => {
-//       console.log("Chat connected", ws);
-
-//       socketStatus.value = SocketStatusConnect.OPEN;
-//     };
-
-//     ws.onmessage = ({ data }) => {
-//       console.log("socket chatItem onmessage");
-
-//       const payload = JSON.parse(data) as ISocketResponseData;
-//       switch (payload.event) {
-//         case ChatSocketEvents.NEW_MESSAGE:
-//           break;
-//         case ChatSocketEvents.MESSAGE_STATUS:
-//           break;
-//         case ChatSocketEvents.DELETE_MESSAGE:
-//           break;
-//         case ChatSocketEvents.DELETE_USER:
-//           break;
-//         case ChatSocketEvents.TYPING_MESSAGE:
-//           break;
-//       }
-//     };
-//     ws.onclose = ws.onerror = () => {
-//       quantityConnectErrors.value += 1;
-//       setTimeout(() => connect_socket(), 5000);
-//       socketStatus.value = SocketStatusConnect.CONNECTING;
-//     };
-//   }
-
-//   function send(data: ISocketResponseData) {
-//     ws.send(JSON.stringify(data));
-//   }
-
-//   function disconnect_socket() {
-//     ws.close();
-
-//     socketStatus.value = SocketStatusConnect.CLOSED;
-//   }
-
-//   // onMounted(() => connect_socket());
-
-//   return {
-//     connect_socket,
-//     send,
-//     disconnect_socket,
-//     socketStatus,
-//   };
-// }
-
-// export type ChatSocketType = typeof useChatSocket;
 
 const state = reactive<IChatSocketState>({
   ws: null,
@@ -85,6 +19,7 @@ const state = reactive<IChatSocketState>({
 
 async function connect_socket() {
   const store = useStore();
+  const route = useRoute();
   const token = await store.dispatch(AllActionTypes.GET_TOKEN);
   if (state.quantityConnectErrors === 10) {
     state.status = SocketStatusConnect.CLOSED;
@@ -99,22 +34,36 @@ async function connect_socket() {
     state.status = SocketStatusConnect.OPEN;
   };
 
-  state.ws.onmessage = ({ data }) => {
-    console.log("socket chatItem onmessage");
-
-    const payload = JSON.parse(data);
+  state.ws.onmessage = ({ data }: any) => {
+    const payload: ChatSocketResponse = JSON.parse(data);
     switch (payload.event) {
       case ChatSocketEvents.NEW_MESSAGE:
         store.commit(AllMutationTypes.SET_NEW_MESSAGE, payload.data);
+        if (
+          store.getters.userData?.id !== payload.data.user?.id &&
+          route.params.id === payload.data.chat
+        ) {
+          const data: ChatSocketSendDataType<ChatSocketEvents.MESSAGE_STATUS> = {
+            event: ChatSocketEvents.MESSAGE_STATUS,
+            data: {
+              chat_id: payload.data.chat,
+              user_id: store.getters.userData?.id,
+            },
+          };
+          send(data);
+        }
+
         break;
       case ChatSocketEvents.MESSAGE_STATUS:
+        store.commit(AllMutationTypes.SET_READ, payload.data);
+
         break;
-      case ChatSocketEvents.DELETE_MESSAGE:
-        break;
-      case ChatSocketEvents.DELETE_USER:
-        break;
-      case ChatSocketEvents.TYPING_MESSAGE:
-        break;
+      // case ChatSocketEvents.DELETE_MESSAGE:
+      //   break;
+      // case ChatSocketEvents.DELETE_USER:
+      //   break;
+      // case ChatSocketEvents.TYPING_MESSAGE:
+      //   break;
     }
   };
   state.ws.onerror = () => {
@@ -124,7 +73,7 @@ async function connect_socket() {
   };
 }
 
-function send(data: ISocketResponseData) {
+function send(data: ChatSocketSendDataType) {
   state.ws?.send(JSON.stringify(data));
 }
 

@@ -42,6 +42,7 @@ import { defineComponent, ref } from "vue";
 import { useStore } from "@/composition-api/useStore";
 import { AllActionTypes } from "@/store/types/actions.types";
 import notificationService from "@/services/notificationService";
+import { useRouter } from "vue-router";
 export default defineComponent({
   components: { InputText, Button },
 
@@ -49,6 +50,7 @@ export default defineComponent({
     const email = ref("");
     const password = ref("");
     const store = useStore();
+    const router = useRouter();
 
     function login() {
       store
@@ -56,7 +58,10 @@ export default defineComponent({
           email: email.value,
           password: password.value,
         })
-        .then((res) => notificationService.success("Authorized"));
+        .then((res) => {
+          notificationService.success("Authorized");
+          setTimeout(() => router.push("/"), 200);
+        });
     }
 
     return {

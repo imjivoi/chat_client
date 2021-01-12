@@ -1,6 +1,5 @@
-import { store } from "@/store";
-import { state } from "@/store/modules/auth/state";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { state } from "../store/modules/auth/state";
 
 const routes: Array<RouteRecordRaw> = [
   {

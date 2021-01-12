@@ -28,5 +28,5 @@ export type ChatActionsTypes = {
   [ActionTypes.CREATE_CHAT](
     { commit }: AugmentedActionContext,
     payload: ICreateChatData
-  ): Promise<IChatItem>;
+  ): Promise<IChatItem[]>;
 };

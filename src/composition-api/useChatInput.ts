@@ -1,6 +1,7 @@
-import { ChatSocketEvents, IAttachments } from "@/store/interfaces/chat";
+import { IAttachments } from "@/store/interfaces/chat";
+import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
 import { toBase64 } from "@/utils/base64encryption";
-import { computed, inject, ref } from "vue";
+import { computed, ref } from "vue";
 
 export default function useChatInput(socket: any) {
   const message = ref<string | null>(null);
@@ -64,9 +65,6 @@ export default function useChatInput(socket: any) {
     }
   }
 
-  //   function sendStatusMessage() {
-  //     socket.store.dispatch("chats/sendSocketStatusMessage");
-  //   }
   function setAttachments(files: any) {
     if (files.type) {
       attachments.value.push(files);
@@ -92,9 +90,6 @@ export default function useChatInput(socket: any) {
       },
     });
   }
-  //   onMounted(() => {
-  //     sendStatusMessage();
-  //   });
 
   return {
     message,

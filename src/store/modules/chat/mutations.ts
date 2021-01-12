@@ -21,6 +21,15 @@ export const mutations: MutationTree<IChatState> & ChatMutationsTypes = {
     chat[0].last_message = payload;
   },
   SET_ONE_NEW_CHAT(state, payload) {},
-  SET_READ(state, payload) {},
+  SET_READ(state, payload) {
+    console.log(payload);
+    const chat = state.chats.find((i) => i.id === payload.chat_id);
+    console.log(chat);
+    chat?.messages.forEach((i) => {
+      if (i.user?.id !== payload.user_id) {
+        i.is_readed = true;
+      }
+    });
+  },
   SET_TYPING(state, payload) {},
 };

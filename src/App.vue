@@ -16,6 +16,7 @@ import {
   defineComponent,
   onBeforeMount,
   onUnmounted,
+  provide,
   ref,
 } from "vue";
 import { useRouter } from "vue-router";
@@ -35,13 +36,11 @@ export default defineComponent({
     }
 
     onBeforeMount(async () => {
-      store
-        .dispatch(AllActionTypes.GET_USER_DATA)
-        .then(async (res) => {
-          await store.dispatch(AllActionTypes.GET_CHATS);
-          isLoading.value = false;
-        })
-        .catch((e) => (isLoading.value = false));
+      try {
+        await store.dispatch(AllActionTypes.GET_USER_DATA);
+      } catch (error) {}
+
+      isLoading.value = false;
     });
 
     return {

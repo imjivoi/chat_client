@@ -2,6 +2,7 @@
   <router-link :to="`/chats/${chat.id}`">
     <li class="p-mb-2 p-p-2">
       <Badge
+        class="p-mr-2"
         color="#1ee952"
         :active="chat.type === 'D' ? participants[0].is_online : false"
       >
@@ -14,7 +15,7 @@
           {{ chat.type === "D" ? participants[0].nickname : chat.title }}
         </div>
         <div class="chat__last-message">
-          <p>
+          <p v-if="chat.last_message">
             {{
               chat.last_message.user.id === userId
                 ? `You: ${chat.last_message.text}`
@@ -24,10 +25,11 @@
         </div>
       </div>
       <Badge
-        :value="chat.unreaded_messages"
+        :value="unreadedMessages"
         :fontSize="0.6"
         :size="15"
-        :active="chat.unreaded_messages ? true : false"
+        :active="unreadedMessages ? true : false"
+        v-if="unreadedMessages > 0"
       />
     </li>
   </router-link>
@@ -38,7 +40,7 @@ import Badge from "../Badge.vue";
 
 import Avatar from "primevue/avatar";
 
-import { defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import { IChatItem } from "@/store/interfaces/chat";
 import { IUserData } from "@/store/interfaces/user";
 export default defineComponent({
@@ -51,10 +53,22 @@ export default defineComponent({
       type: String,
     },
   },
-  computed: {
-    participants(): IUserData[] | undefined {
-      return this.chat?.participants.filter((i) => i.id !== this.userId);
-    },
+  setup(props, ctx) {
+    const participants = computed(() =>
+      props.chat?.participants.filter((i) => i.id !== props.userId)
+    );
+    const unreadedMessages = computed(() =>
+      props.chat?.messages.length
+        ? props.chat?.messages.filter(
+            (i) => i.user?.id !== props.userId && !i.is_readed
+          ).length
+        : props.chat?.unreaded_messages
+    );
+
+    return {
+      participants,
+      unreadedMessages,
+    };
   },
 });
 </script>
@@ -62,7 +76,6 @@ export default defineComponent({
 <style scoped lang='scss'>
 li {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   @include list_item_mixin;
 

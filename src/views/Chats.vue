@@ -1,52 +1,59 @@
 <template>
   <section class="chats p-d-flex p-jc-between">
-    <div class="chats__list">
-      <div class="chats__header p-mb-2">
-        <h2>Chats</h2>
-      </div>
-      <div class="chats__search p-mb-3" style="text-align: left">
-        <span class="p-input-icon-left" style="width: 100%">
-          <i class="pi pi-search" />
-          <InputText
-            type="text"
-            v-model="search"
-            placeholder="Search"
-            class="p-inputtext-sm"
-            style="width: 100%"
+    <div class="empty" v-if="isLoading"><Spinner height="100%" /></div>
+
+    <template v-else>
+      <div class="chats__list">
+        <div class="chats__header p-mb-2">
+          <h2>Chats</h2>
+        </div>
+        <div class="chats__search p-mb-3" style="text-align: left">
+          <span class="p-input-icon-left" style="width: 100%">
+            <i class="pi pi-search" />
+            <InputText
+              type="text"
+              v-model="search"
+              placeholder="Search"
+              class="p-inputtext-sm"
+              style="width: 100%"
+            />
+          </span>
+        </div>
+        <ul class="chats__items">
+          <ChatItem
+            v-for="chat in chats"
+            :key="chat.id"
+            :chat="chat"
+            :userId="userId"
           />
-        </span>
+        </ul>
       </div>
-      <ul class="chats__items">
-        <ChatItem
-          v-for="chat in chats"
-          :key="chat.id"
-          :chat="chat"
-          :userId="userId"
-        />
-      </ul>
-    </div>
-    <div class="chat__content">
-      <router-view />
-      <p v-if="!route.params.id">Choose a chat</p>
-    </div>
+      <div class="chat__content">
+        <router-view />
+        <p v-if="!route.params.id">Choose a chat</p>
+      </div>
+    </template>
   </section>
 </template>
 
 <script lang='ts'>
+import Spinner from "../components/Spinner.vue";
 import Chat from "./Chat.vue";
 import ChatItem from "../components/chat/ChatItem.vue";
 
 import InputText from "primevue/inputtext";
 
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { useStore } from "@/composition-api/useStore";
 import { useRoute } from "vue-router";
+import { AllActionTypes } from "@/store/types/actions.types";
 
 export default defineComponent({
-  components: { InputText, ChatItem, Chat },
+  components: { InputText, ChatItem, Chat, Spinner },
   name: "Chats",
   setup() {
     const search = ref("");
+    const isLoading = ref(true);
 
     const route = useRoute();
 
@@ -54,11 +61,19 @@ export default defineComponent({
     const chats = computed(() => store.getters.chats);
     const userId = store.getters.userData?.id;
 
+    onMounted(async () => {
+      if (!chats.value.length) {
+        await store.dispatch(AllActionTypes.GET_CHATS);
+      }
+      isLoading.value = false;
+    });
+
     return {
       chats,
       search,
       userId,
       route,
+      isLoading,
     };
   },
 });

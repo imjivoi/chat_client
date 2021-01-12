@@ -63,6 +63,7 @@ div {
   max-width: 32px;
   padding: 3px;
   width: fit-content;
+  min-width: 17px;
 
   p {
     text-overflow: ellipsis;

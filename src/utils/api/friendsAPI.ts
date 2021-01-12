@@ -1,6 +1,6 @@
 import { HTTP } from "../axios";
 
-const url = "api/v1/users/relationship";
+const url = "api/v1/users/relationship/";
 
 export default {
   search(q: string) {

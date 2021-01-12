@@ -40,9 +40,9 @@
           </li>
         </ul>
       </div>
-    </div>
-    <div class="message__time">
-      {{ createdAt }}
+      <div class="message__time">
+        {{ createdAt }}
+      </div>
     </div>
     <div class="message__user-avatar">
       <Avatar label="A" class="p-avatar-circle" />
@@ -132,6 +132,9 @@ export default defineComponent({
       .message__text {
         color: $color_gray3;
       }
+      .message__time {
+        text-align: left;
+      }
     }
     .message__user-avatar {
       display: none;
@@ -151,7 +154,7 @@ export default defineComponent({
   &__content {
     background: linear-gradient(to bottom right, #60a9f6, #2a8bf2);
     margin-left: 40px;
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 10px;
     border-bottom-left-radius: 0;
     color: #fff;
@@ -199,10 +202,12 @@ export default defineComponent({
     font-size: 0.6em;
     font-weight: 500;
     color: #9e9e9e;
-    bottom: -25px;
-    position: absolute;
-    transform: translate(-50%, 0);
-    min-width: max-content;
+    margin: 5px 0 0;
+    text-align: right;
+    // bottom: -25px;
+    // position: absolute;
+    // transform: translate(-50%, 0);
+    // min-width: max-content;
   }
 
   &__user-avatar {

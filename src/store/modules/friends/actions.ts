@@ -11,7 +11,8 @@ export const actions: ActionTree<IFriendsState, IRootState> &
     return new Promise(async (resolve, reject) => {
       try {
         const { data } = await friendsAPI.get();
-        commit(MutationTypes.SET_FRIENDS, data);
+        commit(MutationTypes.SET_FRIENDS, data.friends);
+        commit(MutationTypes.SET_REQUESTS, data.requests);
         resolve(data);
       } catch (error) {
         reject(error);

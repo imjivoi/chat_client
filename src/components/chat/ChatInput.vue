@@ -69,7 +69,6 @@ import Btn from "../Button.vue";
 import { computed, defineComponent, inject, PropType, ref, watch } from "vue";
 import useChatinput from "@/composition-api/useChatInput";
 import { AllActionTypes } from "@/store/types/actions.types";
-import { ChatSocketEvents } from "@/store/interfaces/chat";
 import { IUserData } from "@/store/interfaces/user";
 export default defineComponent({
   props: {

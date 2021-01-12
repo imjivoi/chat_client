@@ -5,6 +5,7 @@
       link: link,
       disabled: disabled,
       icon: isIcon,
+      rounded: rounded,
     }"
     :style="{ width: width }"
     :disabled="disabled"
@@ -97,6 +98,7 @@ button {
 
   &.rounded {
     padding: 10px;
+    border-radius: 20px;
   }
 
   a {

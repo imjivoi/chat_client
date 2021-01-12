@@ -5,21 +5,21 @@ export default class ErrorService {
 
   static onError(error: any) {
     console.log(error);
-    const response = error.response;
-    if (response && response.status >= 400 && response.status < 405) {
-      return false;
-    }
   }
 
-  static initHandler() {
-    const scope = this;
-    window.onerror = (message, url, lineNo, columnNo, error) => {
-      console.log(error, "test");
-      if (error) {
-        scope.onError(error);
-        console.log(message, url, lineNo, columnNo, error);
-      }
-    };
+  // static initHandler() {
+  //   const scope = this;
+  //   window.onerror = (message, url, lineNo, columnNo, error) => {
+  //     console.log(error, "test");
+  //     if (error) {
+  //       scope.onError(error);
+  //       console.log(message, url, lineNo, columnNo, error);
+  //     }
+  //   };
+  // }
+
+  static requestError(error: any) {
+    console.log(error);
   }
 
   static displayErrorAlert(message: string) {

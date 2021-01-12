@@ -75,13 +75,13 @@ import {
 } from "vue";
 import { AllActionTypes } from "@/store/types/actions.types";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
-import { ISocketResponseData } from "@/store/interfaces/chat";
+import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
 export default defineComponent({
   components: { ChatInput, Button, Avatar, Message, Spinner },
   setup() {
     const store = useStore();
     const route = useRoute();
-    const { state }: any = inject("socket");
+    const { state, send }: any = inject("socket");
 
     const isLoading = ref(true);
 
@@ -122,6 +122,13 @@ export default defineComponent({
 
     onMounted(async () => {
       await fetchMessages();
+      send({
+        event: ChatSocketEvents.MESSAGE_STATUS,
+        data: {
+          chat_id: chatId.value,
+          user_id: store.getters.userData?.id,
+        },
+      });
     });
 
     onBeforeRouteUpdate(async (to, from) => {
@@ -177,7 +184,7 @@ export default defineComponent({
   overflow-y: scroll;
   margin: 40px 0 0px;
   height: calc(100vh - 190px);
-  padding: 0 7px 20px 0;
+  padding: 10px 7px 20px 0;
   overflow-x: hidden;
   position: relative;
 }

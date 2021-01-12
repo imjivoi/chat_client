@@ -1,3 +1,4 @@
+import { IChatItem } from "@/store/interfaces/chat";
 import { HTTP } from "../axios";
 
 const url = "api/v1/chat/";
@@ -7,7 +8,7 @@ export type TypeOfChatType = "C" | "D";
 export interface ICreateChatData {
   participants: string[];
   type: TypeOfChatType;
-  title: string;
+  title?: string;
 }
 
 export default {
