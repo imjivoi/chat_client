@@ -1,7 +1,8 @@
 import { IAttachments } from "@/store/interfaces/chat";
 import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
 import { toBase64 } from "@/utils/base64encryption";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 export default function useChatInput(socket: any) {
   const message = ref<string | null>(null);
@@ -76,9 +77,7 @@ export default function useChatInput(socket: any) {
     attachments.value?.splice(index, 1);
   }
   function setEmoji(emoji: any) {
-    message.value
-      ? (message.value += emoji.colons)
-      : (message.value = emoji.colons);
+    message.value ? (message.value += emoji) : (message.value = emoji);
   }
   function sendTyping(status: boolean, chatId: string, nickname: string) {
     socket.send({

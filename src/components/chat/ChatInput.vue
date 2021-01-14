@@ -1,6 +1,9 @@
-<template>
-  <div class="input-block">
-    <Btn style="position: absolute; left: 5px; bottom: 7px">
+<template >
+  <div class="input-block" v-click-outside="hideEmojiPicker">
+    <Btn
+      style="position: absolute; left: 5px; bottom: 7px"
+      @click="activeEmojiPicker = !activeEmojiPicker"
+    >
       <template v-slot:icon>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <g id="Layer_2" data-name="Layer 2">
@@ -59,10 +62,16 @@
         </svg>
       </template>
     </Btn>
+    <EmojiPicker
+      v-if="activeEmojiPicker"
+      style="left: 0; bottom: 50px"
+      @setEmoji="setEmoji"
+    />
   </div>
 </template>
 
 <script lang='ts'>
+import EmojiPicker from "./EmojiPicker.vue";
 import Btn from "../Button.vue";
 
 //@ts-ignore
@@ -70,6 +79,8 @@ import { computed, defineComponent, inject, PropType, ref, watch } from "vue";
 import useChatinput from "@/composition-api/useChatInput";
 import { AllActionTypes } from "@/store/types/actions.types";
 import { IUserData } from "@/store/interfaces/user";
+import { useRoute } from "vue-router";
+//@ts-ignore
 export default defineComponent({
   props: {
     chatId: {
@@ -82,7 +93,7 @@ export default defineComponent({
     },
   },
 
-  components: { Btn },
+  components: { Btn, EmojiPicker },
   setup({ chatId, user }, ctx) {
     const {
       sendMessage,
@@ -92,26 +103,45 @@ export default defineComponent({
       attachments,
       timeout,
       typing,
+      activeEmojiPicker,
+      setEmoji,
     } = useChatinput(inject("socket"));
+    const route = useRoute();
+
+    function hideEmojiPicker() {
+      console.log(11);
+      activeEmojiPicker.value = false;
+    }
 
     watch(message, () => {
       message.value === "" ? (message.value = null) : message.value;
       clearInterval(timeout.value);
       if (!typing.value) {
-        sendTyping(true, chatId, user?.id);
+        sendTyping(true, chatId, user?.nickname);
       }
 
       typing.value = true;
       timeout.value = setTimeout(() => {
         typing.value = false;
-        sendTyping(false, chatId, user?.id);
+        sendTyping(false, chatId, user?.nickname);
       }, 3000);
     });
+
     return {
       sendMessage,
       setAttachments,
       message,
+      attachments,
+      activeEmojiPicker,
+      hideEmojiPicker,
+      setEmoji,
     };
+  },
+  watch: {
+    chatId: function () {
+      this.message = null;
+      this.attachments = [];
+    },
   },
 });
 </script>

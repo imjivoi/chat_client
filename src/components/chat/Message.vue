@@ -45,7 +45,10 @@
       </div>
     </div>
     <div class="message__user-avatar">
-      <Avatar label="A" class="p-avatar-circle" />
+      <Avatar
+        :image="messageData.user.avatar"
+        :nickname="messageData.user.nickname"
+      />
     </div>
     <div class="message__readed">
       <i
@@ -62,9 +65,10 @@
 <script lang='ts'>
 import Modal from "../Modal.vue";
 import { useStore } from "@/composition-api/useStore";
+import Avatar from "../Avatar.vue";
 
 import { formatDistanceToNow, parseISO } from "date-fns";
-import Avatar from "primevue/avatar"; //@ts-ignore
+//@ts-ignore
 import ClickOutside from "vue-click-outside";
 
 import { computed, defineComponent, ref } from "vue";

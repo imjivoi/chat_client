@@ -7,7 +7,9 @@
         :active="chat.type === 'D' ? participants[0].is_online : false"
       >
         <template v-slot:content
-          ><Avatar label="P" class="p-avatar-circle"
+          ><Avatar
+            :image="chat.type === 'D' ? participants[0].avatar : ''"
+            :nickname="chat.type === 'D' ? participants[0].nickname : ''"
         /></template>
       </Badge>
       <div class="chat__info">
@@ -38,7 +40,7 @@
 <script lang='ts'>
 import Badge from "../Badge.vue";
 
-import Avatar from "primevue/avatar";
+import Avatar from "../Avatar.vue";
 
 import { computed, defineComponent, PropType } from "vue";
 import { IChatItem } from "@/store/interfaces/chat";

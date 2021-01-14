@@ -1,15 +1,35 @@
 <template>
-  <picker set="emojione" />
+  <Modal>
+    <div class="emoji-picker">
+      <span
+        v-for="(emoji, index) in emojis"
+        :key="index"
+        @click="$emit('setEmoji', emoji)"
+        >{{ emoji }}</span
+      >
+    </div>
+  </Modal>
 </template>
 
 <script>
-import { Picker } from "emoji-mart-vue";
+import Modal from "../Modal";
+
+const emojis = require("emoji.json/emoji-compact.json");
 export default {
-  components: {
-    Picker,
-  },
+  emit: ["setEmoji"],
+  components: { Modal },
+  data: () => ({
+    emojis: emojis,
+  }),
+  mounted() {},
 };
 </script>
 
-<style>
+<style scoped lang='scss'>
+.emoji-picker {
+  span {
+    margin: 5px;
+    cursor: pointer;
+  }
+}
 </style>

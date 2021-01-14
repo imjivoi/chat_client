@@ -62,8 +62,9 @@ async function connect_socket() {
       //   break;
       // case ChatSocketEvents.DELETE_USER:
       //   break;
-      // case ChatSocketEvents.TYPING_MESSAGE:
-      //   break;
+      case ChatSocketEvents.TYPING_MESSAGE:
+        store.commit(AllMutationTypes.SET_TYPING, payload.data);
+        break;
     }
   };
   state.ws.onerror = () => {

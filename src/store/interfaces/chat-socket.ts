@@ -21,13 +21,6 @@ export enum SocketStatusConnect {
   CLOSED = "CLOSED",
 }
 
-export type ChatSocketResponseType<T = ChatSocketEvents> = {
-  event: T;
-  data: T extends ChatSocketEvents.NEW_MESSAGE
-    ? IMessage
-    : IChatSocketMessageStatus;
-};
-
 interface IChatSocketMesStatusResp {
   event: ChatSocketEvents.MESSAGE_STATUS;
   data: IChatSocketMessageStatus;
@@ -38,9 +31,15 @@ interface IChatSocketMesResponse {
   data: IMessage;
 }
 
+interface IChatSocketTypingResponse {
+  event: ChatSocketEvents.TYPING_MESSAGE;
+  data: IChatSocketTypingData;
+}
+
 export type ChatSocketResponse =
   | IChatSocketMesResponse
-  | IChatSocketMesStatusResp;
+  | IChatSocketMesStatusResp
+  | IChatSocketTypingResponse;
 
 export type ChatSocketSendDataType<T = ChatSocketEvents> = {
   event: T;
@@ -80,7 +79,7 @@ interface IChatSocketMessageData {
   chat_id: string;
 }
 
-interface IChatSocketTypingData {
+export interface IChatSocketTypingData {
   chat_id: string;
   status: boolean;
   nickname: string;

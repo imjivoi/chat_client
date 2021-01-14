@@ -2,7 +2,7 @@
   <li class="p-mb-2 p-d-flex p-ai-center p-jc-between p-p-2">
     <Badge color="#1ee952" class="p-mr-5">
       <template v-slot:content
-        ><Avatar label="P" class="p-avatar-circle" /></template
+        ><Avatar :image="item.avatar" :nickname="item.nickname" /></template
     ></Badge>
     <div class="user__name">{{ item.nickname }}</div>
     <Button label="Send" rounded @click="createChat()" />
@@ -13,7 +13,7 @@
 import Button from "./Button.vue";
 import Badge from "./Badge.vue";
 
-import Avatar from "primevue/avatar";
+import Avatar from "./Avatar.vue";
 
 import { defineComponent, inject, PropType } from "vue";
 import { IUserData } from "@/store/interfaces/user";

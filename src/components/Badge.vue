@@ -63,7 +63,6 @@ div {
   max-width: 32px;
   padding: 3px;
   width: fit-content;
-  min-width: 17px;
 
   p {
     text-overflow: ellipsis;
@@ -86,6 +85,7 @@ div {
     width: auto !important;
     height: auto !important;
     max-width: 28px !important;
+    min-width: 17px;
   }
 }
 </style>

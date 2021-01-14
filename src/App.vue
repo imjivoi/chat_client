@@ -64,6 +64,7 @@ export default defineComponent({
 .content {
   display: none;
   background-color: #c0c0c0;
+  overflow: hidden;
   @media (min-width: 992px) {
     display: block;
   }

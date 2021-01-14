@@ -3,7 +3,7 @@ export interface IUserData {
   id: string;
   email: string;
   avatar?: string;
-  last_login: string;
+  last_login?: string;
   is_online: boolean;
 }
 

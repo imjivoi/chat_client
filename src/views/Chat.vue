@@ -2,9 +2,12 @@
   <div v-show="!isLoading">
     <div class="chat__header">
       <div class="chat__header-left">
-        <Avatar label="P" class="p-avatar-circle p-mr-2" />
+        <Avatar
+          :image="chat.type === 'D' ? participants[0].avatar : chat.image"
+          :nickname="chat.type === 'D' ? participants[0].nickname : ''"
+        />
 
-        <div class="chat__info">
+        <div class="chat__info p-ml-2">
           <div class="chat__name">
             {{ chat.type === "D" ? participants[0].nickname : chat.title }}
           </div>
@@ -57,11 +60,10 @@ import Spinner from "../components/Spinner.vue";
 import Message from "../components/chat/Message.vue";
 import Button from "../components/Button.vue";
 import ChatInput from "../components/chat/ChatInput.vue";
+import Avatar from "../components/Avatar.vue";
 
 import { useStore } from "@/composition-api/useStore";
 import { IMessage } from "../store/interfaces/message";
-
-import Avatar from "primevue/avatar";
 
 import {
   computed,
@@ -94,14 +96,20 @@ export default defineComponent({
       chat.value?.participants.filter((i) => i.id !== user.value?.id)
     );
     const status = computed(() => {
-      if (state.status === "OPEN") {
+      if (
+        chat.value?.typing &&
+        chat.value.typing.status &&
+        chat.value.typing.nickname !== user.value?.nickname
+      ) {
+        return `${chat.value.typing.nickname} is typing ...`;
+      } else if (state.status === "OPEN") {
         //@ts-ignore
 
-        participants.value[0].is_online //@ts-ignore
-          ? participants.value[0].is_online //@ts-ignore
+        return participants.value[0].is_online
+          ? "online" //@ts-ignore
           : participants.value[0].last_login;
       } else {
-        return state.status;
+        return state.status + "...";
       }
     });
 
