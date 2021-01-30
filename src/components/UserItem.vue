@@ -2,14 +2,14 @@
   <li class="p-mb-2 p-d-flex p-ai-center p-jc-between p-p-2">
     <Badge color="#1ee952" class="p-mr-5">
       <template v-slot:content
-        ><Avatar :image="item.avatar" :nickname="item.nickname" /></template
+        ><Avatar :image="item.avatar" :nickname="item.nickname"/></template
     ></Badge>
     <div class="user__name">{{ item.nickname }}</div>
     <Button label="Send" rounded @click="createChat()" />
   </li>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import Button from "./Button.vue";
 import Badge from "./Badge.vue";
 
@@ -34,10 +34,7 @@ export default defineComponent({
     function createChat() {
       const userId = store.getters.userData?.id;
       if (userId) {
-        const data: ICreateChatData = {
-          participants: [props.item.id, userId],
-          type: "D",
-        };
+        const data: ICreateChatData = {};
         store.dispatch(AllActionTypes.CREATE_CHAT, data);
       }
     }
@@ -47,7 +44,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 li {
   @include list_item_mixin;
 }

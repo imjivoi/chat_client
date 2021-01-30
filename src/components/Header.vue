@@ -12,7 +12,7 @@
   </header>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import Button from "./Button.vue";
 
 import { computed, defineComponent } from "vue";
@@ -44,6 +44,7 @@ header {
   align-items: center;
   background: #fff;
   padding: 0 15px;
+  z-index: 10;
 }
 .header__right {
   float: right;

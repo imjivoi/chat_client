@@ -4,7 +4,7 @@ import { HTTP } from "../axios";
 
 export default {
   getToken(data: IAuth) {
-    return HTTP.post("api/v1/auth/obtain_token/", {
+    return HTTP.post("auth/login", {
       email: data.email,
       password: data.password,
     });
@@ -15,14 +15,13 @@ export default {
     });
   },
   getUser() {
-    return HTTP.get("auth/users/me/");
+    return HTTP.get("/users/me/");
   },
   register(data: IAuth) {
-    return HTTP.post("auth/users/", {
+    return HTTP.post("auth/register", {
       nickname: data.nickname,
       email: data.email,
       password: data.password,
-      re_password: data.password,
     });
   },
 };

@@ -1,3 +1,6 @@
+import router from "@/router";
+import { store } from "@/store";
+import { AllActionTypes } from "@/store/types/actions.types";
 import axios from "axios";
 import { VueCookieNext } from "vue-cookie-next";
 
@@ -6,7 +9,17 @@ export const HTTP = axios.create({
 });
 
 HTTP.interceptors.request.use(function(config) {
-  const token = VueCookieNext.getCookie("auth_token");
-  config.headers.Authorization = token ? `JWT ${token}` : "";
+  const token = VueCookieNext.getCookie("accessToken");
+  config.headers.Authorization = token ? `Bearer ${token}` : "";
   return config;
+});
+
+HTTP.interceptors.response.use(undefined, function(err) {
+  return new Promise(function(resolve, reject) {
+    if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+      store.dispatch(AllActionTypes.LOGOUT);
+      router.push("/auth/login");
+    }
+    throw err;
+  });
 });

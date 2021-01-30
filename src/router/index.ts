@@ -4,16 +4,20 @@ import { state } from "../store/modules/auth/state";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
+    redirect: "/app",
+  },
+  {
+    path: "/app",
     name: "Home",
     component: () => import("../views/Home.vue"),
     children: [
       {
-        path: "/chats/",
+        path: "/app/chats/",
         name: "Chats",
         component: () => import("../views/Chats.vue"),
         children: [
           {
-            path: "/chats/:id",
+            path: "/app/chats/:id",
             name: "Chat",
             component: () => import("../views/Chat.vue"),
           },
@@ -54,7 +58,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeResolve((to, from, next) => {
+router.beforeEach((to, from, next) => {
   if (!to.path.includes("auth") && !state.isLogged) next({ name: "Login" });
   else next();
 });

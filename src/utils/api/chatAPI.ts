@@ -1,13 +1,11 @@
 import { IChatItem } from "@/store/interfaces/chat";
 import { HTTP } from "../axios";
 
-const url = "api/v1/chat/";
+const url = "/chats/";
 
 export type TypeOfChatType = "C" | "D";
 
 export interface ICreateChatData {
-  participants: string[];
-  type: TypeOfChatType;
   title?: string;
 }
 
@@ -16,12 +14,8 @@ export default {
     if (id) return HTTP.get(`${url}?id=${id}`);
     return HTTP.get(url);
   },
-  createChat(data: ICreateChatData) {
-    return HTTP.post(url, {
-      participants: data.participants,
-      type: data.type,
-      title: data.title,
-    });
+  createChat() {
+    return HTTP.post(url);
   },
   deleteChat(id: string | null) {
     return HTTP.delete(`${url}?id=${id}`);

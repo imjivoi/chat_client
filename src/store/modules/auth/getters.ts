@@ -7,5 +7,4 @@ export const getters: GetterTree<IAuthState, IRootState> & AuthGettersTypes = {
   isLogged: (state) => state.isLogged,
   isLoadingAuth: (state) => state.isLoading,
   userData: (state) => state.userData,
-  token: (state) => state.token,
 };

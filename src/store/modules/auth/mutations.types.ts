@@ -7,6 +7,7 @@ export enum MutationTypes {
   SET_TOKEN = "SET_TOKEN",
   SET_USER_DATA = "SET_USER_DATA",
   CLEAR_STATE = "CLEAR_STATE",
+  SET_LOGGED = "SET_LOGGED",
 }
 
 export type AuthMutationsTypes<S = IAuthState> = {
@@ -14,4 +15,5 @@ export type AuthMutationsTypes<S = IAuthState> = {
   [MutationTypes.SET_TOKEN](state: S, payload: ITokensResponse): void;
   [MutationTypes.SET_USER_DATA](state: S, payload: IUserData): void;
   [MutationTypes.CLEAR_STATE](state: S): void;
+  [MutationTypes.SET_LOGGED](state: S, payload: boolean): void;
 };

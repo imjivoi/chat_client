@@ -10,15 +10,16 @@
     :style="{ width: width }"
     :disabled="disabled"
   >
+    <div class="icon"><slot name="icon"></slot></div>
+
     {{ label }}
-    <slot name="icon" class="svg"></slot>
     <template v-if="link">
       <router-link :to="link"></router-link>
     </template>
   </button>
 </template>
 
-<script >
+<script>
 export default {
   props: {
     label: {
@@ -52,19 +53,14 @@ export default {
   data: () => ({
     isIcon: false,
   }),
-  mounted() {
-    if (this.$slots.icon) {
-      this.isIcon = true;
-    }
-  },
 };
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 button {
   height: fit-content;
-  border-radius: 5px;
-  background: var(--primary-color);
+  border-radius: 6px;
+  background: $background_blue_gradient;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
@@ -72,18 +68,23 @@ button {
   position: relative;
   overflow: hidden;
   transition: 0.4s;
+  display: flex;
+  align-items: center;
+  box-shadow: $box_shadow2;
+  transition: $transition;
+
+  &:hover {
+    box-shadow: none;
+    transition: $transition;
+  }
 
   &.disabled {
     background: $color_gray2;
   }
-  &.icon {
-    width: 40px;
-    padding: 5px 10px;
-    background: transparent;
-
-    &:after {
-      transform: none;
-    }
+  .icon {
+    margin: 0 7px 0 0;
+    height: 24px;
+    width: 24px;
   }
 
   &.outline {

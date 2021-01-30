@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="content" v-if="!isLoading">
-      <Header @logout="logout" :isLogged="isLogged" :isLoading="isLoading" />
+      <!-- <Header @logout="logout" :isLogged="isLogged" :isLoading="isLoading" /> -->
       <router-view />
     </div>
     <Spinner height="100vh" width="100vw" text="Loading..." v-else />
   </div>
 </template>
-<script lang='ts'>
+<script lang="ts">
 import Spinner from "./components/Spinner.vue";
 import Header from "./components/Header.vue";
 
@@ -54,17 +54,19 @@ export default defineComponent({
 
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  overflow: hidden;
+  width: 100%;
+  max-height: 100vh;
+  position: relative;
 }
 
 .content {
   display: none;
-  background-color: #c0c0c0;
+  background: linear-gradient(180deg, #f3f3fb 0%, #fdfbfd 100%);
   overflow: hidden;
+  height: 100vh;
+
   @media (min-width: 992px) {
     display: block;
   }

@@ -27,7 +27,7 @@ export const actions: ActionTree<IAuthState, IRootState> & AuthActionsTypes = {
   GET_USER_DATA({ commit, dispatch }) {
     return new Promise(async (resolve, reject) => {
       try {
-        const token = await dispatch("GET_TOKEN");
+        const token = VueCookieNext.getCookie("accessToken");
         if (!token) {
           commit(MutationTypes.SET_LOADING, false);
           reject(token);
@@ -42,12 +42,6 @@ export const actions: ActionTree<IAuthState, IRootState> & AuthActionsTypes = {
       }
       commit(MutationTypes.SET_LOADING, false);
     });
-  },
-  GET_TOKEN({ commit, state }): string {
-    const token = state.token || VueCookieNext.getCookie("auth_token");
-    if (state.token && !VueCookieNext.getCookie("auth_token"))
-      commit(MutationTypes.SET_TOKEN, { access: token, refresh: "" });
-    return token;
   },
   LOGOUT({ commit }) {
     commit(MutationTypes.CLEAR_STATE);

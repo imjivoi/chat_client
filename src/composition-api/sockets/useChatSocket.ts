@@ -8,6 +8,7 @@ import {
 import { AllActionTypes } from "@/store/types/actions.types";
 import { AllMutationTypes } from "@/store/types/mutations.types";
 import { reactive, readonly } from "vue";
+import { VueCookieNext } from "vue-cookie-next";
 import { useRoute } from "vue-router";
 import { useStore } from "../useStore";
 
@@ -20,7 +21,7 @@ const state = reactive<IChatSocketState>({
 async function connect_socket() {
   const store = useStore();
   const route = useRoute();
-  const token = await store.dispatch(AllActionTypes.GET_TOKEN);
+  const token = VueCookieNext.getCookie("accessToken");
   if (state.quantityConnectErrors === 10) {
     state.status = SocketStatusConnect.CLOSED;
     return false;

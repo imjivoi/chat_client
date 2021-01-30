@@ -6,50 +6,47 @@
       <div class="chats__list">
         <div class="chats__header p-mb-2">
           <h2>Chats</h2>
+          <Button label="Create New Chat">
+            <template v-slot:icon>
+              <Plus />
+            </template>
+          </Button>
         </div>
-        <div class="chats__search p-mb-3" style="text-align: left">
-          <span class="p-input-icon-left" style="width: 100%">
-            <i class="pi pi-search" />
-            <InputText
-              type="text"
-              v-model="search"
-              placeholder="Search"
-              class="p-inputtext-sm"
-              style="width: 100%"
-            />
-          </span>
-        </div>
+        <CutomInput>
+          <template v-slot:icon> <Search class="svg" /> </template>
+        </CutomInput>
         <ul class="chats__items">
-          <ChatItem
+          <!-- <ChatItem
             v-for="chat in chats"
             :key="chat.id"
             :chat="chat"
             :userId="userId"
-          />
+          /> -->
         </ul>
       </div>
-      <div class="chat__content">
+      <!-- <div class="chat__content">
         <router-view />
         <p v-if="!route.params.id">Choose a chat</p>
-      </div>
+      </div> -->
     </template>
   </section>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
+import Plus from "../components/icons/Plus.vue";
+import Button from "../components/Button.vue";
+import Search from "../components/icons/Search.vue";
+import CutomInput from "../components/Input.vue";
 import Spinner from "../components/Spinner.vue";
 import Chat from "./Chat.vue";
 import ChatItem from "../components/chat/ChatItem.vue";
 
-import InputText from "primevue/inputtext";
-
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useStore } from "@/composition-api/useStore";
 import { useRoute } from "vue-router";
-import { AllActionTypes } from "@/store/types/actions.types";
 
 export default defineComponent({
-  components: { InputText, ChatItem, Chat, Spinner },
+  components: { ChatItem, Chat, Spinner, CutomInput, Search, Button, Plus },
   name: "Chats",
   setup() {
     const search = ref("");
@@ -62,9 +59,9 @@ export default defineComponent({
     const userId = store.getters.userData?.id;
 
     onMounted(async () => {
-      if (!chats.value.length) {
-        await store.dispatch(AllActionTypes.GET_CHATS);
-      }
+      // if (!chats.value.length) {
+      //   await store.dispatch(AllActionTypes.GET_CHATS);
+      // }
       isLoading.value = false;
     });
 
@@ -79,13 +76,23 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .chats {
   height: 100%;
+  width: 597px;
+  margin: 0 0 0 310px;
+  padding: 110px 0 0;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
+  h2 {
+    font-size: 28px;
+  }
   &__list {
     width: 300px;
-    @include block_mixin;
   }
 }
 

@@ -13,8 +13,12 @@ import App from "./App.vue";
 import router from "./router";
 import { store } from "./store";
 import ErrorService from "./services/errorService";
+import { AllMutationTypes } from "./store/types/mutations.types";
 
 const app = createApp(App);
+
+const token = VueCookieNext.getCookie("accessToken");
+if (token) store.commit(AllMutationTypes.SET_LOGGED, true);
 
 app.directive("click-outside", {
   beforeMount(el, binding, vnode) {

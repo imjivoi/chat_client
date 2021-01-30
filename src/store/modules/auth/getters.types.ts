@@ -5,5 +5,4 @@ export interface AuthGettersTypes {
   isLogged(state: IAuthState): boolean;
   isLoadingAuth(state: IAuthState): boolean;
   userData(state: IAuthState): IUserData | null;
-  token(state: IAuthState): string | null | undefined;
 }

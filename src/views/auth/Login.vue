@@ -33,7 +33,7 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import Button from "../../components/Button.vue";
 
 import InputText from "primevue/inputtext";
@@ -60,7 +60,7 @@ export default defineComponent({
         })
         .then((res) => {
           notificationService.success("Authorized");
-          setTimeout(() => router.push("/"), 200);
+          setTimeout(() => router.push("/app"), 200);
         });
     }
 

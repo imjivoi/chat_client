@@ -6,7 +6,6 @@ import { ActionContext } from "vuex";
 import { AuthMutationsTypes } from "./mutations.types";
 
 export enum ActionTypes {
-  GET_TOKEN = "GET_TOKEN",
   GET_USER_DATA = "GET_USER_DATA",
   GET_AUTH = "GET_AUTH",
   LOGOUT = "LOGOUT",
@@ -28,7 +27,6 @@ export type AuthActionsTypes = {
   [ActionTypes.GET_USER_DATA]({
     commit,
   }: AugmentedActionContext): Promise<IUserData | boolean>;
-  [ActionTypes.GET_TOKEN]({ commit }: AugmentedActionContext): string;
   [ActionTypes.LOGOUT]({ commit }: AugmentedActionContext): void;
   [ActionTypes.REGISTER](
     { commit }: AugmentedActionContext,

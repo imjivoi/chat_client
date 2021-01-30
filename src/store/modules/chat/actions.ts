@@ -28,7 +28,7 @@ export const actions: ActionTree<IChatState, IRootState> & ChatActionsTypes = {
   CREATE_CHAT({ commit }, payload) {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await chatAPI.createChat(payload);
+        const res = await chatAPI.createChat();
         if (res.status === 226) {
           router.push(`/chats/${res.data.id}`);
         } else {

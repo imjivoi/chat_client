@@ -1,4 +1,4 @@
 export interface ITokensResponse {
-  refresh: string;
-  access: string;
+  refreshToken?: string;
+  accessToken: string;
 }
