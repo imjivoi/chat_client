@@ -41,7 +41,8 @@
         </ul>
       </div>
       <div class="message__time">
-        {{ createdAt }}
+        <!-- {{ createdAt }} -->
+        345345
       </div>
     </div>
     <div class="message__user-avatar">
@@ -62,7 +63,7 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import Modal from "../Modal.vue";
 import { useStore } from "@/composition-api/useStore";
 import Avatar from "../Avatar.vue";
@@ -113,7 +114,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .message {
   margin: 0 auto 50px 0;
   display: flex;
@@ -124,7 +125,7 @@ export default defineComponent({
   position: relative;
 
   &.messageMe {
-    margin: 0 5px 35px auto;
+    margin: 0 30px 35px auto;
     flex-direction: row;
 
     .message__content {
@@ -137,7 +138,10 @@ export default defineComponent({
         color: $color_gray3;
       }
       .message__time {
+        position: absolute;
         text-align: left;
+        bottom: -20px;
+        left: 0;
       }
     }
     .message__user-avatar {
@@ -156,14 +160,15 @@ export default defineComponent({
     }
   }
   &__content {
-    background: linear-gradient(to bottom right, #60a9f6, #2a8bf2);
+    background: $background_blue_gradient;
     margin-left: 40px;
-    padding: 5px 10px;
+    padding: 15px 20px;
     border-radius: 10px;
     border-bottom-left-radius: 0;
     color: #fff;
-    box-shadow: 1px 1px 6px 0px #9e9e9e;
-    // max-width: 90%;
+    box-shadow: 10px 10px 25px rgba(42, 139, 242, 0.1),
+      15px 15px 35px rgba(42, 139, 242, 0.05),
+      10px 10px 50px rgba(42, 139, 242, 0.1); // max-width: 90%;
     position: relative;
   }
   &__attachments {
@@ -208,10 +213,9 @@ export default defineComponent({
     color: #9e9e9e;
     margin: 5px 0 0;
     text-align: right;
-    // bottom: -25px;
-    // position: absolute;
-    // transform: translate(-50%, 0);
-    // min-width: max-content;
+    bottom: -20px;
+    right: 0;
+    position: absolute;
   }
 
   &__user-avatar {
@@ -227,5 +231,3 @@ export default defineComponent({
   }
 }
 </style>
-
-

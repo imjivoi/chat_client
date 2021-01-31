@@ -62,7 +62,7 @@ button {
   border-radius: 6px;
   background: $background_blue_gradient;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 20px !important;
   cursor: pointer;
   color: #fff;
   position: relative;
@@ -130,7 +130,7 @@ button {
   &:focus,
   &:active {
     &:after {
-      width: 200px;
+      width: 100%;
       height: 200px;
     }
   }

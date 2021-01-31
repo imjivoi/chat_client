@@ -1,5 +1,5 @@
 <template>
-  <section class="chats p-d-flex p-jc-between">
+  <section class="chats p-d-flex ">
     <div class="empty" v-if="isLoading"><Spinner height="100%" /></div>
 
     <template v-else>
@@ -16,18 +16,15 @@
           <template v-slot:icon> <Search class="svg" /> </template>
         </CutomInput>
         <ul class="chats__items">
-          <!-- <ChatItem
-            v-for="chat in chats"
-            :key="chat.id"
-            :chat="chat"
-            :userId="userId"
-          /> -->
+          <ChatItem />
+          <ChatItem />
         </ul>
       </div>
-      <!-- <div class="chat__content">
-        <router-view />
-        <p v-if="!route.params.id">Choose a chat</p>
-      </div> -->
+      <div class="chat__content">
+        <!-- <router-view /> -->
+        <Chat />
+        <!-- <p v-if="!route.params.id">Choose a chat</p> -->
+      </div>
     </template>
   </section>
 </template>
@@ -43,7 +40,7 @@ import ChatItem from "../components/chat/ChatItem.vue";
 
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useStore } from "@/composition-api/useStore";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
   components: { ChatItem, Chat, Spinner, CutomInput, Search, Button, Plus },
@@ -52,7 +49,7 @@ export default defineComponent({
     const search = ref("");
     const isLoading = ref(true);
 
-    const route = useRoute();
+    const router = useRouter();
 
     const store = useStore();
     const chats = computed(() => store.getters.chats);
@@ -65,12 +62,17 @@ export default defineComponent({
       isLoading.value = false;
     });
 
+    function toChat() {
+      router.push({ name: "Chat", params: { id: "sdfsdf" } });
+    }
+
     return {
       chats,
       search,
       userId,
-      route,
+
       isLoading,
+      toChat,
     };
   },
 });
@@ -79,9 +81,8 @@ export default defineComponent({
 <style scoped lang="scss">
 .chats {
   height: 100%;
-  width: 597px;
   margin: 0 0 0 310px;
-  padding: 110px 0 0;
+  padding: 90px 0 0;
   &__header {
     display: flex;
     justify-content: space-between;
@@ -94,14 +95,22 @@ export default defineComponent({
   &__list {
     width: 300px;
   }
+
+  &__items {
+    margin: 20px 0 0;
+    height: 85%;
+    overflow-y: auto;
+    width: 106%;
+    padding: 0 15px 0 0;
+  }
 }
 
 .chat__content {
-  @include block_mixin;
-  min-width: 600px;
+  width: 65%;
   position: relative;
-  padding: 20px 3px 20px 10px;
-  width: 60%;
+  margin: 0 0 0 80px;
+  // background: #ffffff;
+  border-radius: 6px;
 
   p {
     position: absolute;

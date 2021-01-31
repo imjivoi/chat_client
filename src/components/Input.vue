@@ -27,7 +27,7 @@ input {
   background: #fff;
   border-radius: 6px;
   border: none;
-  padding: 0 0 0 75px;
+  padding: 0 0 0 65px;
   color: $color_gray;
 
   &:focus {
@@ -39,7 +39,7 @@ input {
   width: 24px;
   height: 24px;
   position: absolute;
-  left: 80px;
+  left: 60px;
   top: 50%;
   transform: translate(-41px, -50%);
   svg {

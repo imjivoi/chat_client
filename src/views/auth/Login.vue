@@ -60,7 +60,7 @@ export default defineComponent({
         })
         .then((res) => {
           notificationService.success("Authorized");
-          setTimeout(() => router.push("/app"), 200);
+          router.push("/app");
         });
     }
 

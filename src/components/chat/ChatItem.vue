@@ -1,109 +1,129 @@
 <template>
-  <router-link :to="`/chats/${chat.id}`">
-    <li class="p-mb-2 p-p-2">
-      <Badge
-        class="p-mr-2"
-        color="#1ee952"
-        :active="chat.type === 'D' ? participants[0].is_online : false"
-      >
-        <template v-slot:content
-          ><Avatar
-            :image="chat.type === 'D' ? participants[0].avatar : ''"
-            :nickname="chat.type === 'D' ? participants[0].nickname : ''"
-        /></template>
-      </Badge>
-      <div class="chat__info">
-        <div class="chat__name p-text-regular p-text-left">
-          {{ chat.type === "D" ? participants[0].nickname : chat.title }}
-        </div>
-        <div class="chat__last-message">
-          <p v-if="chat.last_message">
-            {{
-              chat.last_message.user.id === userId
-                ? `You: ${chat.last_message.text}`
-                : chat.last_message.text
-            }}
-          </p>
+  <div class="chat-item">
+    <div class="chat-item__header">
+      <div class="chat-item__header-left">
+        <Avatar
+          image="https://res.cloudinary.com/dqgfkzejx/image/upload/v1611968865/avatar/jivoi.jpg"
+          style="margin:0 10px 0 0"
+        />
+        <div class="chat-item__header-info">
+          <h3>nickname</h3>
+          <p>last online 5 hours ago</p>
         </div>
       </div>
-      <Badge
-        :value="unreadedMessages"
-        :fontSize="0.6"
-        :size="15"
-        :active="unreadedMessages ? true : false"
-        v-if="unreadedMessages > 0"
-      />
-    </li>
-  </router-link>
+      <div class="chat-item__header-right">
+        <p>3 days ago</p>
+      </div>
+    </div>
+    <div class="chat-item__content">
+      <div class="chat-item__content-text">
+        <p>
+          Most of its text is made up from sections 1.10.32–3 of Cicero's De
+          finibus bonorum et malorum (On the Boundaries of Goods and Evils;
+          finibus may also be translated as purposes).
+        </p>
+      </div>
+      <div class="chat-item__content-unreaded">
+        <p>2</p>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script lang='ts'>
-import Badge from "../Badge.vue";
-
+<script lang="ts">
 import Avatar from "../Avatar.vue";
 
-import { computed, defineComponent, PropType } from "vue";
-import { IChatItem } from "@/store/interfaces/chat";
-import { IUserData } from "@/store/interfaces/user";
+import { defineComponent } from "vue";
 export default defineComponent({
-  components: { Avatar, Badge },
-  props: {
-    chat: {
-      type: Object as PropType<IChatItem>,
-    },
-    userId: {
-      type: String,
-    },
-  },
-  setup(props, ctx) {
-    const participants = computed(() =>
-      props.chat?.participants.filter((i) => i.id !== props.userId)
-    );
-    const unreadedMessages = computed(() =>
-      props.chat?.messages.length
-        ? props.chat?.messages.filter(
-            (i) => i.user?.id !== props.userId && !i.is_readed
-          ).length
-        : props.chat?.unreaded_messages
-    );
-
-    return {
-      participants,
-      unreadedMessages,
-    };
-  },
+  components: { Avatar },
 });
 </script>
 
-<style scoped lang='scss'>
-li {
-  display: flex;
-  align-items: center;
-  @include list_item_mixin;
+<style lang="scss" scoped>
+.chat-item {
+  background: #ffffff;
+  border-radius: 6px;
+  width: 100%;
+  padding: 20px;
+  cursor: pointer;
+  margin: 0 0 20px;
 
-  .chat__info {
-    width: 70%;
+  &.active {
+    background: $background_blue_gradient;
+
+    .chat-item__header {
+      p {
+        color: #fff !important;
+      }
+    }
+
+    .chat-item__content {
+      &-text {
+        color: #fff;
+      }
+    }
   }
 
-  .chat__name {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+  &__header {
+    display: flex;
+    justify-content: space-between;
 
-    width: 90%;
-    font-size: 0.9em;
+    &-left {
+      display: flex;
+      text-align: left;
+      h3 {
+        font-size: 14px;
+        margin: 0 0 6px;
+      }
+
+      p {
+        font-size: 10px;
+        font-weight: 500;
+        color: $color_blue;
+      }
+    }
+    &-right {
+      p {
+        font-size: 10px;
+        font-weight: 500;
+        color: $color_gray;
+        margin: 3px 0 0;
+      }
+    }
   }
 
-  .chat__last-message {
-    text-align: left;
-    font-size: 0.8em;
-
-    p {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0 0;
+    &-text {
+      text-align: left;
+      font-size: 12px;
       color: $color_gray;
+      font-weight: 500;
       width: 90%;
+      max-height: 46px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &-unreaded {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #ff3366;
+      color: #ffffff;
+      box-shadow: 4px 4px 15px rgba(198, 27, 74, 0.05),
+        2px 2px 10px rgba(198, 27, 74, 0.1),
+        1px 1px 50px rgba(198, 27, 74, 0.15);
+
+      p {
+        font-size: 12px;
+      }
     }
   }
 }

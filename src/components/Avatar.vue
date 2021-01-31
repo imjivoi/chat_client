@@ -1,7 +1,7 @@
 <template>
-  <div class="avatar">
+  <div class="avatar" :style="{ width: `${size}px`, height: `${size}px` }">
     <span v-if="!image">{{ label }}</span>
-    <img src="" alt="" v-else />
+    <img :src="image" alt="" v-else />
   </div>
 </template>
 
@@ -10,6 +10,9 @@ export default {
   props: {
     nickname: { type: String },
     image: { type: String },
+    size: {
+      type: String,
+    },
   },
   computed: {
     label() {
@@ -24,11 +27,12 @@ export default {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 34px;
+  height: 34px;
   font-size: 1rem;
   background-color: #dee2e6;
   border-radius: 50%;
+  overflow: hidden;
 }
 
 img {

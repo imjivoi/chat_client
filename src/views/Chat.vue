@@ -3,49 +3,41 @@
     <div class="chat__header">
       <div class="chat__header-left">
         <Avatar
-          :image="chat.type === 'D' ? participants[0].avatar : chat.image"
-          :nickname="chat.type === 'D' ? participants[0].nickname : ''"
+          image="https://res.cloudinary.com/dqgfkzejx/image/upload/v1611968865/avatar/jivoi.jpg"
+          nickname="nickname"
+          size="54"
         />
 
-        <div class="chat__info p-ml-2">
+        <div class="chat__info p-ml-5">
           <div class="chat__name">
-            {{ chat.type === "D" ? participants[0].nickname : chat.title }}
+            <h3>nickname</h3>
           </div>
           <div class="chat__status p-mt-1">{{ status }}</div>
         </div>
       </div>
 
       <div class="chat__options">
-        <Button>
-          <template v-slot:icon>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <g data-name="Layer 2">
-                <g data-name="more-vertical">
-                  <rect
-                    width="24"
-                    height="24"
-                    transform="rotate(-90 12 12)"
-                    opacity="0"
-                  />
-                  <circle cx="12" cy="12" r="2" />
-                  <circle cx="12" cy="5" r="2" />
-                  <circle cx="12" cy="19" r="2" />
-                </g>
-              </g>
-            </svg>
-          </template>
-        </Button>
+        <button><AdjustmentIcon /></button>
+        <button><OptionsIcon /></button>
       </div>
     </div>
-    <div class="chat__messages" ref="content">
-      <Message
-        v-for="message in chat.messages"
-        :key="message.id"
-        :messageData="message"
-        :isMe="user.id === message.user.id ? true : false"
-      />
+    <div class="chat__messages">
+      <div class="chat__messages-content" ref="content">
+        <Message
+          v-for="message in messages"
+          :key="message.id"
+          :messageData="message"
+          :isMe="false"
+        />
+        <Message
+          v-for="message in messages"
+          :key="message.id"
+          :messageData="message"
+          :isMe="true"
+        />
+      </div>
+      <ChatInput />
     </div>
-    <ChatInput :chatId="chatId" :user="user" />
   </div>
   <Spinner
     height="100%"
@@ -55,7 +47,9 @@
   />
 </template>
 
-<script lang='ts'>
+<script lang="ts">
+import OptionsIcon from "../components/icons/Options.vue";
+import AdjustmentIcon from "../components/icons/Adjustment.vue";
 import Spinner from "../components/Spinner.vue";
 import Message from "../components/chat/Message.vue";
 import Button from "../components/Button.vue";
@@ -79,13 +73,36 @@ import { AllActionTypes } from "@/store/types/actions.types";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
 export default defineComponent({
-  components: { ChatInput, Button, Avatar, Message, Spinner },
+  components: {
+    ChatInput,
+    Button,
+    Avatar,
+    Message,
+    Spinner,
+    AdjustmentIcon,
+    OptionsIcon,
+  },
+  data: () => ({
+    messages: [
+      {
+        id: "34345dsdg",
+        text: "some text",
+        created: "345346",
+        attachments: [],
+        user: {
+          avatar:
+            "https://res.cloudinary.com/dqgfkzejx/image/upload/v1611968865/avatar/jivoi.jpg",
+          nickname: "nickname",
+        },
+      },
+    ],
+  }),
   setup() {
     const store = useStore();
     const route = useRoute();
     const { state, send }: any = inject("socket");
 
-    const isLoading = ref(true);
+    const isLoading = ref(false);
 
     const content = ref();
 
@@ -128,16 +145,16 @@ export default defineComponent({
       });
     }
 
-    onMounted(async () => {
-      await fetchMessages();
-      send({
-        event: ChatSocketEvents.MESSAGE_STATUS,
-        data: {
-          chat_id: chatId.value,
-          user_id: store.getters.userData?.id,
-        },
-      });
-    });
+    // onMounted(async () => {
+    //   await fetchMessages();
+    //   send({
+    //     event: ChatSocketEvents.MESSAGE_STATUS,
+    //     data: {
+    //       chat_id: chatId.value,
+    //       user_id: store.getters.userData?.id,
+    //     },
+    //   });
+    // });
 
     onBeforeRouteUpdate(async (to, from) => {
       if (to.params.id !== from.params.id) {
@@ -162,38 +179,74 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .chat__header {
   width: 100%;
-  height: 50px;
-  box-shadow: 0 0 4px 0px #b8b8b8;
+  height: 80px;
   padding: 10px 20px;
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin: 0 0 1px;
+  background: #fff;
 
   &-left {
     display: flex;
+    align-items: center;
     text-align: left;
   }
   .chat__name {
-    font-size: 0.9em;
+    font-size: 14px;
+    margin: 0 0 6px;
   }
   .chat__status {
-    font-size: 0.7em;
+    font-size: 12px;
+    color: $color_blue;
+    font-weight: 500;
   }
 
   .chat__options {
+    display: flex;
+    button {
+      width: 52px;
+      height: 52px;
+      background: #fff;
+      border: none;
+      box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.03),
+        0px 7px 25px rgba(42, 139, 242, 0.03),
+        0px 5px 25px rgba(42, 139, 242, 0.07);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      cursor: pointer;
+
+      &:focus,
+      &:active {
+        outline: none;
+      }
+
+      &:first-child {
+        margin: 0 20px 0 0;
+      }
+    }
   }
 }
 .chat__messages {
-  overflow-y: scroll;
-  margin: 40px 0 0px;
-  height: calc(100vh - 190px);
-  padding: 10px 7px 20px 0;
-  overflow-x: hidden;
+  padding: 10px 20px 0;
+  background: #fff;
   position: relative;
+  height: calc(100vh - 250px);
+  box-shadow: $box_shadow;
+
+  &-content {
+    overflow-y: scroll;
+    height: calc(100vh - 340px);
+    overflow-x: hidden;
+    position: relative;
+  }
 }
 </style>

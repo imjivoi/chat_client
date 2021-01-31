@@ -16,17 +16,6 @@
           ><span>{{ item.title }}</span></router-link
         >
       </li>
-      <!-- <li>
-        <router-link to="/chats"><Chat /><span>chats</span></router-link>
-      </li>
-      <li>
-        <router-link to="/"
-          ><Notifications /><span>notifications</span></router-link
-        >
-      </li>
-      <li>
-        <router-link to="/"><Settings /><span>settings</span></router-link>
-      </li> -->
     </ul>
     <div class="sidebar__bottom"><Logout /><button>logout</button></div>
   </aside>
@@ -72,9 +61,6 @@ export default {
   height: 100%;
   width: 250px;
   box-shadow: $box_shadow;
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
   background: #fff;
   &__profile {
     margin: 81px auto 0;
@@ -104,7 +90,7 @@ export default {
 
     li {
       padding: 0 0 0 38px;
-      margin: 0 0 56px;
+      margin: 0 0 40px;
       position: relative;
 
       &.active {
