@@ -38,6 +38,7 @@ export default defineComponent({
     onBeforeMount(async () => {
       try {
         await store.dispatch(AllActionTypes.GET_USER_DATA);
+        await store.dispatch(AllActionTypes.GET_CHATS);
       } catch (error) {}
 
       isLoading.value = false;

@@ -239,12 +239,12 @@ export default defineComponent({
   padding: 10px 20px 0;
   background: #fff;
   position: relative;
-  height: calc(100vh - 250px);
+  height: calc(100vh - 200px);
   box-shadow: $box_shadow;
 
   &-content {
     overflow-y: scroll;
-    height: calc(100vh - 340px);
+    height: calc(100vh - 290px);
     overflow-x: hidden;
     position: relative;
   }
