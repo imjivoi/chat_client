@@ -23,7 +23,7 @@
     </div>
     <div class="chat__messages">
       <div class="chat__messages-content" ref="content">
-        <Message
+        <!-- <Message
           v-for="message in messages"
           :key="message.id"
           :messageData="message"
@@ -34,7 +34,7 @@
           :key="message.id"
           :messageData="message"
           :isMe="true"
-        />
+        /> -->
       </div>
       <ChatInput />
     </div>
@@ -100,7 +100,6 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
-    const { state, send }: any = inject("socket");
 
     const isLoading = ref(false);
 
@@ -119,14 +118,8 @@ export default defineComponent({
         chat.value.typing.nickname !== user.value?.nickname
       ) {
         return `${chat.value.typing.nickname} is typing ...`;
-      } else if (state.status === "OPEN") {
-        //@ts-ignore
-
-        return participants.value[0].is_online
-          ? "online" //@ts-ignore
-          : participants.value[0].last_login;
       } else {
-        return state.status + "...";
+        return "connecting";
       }
     });
 

@@ -19,7 +19,6 @@ import {
   onUnmounted,
   provide,
 } from "vue";
-import { useChatSocket } from "@/composition-api/sockets/useChatSocket";
 import { useStore } from "@/composition-api/useStore";
 import { AllActionTypes } from "@/store/types/actions.types";
 
@@ -28,16 +27,12 @@ export default defineComponent({
   components: { Sidebar, Button, InputText },
 
   setup() {
-    const { connect_socket, disconnect_socket } = useChatSocket;
     const store = useStore();
     async function createChat() {
       console.log(11);
       const res = await store.dispatch(AllActionTypes.CREATE_CHAT);
       console.log(res);
     }
-    provide("socket", useChatSocket);
-    onMounted(() => connect_socket());
-    onUnmounted(() => disconnect_socket());
 
     return { createChat };
   },

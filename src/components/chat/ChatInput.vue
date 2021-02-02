@@ -1,7 +1,7 @@
 <template>
   <div class="input-block" v-click-outside="hideEmojiPicker">
-    <textarea placeholder="Type your message here" />
-    <button class="send"><SendIcon /></button>
+    <textarea placeholder="Type your message here" v-model="message" />
+    <button class="send" @click="sendMessage"><SendIcon /></button>
   </div>
 </template>
 
@@ -10,13 +10,19 @@ import SendIcon from "../icons/SendIcon.vue";
 import EmojiPicker from "./EmojiPicker.vue";
 import Btn from "../Button.vue";
 
-//@ts-ignore
-import { computed, defineComponent, inject, PropType, ref, watch } from "vue";
+import {
+  computed,
+  defineComponent,
+  inject,
+  onMounted,
+  PropType,
+  ref,
+  watch,
+} from "vue";
 import useChatinput from "@/composition-api/useChatInput";
 import { AllActionTypes } from "@/store/types/actions.types";
 import { IUserData } from "@/store/interfaces/user";
 import { useRoute } from "vue-router";
-//@ts-ignore
 export default defineComponent({
   props: {
     chatId: {
@@ -32,7 +38,6 @@ export default defineComponent({
   components: { Btn, EmojiPicker, SendIcon },
   setup({ chatId, user }, ctx) {
     const {
-      sendMessage,
       sendTyping,
       setAttachments,
       message,
@@ -41,6 +46,7 @@ export default defineComponent({
       typing,
       activeEmojiPicker,
       setEmoji,
+      sendMessage,
     } = useChatinput(inject("socket"));
     const route = useRoute();
 
@@ -64,13 +70,13 @@ export default defineComponent({
     });
 
     return {
-      sendMessage,
       setAttachments,
       message,
       attachments,
       activeEmojiPicker,
       hideEmojiPicker,
       setEmoji,
+      sendMessage,
     };
   },
   watch: {
@@ -78,6 +84,12 @@ export default defineComponent({
       this.message = null;
       this.attachments = [];
     },
+  },
+  mounted() {
+    //@ts-ignore
+    // this.$socket.on("msgToClient", (message: any) => {
+    //   console.log(message);
+    // });
   },
 });
 </script>

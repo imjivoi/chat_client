@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import PrimeVue from "primevue/config";
 import { VueCookieNext } from "vue-cookie-next";
 import Toast from "vue-toastification";
-import SocketIO from "@/plugins/scoektIO";
+import SocketIO from "@/plugins/socketIO";
 
 import "vue-toastification/dist/index.css";
 import "primevue/resources/themes/saga-blue/theme.css";
@@ -37,8 +37,13 @@ app.directive("click-outside", {
 
 app
   .use(SocketIO, {
-    connection: "http://localhost:8000",
-    options: {},
+    connection: "127.0.0.1:80",
+    options: {
+      // transports: ["websocket"],
+      query: {
+        token: token,
+      },
+    },
   })
   .use(Toast, {
     transition: "Vue-Toastification__fade",

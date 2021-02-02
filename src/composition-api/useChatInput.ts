@@ -1,7 +1,7 @@
 import { IAttachments } from "@/store/interfaces/chat";
 import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
 import { toBase64 } from "@/utils/base64encryption";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 export default function useChatInput(socket: any) {
@@ -51,15 +51,7 @@ export default function useChatInput(socket: any) {
         }
       }
 
-      const data = {
-        event: ChatSocketEvents.NEW_MESSAGE,
-        data: {
-          text: message.value,
-          attachments: attachArray,
-          chat_id: chatId,
-        },
-      };
-      socket.send(data);
+      socket.emit("msgToServer", message.value);
 
       message.value = null;
       attachments.value = [];
