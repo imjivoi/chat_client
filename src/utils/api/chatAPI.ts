@@ -38,7 +38,7 @@ export default {
       chat_id: chat_id,
     });
   },
-  getMessages(chat_id: string | null) {
+  getMessages(chat_id: string | string[]) {
     return HTTP.get(`${url}messages/?chat_id=${chat_id}`);
   },
 };

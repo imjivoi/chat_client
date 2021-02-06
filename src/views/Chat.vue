@@ -109,7 +109,7 @@ export default defineComponent({
     const user = computed(() => store.getters.userData);
     const chat = computed(() => store.getters.activeChat(chatId.value));
     const participants = computed(() =>
-      chat.value?.participants.filter((i) => i.id !== user.value?.id)
+      chat.value?.participants.filter((i) => i._id !== user.value?._id)
     );
     const status = computed(() => {
       if (
@@ -124,8 +124,7 @@ export default defineComponent({
     });
 
     async function fetchMessages() {
-      if (chat.value && !chat.value?.messages.length) {
-        //@ts-ignore
+      if (chat.value && !chat.value?.all_messages.count) {
         await store.dispatch(AllActionTypes.GET_MESSAGES, chatId.value);
       }
       isLoading.value = false;

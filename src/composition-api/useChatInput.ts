@@ -3,6 +3,7 @@ import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
 import { toBase64 } from "@/utils/base64encryption";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "./useStore";
 
 export default function useChatInput(socket: any) {
   const message = ref<string | null>(null);
@@ -12,6 +13,10 @@ export default function useChatInput(socket: any) {
   const typing = ref<boolean>(false);
   const timeout = ref<any | null>(null);
 
+  const route = useRoute();
+  const store = useStore();
+
+  console.log(route);
   const attachmentsUrl = computed(() => {
     let newArr = [];
     for (let i = 0; i < attachments.value.length; i++) {
@@ -30,7 +35,7 @@ export default function useChatInput(socket: any) {
     return newArr;
   });
 
-  async function sendMessage(e: any, chatId: string) {
+  async function sendMessage(e: any) {
     if (!e.shiftKey && e.which === 13) {
       e.preventDefault();
     }
@@ -51,7 +56,10 @@ export default function useChatInput(socket: any) {
         }
       }
 
-      socket.emit("msgToServer", message.value);
+      socket.emit(ChatSocketEvents.NEW_MESSAGE, {
+        text: message.value,
+        chat_id: route.params.id,
+      });
 
       message.value = null;
       attachments.value = [];
@@ -71,13 +79,13 @@ export default function useChatInput(socket: any) {
   function setEmoji(emoji: any) {
     message.value ? (message.value += emoji) : (message.value = emoji);
   }
-  function sendTyping(status: boolean, chatId: string, nickname: string) {
+  function sendTyping(status: boolean) {
     socket.send({
       event: ChatSocketEvents.TYPING_MESSAGE,
       data: {
-        chat_id: chatId,
+        chat_id: route.params.id,
         status: status,
-        nickname: nickname,
+        nickname: store.getters.userData?.nickname,
       },
     });
   }

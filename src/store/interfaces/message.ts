@@ -1,11 +1,16 @@
 import { IUserData } from "./user";
 
 export interface IMessage {
-  user?: IUserData;
+  sender?: IUserData;
   chat: string;
   created?: string;
   text: string | null;
   attachments?: any | null;
-  id?: string;
+  _id?: string;
   is_readed?: boolean;
+}
+
+export interface IMessagesList {
+  list: IMessage[];
+  count: number;
 }

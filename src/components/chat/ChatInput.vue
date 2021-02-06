@@ -24,19 +24,8 @@ import { AllActionTypes } from "@/store/types/actions.types";
 import { IUserData } from "@/store/interfaces/user";
 import { useRoute } from "vue-router";
 export default defineComponent({
-  props: {
-    chatId: {
-      type: String,
-      required: true,
-    },
-    user: {
-      type: Object as PropType<IUserData>,
-      required: true,
-    },
-  },
-
   components: { Btn, EmojiPicker, SendIcon },
-  setup({ chatId, user }, ctx) {
+  setup({}, ctx) {
     const {
       sendTyping,
       setAttachments,
@@ -59,13 +48,13 @@ export default defineComponent({
       message.value === "" ? (message.value = null) : message.value;
       clearInterval(timeout.value);
       if (!typing.value) {
-        sendTyping(true, chatId, user?.nickname);
+        sendTyping(true);
       }
 
       typing.value = true;
       timeout.value = setTimeout(() => {
         typing.value = false;
-        sendTyping(false, chatId, user?.nickname);
+        sendTyping(false);
       }, 3000);
     });
 
@@ -84,12 +73,6 @@ export default defineComponent({
       this.message = null;
       this.attachments = [];
     },
-  },
-  mounted() {
-    //@ts-ignore
-    // this.$socket.on("msgToClient", (message: any) => {
-    //   console.log(message);
-    // });
   },
 });
 </script>

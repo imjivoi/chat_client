@@ -16,14 +16,17 @@
           <template v-slot:icon> <Search class="svg" /> </template>
         </CutomInput>
         <ul class="chats__items">
-          <ChatItem />
-          <ChatItem />
+          <ChatItem
+            v-for="chat in chats.list"
+            :key="chat._id"
+            :last_message="chat.last_message"
+            @click="toChat(chat._id)"
+          />
         </ul>
       </div>
       <div class="chat__content">
-        <!-- <router-view /> -->
-        <Chat />
-        <!-- <p v-if="!route.params.id">Choose a chat</p> -->
+        <router-view />
+        <p v-if="!$route.params.id">Choose a chat</p>
       </div>
     </template>
   </section>
@@ -41,6 +44,7 @@ import ChatItem from "../components/chat/ChatItem.vue";
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useStore } from "@/composition-api/useStore";
 import { useRoute, useRouter } from "vue-router";
+import { AllActionTypes } from "@/store/types/actions.types";
 
 export default defineComponent({
   components: { ChatItem, Chat, Spinner, CutomInput, Search, Button, Plus },
@@ -53,17 +57,18 @@ export default defineComponent({
 
     const store = useStore();
     const chats = computed(() => store.getters.chats);
-    const userId = store.getters.userData?.id;
+    const userId = store.getters.userData?._id;
 
     onMounted(async () => {
-      // if (!chats.value.length) {
-      //   await store.dispatch(AllActionTypes.GET_CHATS);
-      // }
+      if (!chats.value.length) {
+        await store.dispatch(AllActionTypes.GET_CHATS);
+      }
+      console.log(chats);
       isLoading.value = false;
     });
 
-    function toChat() {
-      router.push({ name: "Chat", params: { id: "sdfsdf" } });
+    function toChat(id: string) {
+      router.push({ name: "Chat", params: { id: id } });
     }
 
     return {

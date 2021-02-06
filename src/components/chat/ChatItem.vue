@@ -7,7 +7,7 @@
           style="margin:0 10px 0 0"
         />
         <div class="chat-item__header-info">
-          <h3>nickname</h3>
+          <h3>{{ last_message.sender.nickname }}</h3>
           <p>last online 5 hours ago</p>
         </div>
       </div>
@@ -18,9 +18,7 @@
     <div class="chat-item__content">
       <div class="chat-item__content-text">
         <p>
-          Most of its text is made up from sections 1.10.32–3 of Cicero's De
-          finibus bonorum et malorum (On the Boundaries of Goods and Evils;
-          finibus may also be translated as purposes).
+          {{ last_message.text }}
         </p>
       </div>
       <div class="chat-item__content-unreaded">
@@ -33,8 +31,14 @@
 <script lang="ts">
 import Avatar from "../Avatar.vue";
 
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
+import { IMessage } from "@/store/interfaces/message";
 export default defineComponent({
+  props: {
+    last_message: {
+      type: Object as PropType<IMessage>,
+    },
+  },
   components: { Avatar },
 });
 </script>
@@ -47,9 +51,28 @@ export default defineComponent({
   padding: 20px;
   cursor: pointer;
   margin: 0 0 20px;
+  transition: $transition;
+
+  &:hover {
+    background: $background_blue_gradient;
+    transition: $transition;
+
+    .chat-item__header {
+      p {
+        color: #fff !important;
+      }
+    }
+
+    .chat-item__content {
+      &-text {
+        color: #fff;
+      }
+    }
+  }
 
   &.active {
     background: $background_blue_gradient;
+    transition: $transition;
 
     .chat-item__header {
       p {

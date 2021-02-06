@@ -1,13 +1,13 @@
-import { IMessage } from "./message";
+import { IMessage, IMessagesList } from "./message";
 import { IUserData } from "./user";
 
 export interface IChatItem {
   participants: Array<IUserData>;
   created: string;
-  id: string;
-  messages: Array<IMessage>;
+  _id: string;
+  all_messages: IMessagesList;
   type: "D" | "C";
-  admin: string;
+  admin: IUserData;
   title: string | null;
   image: string | null;
   typing: {
@@ -21,6 +21,7 @@ export interface IChatItem {
 
 export interface IChatState {
   chats: Array<IChatItem> | [];
+  count: number | null;
 }
 
 export interface IAttachments {

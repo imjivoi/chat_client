@@ -32,7 +32,7 @@ export default defineComponent({
     const store = useStore();
 
     function createChat() {
-      const userId = store.getters.userData?.id;
+      const userId = store.getters.userData?._id;
       if (userId) {
         const data: ICreateChatData = {};
         store.dispatch(AllActionTypes.CREATE_CHAT, data);

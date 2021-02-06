@@ -59,7 +59,6 @@ svg {
 }
 
 .empty {
-  @include block_mixin;
   width: 100%;
   height: 100%;
 }

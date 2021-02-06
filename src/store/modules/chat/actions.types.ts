@@ -23,7 +23,7 @@ export type ChatActionsTypes = {
   }: AugmentedActionContext): Promise<Array<IChatItem>>;
   [ActionTypes.GET_MESSAGES](
     { commit }: AugmentedActionContext,
-    payload: string
+    payload: string | string[]
   ): void;
   [ActionTypes.CREATE_CHAT](
     { commit }: AugmentedActionContext,
