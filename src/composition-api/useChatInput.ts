@@ -80,13 +80,10 @@ export default function useChatInput(socket: any) {
     message.value ? (message.value += emoji) : (message.value = emoji);
   }
   function sendTyping(status: boolean) {
-    socket.send({
-      event: ChatSocketEvents.TYPING_MESSAGE,
-      data: {
-        chat_id: route.params.id,
-        status: status,
-        nickname: store.getters.userData?.nickname,
-      },
+    socket.emit(ChatSocketEvents.TYPING_MESSAGE, {
+      chat_id: route.params.id,
+      status: status,
+      nickname: store.getters.userData?.nickname,
     });
   }
 

@@ -7,6 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@types/webpack-env": "^1.16.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "date-fns": "^2.16.1",
@@ -38,7 +39,8 @@
     "sass-loader": "^8.0.2",
     "typescript": "~3.9.3",
     "vue-svg-loader": "^0.16.0",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "^2.6.12",
+    "webpack-env": "^0.8.0"
   },
   "browserslist": [
     "> 1%",

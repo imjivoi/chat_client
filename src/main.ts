@@ -23,7 +23,7 @@ if (token) store.commit(AllMutationTypes.SET_LOGGED, true);
 
 app.directive("click-outside", {
   beforeMount(el, binding, vnode) {
-    el.clickOutsideEvent = function(event: any) {
+    el.clickOutsideEvent = function (event: any) {
       if (!(el === event.target || el.contains(event.target))) {
         binding.value(event, el);
       }
@@ -36,15 +36,15 @@ app.directive("click-outside", {
 });
 
 app
-  .use(SocketIO, {
-    connection: "127.0.0.1:80",
-    options: {
-      // transports: ["websocket"],
-      query: {
-        token: token,
-      },
-    },
-  })
+  // .use(SocketIO, {
+  //   connection: "127.0.0.1:80",
+  //   options: {
+  //     // transports: ["websocket"],
+  //     query: {
+  //       token: token,
+  //     },
+  //   },
+  // })
   .use(Toast, {
     transition: "Vue-Toastification__fade",
     maxToasts: 8,

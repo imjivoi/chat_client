@@ -12,29 +12,29 @@ import InputText from "primevue/inputtext";
 import Button from "../components/Button.vue";
 import Sidebar from "../components/Sidebar.vue";
 
-import {
-  defineComponent,
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  provide,
-} from "vue";
+import { defineComponent, inject, onMounted, provide } from "vue";
 import { useStore } from "@/composition-api/useStore";
+import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
+import { AllMutationTypes } from "@/store/types/mutations.types";
+import useSocket from "@/composition-api/useSocket";
 import { AllActionTypes } from "@/store/types/actions.types";
-
 export default defineComponent({
   name: "Home",
   components: { Sidebar, Button, InputText },
 
   setup() {
     const store = useStore();
-    async function createChat() {
-      console.log(11);
-      const res = await store.dispatch(AllActionTypes.CREATE_CHAT);
-      console.log(res);
-    }
+    const { socket } = useSocket("127.0.0.1:80");
+    provide("socket", socket);
 
-    return { createChat };
+    onMounted(async () => {
+      //@ts-ignore
+      socket.on(ChatSocketEvents.FETCH_CHATS, (data: any) => {
+        store.dispatch(AllActionTypes.SET_CHATS, data);
+      });
+    });
+
+    return {};
   },
 });
 </script>
@@ -42,19 +42,5 @@ export default defineComponent({
 .container {
   // padding: 5px 10px 5px 60px;
   height: calc(100vh - 53px);
-}
-.donthavechats {
-  position: relative;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  background: #fff;
-  opacity: 0.8;
-  padding: 170px 0 0;
-  h2 {
-    font-size: 32px;
-    text-align: center;
-  }
 }
 </style>

@@ -17,9 +17,10 @@
         </CutomInput>
         <ul class="chats__items">
           <ChatItem
-            v-for="chat in chats.list"
+            v-for="chat in chats"
             :key="chat._id"
             :last_message="chat.last_message"
+            :id="chat._id"
             @click="toChat(chat._id)"
           />
         </ul>
@@ -41,34 +42,34 @@ import Spinner from "../components/Spinner.vue";
 import Chat from "./Chat.vue";
 import ChatItem from "../components/chat/ChatItem.vue";
 
-import { computed, defineComponent, onMounted, ref } from "vue";
+import {
+  computed,
+  defineComponent,
+  inject,
+  onMounted,
+  provide,
+  ref,
+} from "vue";
 import { useStore } from "@/composition-api/useStore";
 import { useRoute, useRouter } from "vue-router";
 import { AllActionTypes } from "@/store/types/actions.types";
+import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
+import { AllMutationTypes } from "@/store/types/mutations.types";
 
 export default defineComponent({
   components: { ChatItem, Chat, Spinner, CutomInput, Search, Button, Plus },
   name: "Chats",
   setup() {
     const search = ref("");
-    const isLoading = ref(true);
+    const isLoading = ref(false);
 
     const router = useRouter();
-
     const store = useStore();
     const chats = computed(() => store.getters.chats);
     const userId = store.getters.userData?._id;
-
-    onMounted(async () => {
-      if (!chats.value.length) {
-        await store.dispatch(AllActionTypes.GET_CHATS);
-      }
-      console.log(chats);
-      isLoading.value = false;
-    });
-
+    console.log(chats);
     function toChat(id: string) {
-      router.push({ name: "Chat", params: { id: id } });
+      router.push({ name: "Chat", params: { id } });
     }
 
     return {

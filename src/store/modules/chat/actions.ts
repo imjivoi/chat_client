@@ -1,13 +1,15 @@
 import router from "@/router";
-import { IChatItem, IChatState } from "@/store/interfaces/chat";
+import { IChatState } from "@/store/interfaces/chat";
 import { IRootState } from "@/store/interfaces/root";
 import chatAPI from "@/utils/api/chatAPI";
-import { AxiosResponse } from "axios";
 import { ActionTree } from "vuex";
 import { ChatActionsTypes } from "./actions.types";
 import { MutationTypes } from "./mutatios.types";
 
 export const actions: ActionTree<IChatState, IRootState> & ChatActionsTypes = {
+  SET_CHATS({ commit }, payload) {
+    commit(MutationTypes.SET_CHATS, payload);
+  },
   GET_CHATS({ commit }) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -32,7 +34,7 @@ export const actions: ActionTree<IChatState, IRootState> & ChatActionsTypes = {
         if (res.status === 226) {
           router.push(`/chats/${res.data.id}`);
         } else {
-          commit(MutationTypes.SET_CHATS, [res.data]);
+          commit(MutationTypes.SET_CHATS, res.data);
           router.push(`/chats/${res.data.id}`);
         }
         resolve(res.data);

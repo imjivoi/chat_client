@@ -20,7 +20,12 @@ export interface IChatItem {
 }
 
 export interface IChatState {
-  chats: Array<IChatItem> | [];
+  chats: IChatsList;
+  isLoading?: boolean;
+}
+
+export interface IChatsList {
+  list: Array<IChatItem> | [];
   count: number | null;
 }
 

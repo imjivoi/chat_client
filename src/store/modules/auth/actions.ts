@@ -15,7 +15,7 @@ export const actions: ActionTree<IAuthState, IRootState> & AuthActionsTypes = {
         commit(MutationTypes.SET_LOADING, true);
         const res = await authAPI.getToken(payload);
         commit(MutationTypes.SET_TOKEN, res.data);
-
+        commit(MutationTypes.SET_LOGGED, true);
         if (state.userData === null) dispatch("GET_USER_DATA");
         resolve(res.data);
       } catch (error) {

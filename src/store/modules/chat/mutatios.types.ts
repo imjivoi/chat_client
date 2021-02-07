@@ -1,4 +1,4 @@
-import { IChatItem, IChatState } from "@/store/interfaces/chat";
+import { IChatItem, IChatsList, IChatState } from "@/store/interfaces/chat";
 import {
   IChatSocketMessageStatus,
   IChatSocketTypingData,
@@ -18,7 +18,7 @@ export enum MutationTypes {
 }
 
 export type ChatMutationsTypes<S = IChatState> = {
-  [MutationTypes.SET_CHATS](state: S, payload: IChatItem[]): void;
+  [MutationTypes.SET_CHATS](state: S, payload: IChatsList): void;
   [MutationTypes.SET_ACTIVE_CHAT](state: S, payload: string): void;
   [MutationTypes.SET_DELETE_CHAT](state: S, payload: string): void;
   [MutationTypes.SET_NEW_MESSAGE](state: S, payload: IMessage): void;

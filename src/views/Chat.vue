@@ -82,21 +82,6 @@ export default defineComponent({
     AdjustmentIcon,
     OptionsIcon,
   },
-  data: () => ({
-    messages: [
-      {
-        id: "34345dsdg",
-        text: "some text",
-        created: "345346",
-        attachments: [],
-        user: {
-          avatar:
-            "https://res.cloudinary.com/dqgfkzejx/image/upload/v1611968865/avatar/jivoi.jpg",
-          nickname: "nickname",
-        },
-      },
-    ],
-  }),
   setup() {
     const store = useStore();
     const route = useRoute();
@@ -123,6 +108,8 @@ export default defineComponent({
       }
     });
 
+    const socket = inject("socket");
+
     async function fetchMessages() {
       if (chat.value && !chat.value?.all_messages.count) {
         await store.dispatch(AllActionTypes.GET_MESSAGES, chatId.value);
@@ -136,17 +123,6 @@ export default defineComponent({
         content.value.scrollTop = content.value.scrollHeight;
       });
     }
-
-    // onMounted(async () => {
-    //   await fetchMessages();
-    //   send({
-    //     event: ChatSocketEvents.MESSAGE_STATUS,
-    //     data: {
-    //       chat_id: chatId.value,
-    //       user_id: store.getters.userData?.id,
-    //     },
-    //   });
-    // });
 
     onBeforeRouteUpdate(async (to, from) => {
       if (to.params.id !== from.params.id) {

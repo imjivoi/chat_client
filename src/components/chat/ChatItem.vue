@@ -1,30 +1,33 @@
 <template>
   <div class="chat-item">
-    <div class="chat-item__header">
-      <div class="chat-item__header-left">
-        <Avatar
-          image="https://res.cloudinary.com/dqgfkzejx/image/upload/v1611968865/avatar/jivoi.jpg"
-          style="margin:0 10px 0 0"
-        />
-        <div class="chat-item__header-info">
-          <h3>{{ last_message.sender.nickname }}</h3>
-          <p>last online 5 hours ago</p>
+    <template v-if="last_message">
+      <div class="chat-item__header">
+        <div class="chat-item__header-left">
+          <Avatar
+            image="https://res.cloudinary.com/dqgfkzejx/image/upload/v1611968865/avatar/jivoi.jpg"
+            style="margin:0 10px 0 0"
+          />
+          <div class="chat-item__header-info">
+            <h3>{{ last_message.sender.nickname }}</h3>
+            <p>last online 5 hours ago</p>
+          </div>
+        </div>
+        <div class="chat-item__header-right">
+          <p>3 days ago</p>
         </div>
       </div>
-      <div class="chat-item__header-right">
-        <p>3 days ago</p>
+      <div class="chat-item__content">
+        <div class="chat-item__content-text">
+          <p>
+            {{ last_message.text }}
+          </p>
+        </div>
+        <div class="chat-item__content-unreaded">
+          <p>2</p>
+        </div>
       </div>
-    </div>
-    <div class="chat-item__content">
-      <div class="chat-item__content-text">
-        <p>
-          {{ last_message.text }}
-        </p>
-      </div>
-      <div class="chat-item__content-unreaded">
-        <p>2</p>
-      </div>
-    </div>
+    </template>
+    <template v-else>Create message</template>
   </div>
 </template>
 
@@ -37,6 +40,10 @@ export default defineComponent({
   props: {
     last_message: {
       type: Object as PropType<IMessage>,
+    },
+    id: {
+      type: String,
+      required: true,
     },
   },
   components: { Avatar },

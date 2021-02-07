@@ -13,6 +13,7 @@ export enum ChatSocketEvents {
   DELETE_MESSAGE = "DELETE_MESSAGE",
   DELETE_USER = "DELETE_USER",
   TYPING_MESSAGE = "TYPING_MESSAGE",
+  FETCH_CHATS = "FETCH_CHATS",
 }
 
 export enum SocketStatusConnect {

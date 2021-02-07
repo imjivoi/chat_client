@@ -12,11 +12,11 @@ export const mutations: MutationTree<IChatState> & ChatMutationsTypes = {
   SET_DELETE_CHAT(state, payload) {},
   SET_DELETE_MESSAGE(state, payload) {},
   SET_MESSAGES(state, payload) {
-    const chat = state.chats.filter((i) => i._id === payload.chat_id);
+    const chat = state.chats.list.filter((i) => i._id === payload.chat_id);
     chat[0].all_messages.list.push(...payload.messages);
   },
   SET_NEW_MESSAGE(state, payload) {
-    const chat = state.chats.find((i) => i._id === payload.chat);
+    const chat = state.chats.list.find((i) => i._id === payload.chat);
     if (chat) {
       chat.all_messages.list.push(payload);
       chat.last_message = payload;
@@ -25,7 +25,7 @@ export const mutations: MutationTree<IChatState> & ChatMutationsTypes = {
   },
   SET_ONE_NEW_CHAT(state, payload) {},
   SET_READ(state, payload) {
-    const chat = state.chats.find((i) => i._id === payload.chat_id);
+    const chat = state.chats.list.find((i) => i._id === payload.chat_id);
     chat?.all_messages.list.forEach((i) => {
       if (i.sender?._id !== payload.user_id) {
         i.is_readed = true;
@@ -33,8 +33,8 @@ export const mutations: MutationTree<IChatState> & ChatMutationsTypes = {
     });
   },
   SET_TYPING(state, payload) {
-    const index = state.chats.findIndex((i) => i._id === payload.chat_id);
+    const index = state.chats.list.findIndex((i) => i._id === payload.chat_id);
 
-    state.chats[index] = { ...state.chats[index], typing: payload };
+    state.chats.list[index] = { ...state.chats.list[index], typing: payload };
   },
 };
