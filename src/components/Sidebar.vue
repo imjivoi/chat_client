@@ -2,15 +2,12 @@
   <aside class="sidebar">
     <div class="sidebar__profile">
       <div class="sidebar__profile-avatar">
-        <img
-          src="https://res.cloudinary.com/dqgfkzejx/image/upload/v1611968865/avatar/jivoi.jpg"
-          alt=""
-        />
+        <img src="" alt="" />
       </div>
-      <div class="sidebar__profile-name">nickname</div>
+      <div class="sidebar__profile-name">{{ userData.nickname }}</div>
     </div>
     <ul>
-      <li v-for="item in items" :key="item.title">
+      <li v-for="item in sidebarItems" :key="item.title">
         <router-link :to="item.link"
           ><component :is="capitalizeFirstLetter(item.title)"></component
           ><span>{{ item.title }}</span></router-link
@@ -21,36 +18,38 @@
   </aside>
 </template>
 
-<script>
-import Logout from "./icons/Logout";
-import Settings from "./icons/Settings";
-import Notifications from "./icons/Notifications";
-import Chats from "./icons/Chats";
-import Home from "./icons/Home";
-import Tooltip from "primevue/tooltip";
-import Button from "./Button.vue";
-export default {
+<script lang="ts">
+import Logout from "./icons/Logout.vue";
+import Settings from "./icons/Settings.vue";
+import Notifications from "./icons/Notifications.vue";
+import Chats from "./icons/Chats.vue";
+import Home from "./icons/Home.vue";
+
+import { defineComponent } from "vue";
+import { useStore } from "@/composition-api/useStore";
+export default defineComponent({
   components: { Home, Chats, Notifications, Settings, Logout },
-  data: () => ({
-    items: [
+  setup() {
+    const store = useStore();
+    const userData = store.getters.userData;
+    const sidebarItems = [
       { title: "home", link: "/app/" },
       { title: "chats", link: "/app/chats/" },
       { title: "notifications", link: "/app/notifications/" },
       { title: "settings", link: "/app/settings" },
-    ],
-  }),
-  methods: {
-    capitalizeFirstLetter(string) {
+    ];
+
+    function capitalizeFirstLetter(string: string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
-    },
+    }
+
+    return {
+      userData,
+      sidebarItems,
+      capitalizeFirstLetter,
+    };
   },
-  directives: {
-    tooltip: Tooltip,
-  },
-  mounted() {
-    console.log(this.$route.name);
-  },
-};
+});
 </script>
 
 <style scoped lang="scss">

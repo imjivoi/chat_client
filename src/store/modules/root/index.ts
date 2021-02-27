@@ -18,5 +18,5 @@ export const root: Module<IRootState, IRootState> = {
 
 export type RootStoreModuleTypes<S = IRootState> = Omit<
   VuexStore<S>,
-  "commit" | "getters" | "dispatch" | "state"
+  "commit" | "getters" | "dispatch"
 >;

@@ -1,15 +1,12 @@
 <template>
-  <div>
-    <div class="content" v-if="!isLoading">
-      <!-- <Header @logout="logout" :isLogged="isLogged" :isLoading="isLoading" /> -->
-      <router-view />
-    </div>
-    <Spinner height="100vh" width="100vw" text="Loading..." v-else />
-  </div>
+  <AppLayout>
+    <router-view />
+  </AppLayout>
 </template>
 <script lang="ts">
 import Spinner from "./components/Spinner.vue";
 import Header from "./components/Header.vue";
+import AppLayout from "@/layouts/AppLayout.vue";
 
 import {
   computed,
@@ -23,7 +20,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "./composition-api/useStore";
 import { AllActionTypes } from "./store/types/actions.types";
 export default defineComponent({
-  components: { Header, Spinner },
+  components: { Header, Spinner, AppLayout },
 
   setup() {
     const store = useStore();

@@ -67,7 +67,6 @@ export default defineComponent({
     const store = useStore();
     const chats = computed(() => store.getters.chats);
     const userId = store.getters.userData?._id;
-    console.log(chats);
     function toChat(id: string) {
       router.push({ name: "Chat", params: { id } });
     }

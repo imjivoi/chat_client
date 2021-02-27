@@ -59,6 +59,7 @@ export default function useChatInput(socket: any) {
       socket.emit(ChatSocketEvents.NEW_MESSAGE, {
         text: message.value,
         chat_id: route.params.id,
+        attachments: attachments.value,
       });
 
       message.value = null;

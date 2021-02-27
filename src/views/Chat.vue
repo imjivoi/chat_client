@@ -89,7 +89,6 @@ export default defineComponent({
     const isLoading = ref(false);
 
     const content = ref();
-
     const chatId = ref<string | string[]>(route.params.id);
     const user = computed(() => store.getters.userData);
     const chat = computed(() => store.getters.activeChat(chatId.value));
