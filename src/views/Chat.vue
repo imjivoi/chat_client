@@ -99,7 +99,7 @@ export default defineComponent({
       if (
         chat.value?.typing &&
         chat.value.typing.status &&
-        chat.value.typing.nickname !== user.value?.nickname
+        chat.value.typing.nickname !== user.value?.username
       ) {
         return `${chat.value.typing.nickname} is typing ...`;
       } else {

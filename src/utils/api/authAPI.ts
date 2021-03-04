@@ -19,7 +19,7 @@ export default {
   },
   register(data: IAuth) {
     return HTTP.post("auth/register", {
-      nickname: data.nickname,
+      username: data.username,
       email: data.email,
       password: data.password,
     });

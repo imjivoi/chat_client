@@ -84,7 +84,7 @@ export default function useChatInput(socket: any) {
     socket.emit(ChatSocketEvents.TYPING_MESSAGE, {
       chat_id: route.params.id,
       status: status,
-      nickname: store.getters.userData?.nickname,
+      nickname: store.getters.userData?.username,
     });
   }
 

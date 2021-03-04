@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "date-fns": "^2.16.1",
+    "element-plus": "^1.0.2-beta.33",
     "emoji.json": "^13.1.0",
     "mitt": "^2.1.0",
     "primeflex": "^2.0.0",

@@ -1,15 +1,21 @@
+//libraries
 import { createApp } from "vue";
 import PrimeVue from "primevue/config";
 import { VueCookieNext } from "vue-cookie-next";
 import Toast from "vue-toastification";
 import SocketIO from "@/plugins/socketIO";
+import ElementPlus from "element-plus";
 
+//styles
+import "element-plus/lib/theme-chalk/index.css";
 import "vue-toastification/dist/index.css";
 import "primevue/resources/themes/saga-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
+import "@/styles/default.scss";
 
+//modules
 import App from "./App.vue";
 import router from "./router";
 import { store } from "./store";
@@ -18,12 +24,13 @@ import { AllMutationTypes } from "./store/types/mutations.types";
 
 const app = createApp(App);
 
+//check jwt token
 const token = VueCookieNext.getCookie("accessToken");
 if (token) store.commit(AllMutationTypes.SET_LOGGED, true);
 
 app.directive("click-outside", {
   beforeMount(el, binding, vnode) {
-    el.clickOutsideEvent = function (event: any) {
+    el.clickOutsideEvent = function(event: any) {
       if (!(el === event.target || el.contains(event.target))) {
         binding.value(event, el);
       }
@@ -36,21 +43,14 @@ app.directive("click-outside", {
 });
 
 app
-  // .use(SocketIO, {
-  //   connection: "127.0.0.1:80",
-  //   options: {
-  //     // transports: ["websocket"],
-  //     query: {
-  //       token: token,
-  //     },
-  //   },
-  // })
   .use(Toast, {
     transition: "Vue-Toastification__fade",
-    maxToasts: 8,
+    maxToasts: 5,
     newestOnTop: true,
   })
-  .use(PrimeVue) //@ts-ignore
+  .use(PrimeVue)
+  .use(ElementPlus)
+  //@ts-ignore
   .use(VueCookieNext)
   .use(store)
   .use(router)

@@ -1,5 +1,5 @@
 export interface IUserData {
-  nickname: string;
+  username: string;
   _id: string;
   email: string;
   avatar?: string;
@@ -8,7 +8,7 @@ export interface IUserData {
 }
 
 export interface IAuth {
-  nickname?: string | null;
+  username?: string | null;
   email: string | null;
   password: string | null;
 }
