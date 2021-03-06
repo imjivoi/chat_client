@@ -26,6 +26,7 @@ import { AllActionTypes } from "@/store/types/actions.types";
 import notificationService from "@/services/notificationService";
 import { useRouter } from "vue-router";
 export default defineComponent({
+  name: "Login",
   setup(_, ctx) {
     const form = reactive({
       email: "",

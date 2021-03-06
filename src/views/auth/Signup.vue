@@ -34,6 +34,7 @@ import notificationService from "@/services/notificationService";
 import useValidation from "@/composition-api/useFormRules";
 
 export default defineComponent({
+  name: "Signup",
   components: { InputText, Button },
   setup(_, ctx) {
     const form = reactive({

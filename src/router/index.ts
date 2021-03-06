@@ -4,32 +4,37 @@ import { state } from "../store/modules/auth/state";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: "/app",
-  },
-  {
-    path: "/app",
     name: "Home",
     component: () => import("../views/Home.vue"),
     meta: { title: "Home" },
     children: [
       {
-        path: "/app/chats/",
+        path: "/chats/",
         name: "Chats",
+        meta: { title: "Chats" },
+
         component: () => import("../views/Chats.vue"),
         children: [
           {
-            path: "/app/chats/:id",
+            path: "/chats/:id",
             name: "Chat",
             component: () => import("../views/Chat.vue"),
           },
         ],
       },
-      {
-        path: "/friends/",
-        name: "Friends",
-        component: () => import("../views/Friends.vue"),
-      },
+
+      // {
+      //   path: "/friends/",
+      //   name: "Friends",
+      //   component: () => import("../views/Friends.vue"),
+      // },
     ],
+  },
+  {
+    path: "/voices",
+    name: "Voices",
+    meta: { title: "Voices" },
+    component: () => import("@/views/Voices.vue"),
   },
   {
     path: "/auth",

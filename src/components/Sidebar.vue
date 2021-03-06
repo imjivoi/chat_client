@@ -2,14 +2,18 @@
   <aside class="sidebar">
     <div class="sidebar__profile">
       <div class="sidebar__profile-avatar">
-        <img src="" alt="" />
+        <img src="" alt="" v-if="userData.avatar" />
+        <User v-else />
       </div>
-      <div class="sidebar__profile-name">{{ userData.nickname }}</div>
+      <div class="sidebar__profile-name">{{ userData.username }}</div>
     </div>
     <ul>
       <li v-for="item in sidebarItems" :key="item.title">
         <router-link :to="item.link"
-          ><component :is="capitalizeFirstLetter(item.title)"></component
+          ><component
+            :is="capitalizeFirstLetter(item.title)"
+            class="icon"
+          ></component
           ><span>{{ item.title }}</span></router-link
         >
       </li>
@@ -19,30 +23,33 @@
 </template>
 
 <script lang="ts">
-import Logout from "./icons/Logout.vue";
-import Settings from "./icons/Settings.vue";
-import Notifications from "./icons/Notifications.vue";
-import Chats from "./icons/Chats.vue";
-import Home from "./icons/Home.vue";
-
-import { defineComponent } from "vue";
+import {
+  Home,
+  Voices,
+  Notifications,
+  Settings,
+  Logout,
+  User,
+} from "@/components/icons";
+import { computed, defineComponent } from "vue";
 import { useStore } from "@/composition-api/useStore";
 export default defineComponent({
-  components: { Home, Chats, Notifications, Settings, Logout },
+  name: "Sidebar",
+  components: { Home, Voices, Notifications, Settings, Logout, User },
   setup() {
     const store = useStore();
-    const userData = store.getters.userData;
+    const userData = computed(() => store.getters.userData);
     const sidebarItems = [
-      { title: "home", link: "/app/" },
-      { title: "chats", link: "/app/chats/" },
-      { title: "notifications", link: "/app/notifications/" },
-      { title: "settings", link: "/app/settings" },
+      { title: "home", link: "/" },
+      // { title: "chats", link: "/app/chats/" },
+      { title: "voices", link: "/voices/" },
+      { title: "notifications", link: "/notifications/" },
+      { title: "settings", link: "/settings" },
     ];
 
     function capitalizeFirstLetter(string: string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
-
     return {
       userData,
       sidebarItems,
@@ -70,10 +77,17 @@ export default defineComponent({
       border-radius: 50%;
       overflow: hidden;
       margin: 0 auto;
+      position: relative;
 
       img {
         width: 100%;
+
         height: 100%;
+      }
+
+      svg {
+        max-width: 50px;
+        fill: $color_gray2;
       }
     }
 
@@ -133,6 +147,7 @@ export default defineComponent({
 
       svg {
         margin: 0 17px 0 0;
+        max-width: 24px;
       }
       span {
         font-size: 16px;

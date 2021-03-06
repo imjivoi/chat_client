@@ -73,6 +73,7 @@ import { AllActionTypes } from "@/store/types/actions.types";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
 export default defineComponent({
+  name: "Chat",
   components: {
     ChatInput,
     Button,

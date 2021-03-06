@@ -1,33 +1,51 @@
 <template>
-  <div class="content" v-if="!isLoading">
-    <!-- <Header @logout="logout" :isLogged="isLogged" :isLoading="isLoading" /> -->
-    <Sidebar />
+  <Spinner height="100vh" width="100vw" text="Loading..." v-if="isLoading" />
 
-    <router-view />
+  <div class="content" v-else>
+    <SideBar />
+    <div class="wrapper">
+      <h2>{{ routeTitle }}</h2>
+      <router-view />
+    </div>
   </div>
-  <Spinner height="100vh" width="100vw" text="Loading..." v-else />
 </template>
 
-<script>
-import SideBar from "../components/Sidebar";
-export default {
+<script lang="ts">
+import SideBar from "@/components/Sidebar.vue";
+import Spinner from "@/components/Spinner.vue";
+
+import useSocket from "@/composition-api/useSocket";
+import { useStore } from "@/composition-api/useStore";
+import { useRoute } from "vue-router";
+
+import { computed, defineComponent, onMounted, provide } from "vue";
+export default defineComponent({
   name: "AppLayoutDefault",
-  components: { SideBar },
-  mounted() {
-    console.log(22);
+  components: { SideBar, Spinner },
+  setup() {
+    const store = useStore();
+    const route = useRoute();
+    const routeTitle = computed(() => route.meta.title);
+    const { socket } = useSocket("127.0.0.1:80");
+    const isLoading = computed(() => store.getters.isLoadingAuth);
+    provide("socket", socket);
+
+    return { routeTitle, isLoading };
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
-.main {
-  // background: $beige;
-}
 .wrapper {
-  margin: 0 0 0 200px;
+  margin: 0 0 0 250px;
   padding: 50px 35px 0 35px;
   height: 100vh;
   overflow: hidden;
+
+  h2 {
+    margin: 0 0 50px;
+    font-size: 28px;
+  }
 
   @media only screen and (max-width: 756px) {
     margin: 0;

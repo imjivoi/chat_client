@@ -6,11 +6,9 @@
       <div class="chats__list">
         <div class="chats__header p-mb-2">
           <h2>Chats</h2>
-          <Button label="Create New Chat">
-            <template v-slot:icon>
-              <Plus />
-            </template>
-          </Button>
+          <el-button type="primary" icon="el-icon-plus"
+            >Create new chat</el-button
+          >
         </div>
         <CutomInput>
           <template v-slot:icon> <Search class="svg" /> </template>

@@ -4,23 +4,13 @@
   </AppLayout>
 </template>
 <script lang="ts">
-import Spinner from "./components/Spinner.vue";
-import Header from "./components/Header.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
 
-import {
-  computed,
-  defineComponent,
-  onBeforeMount,
-  onUnmounted,
-  provide,
-  ref,
-} from "vue";
-import { useRouter } from "vue-router";
+import { computed, defineComponent, onBeforeMount, ref } from "vue";
 import { useStore } from "./composition-api/useStore";
 import { AllActionTypes } from "./store/types/actions.types";
 export default defineComponent({
-  components: { Header, Spinner, AppLayout },
+  components: { AppLayout },
 
   setup() {
     const store = useStore();
