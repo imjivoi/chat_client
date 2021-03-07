@@ -1,19 +1,9 @@
-<template>
-  <el-button @click="callUser">Call</el-button>
-  <el-input v-model="toId"></el-input>
-  <el-button @click="stop">Stop</el-button>
-  <audio autoplay ref="myAudio"></audio>
-  <audio autoplay ref="userAudio"></audio>
-  <div v-if="isReceivingCall">
-    <el-button @click="answerCall">Answer</el-button>
-  </div>
-  <p>{{ socketId }}</p>
-</template>
+<template> </template>
 
 <script lang="ts">
-import { useStore } from "@/composition-api/useStore";
-import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 //@ts-ignore
+
 import Peer from "simple-peer";
 import {
   computed,
@@ -25,10 +15,10 @@ import {
 } from "vue";
 export default defineComponent({
   name: "Rooms",
-  setup() {
-    const store = useStore();
-    const userData = computed(() => store.getters.userData);
+  setup(_, root) {
+    const auth = useAuthStore();
 
+    const userData = computed(() => auth.userData);
     const socket: any = inject("socket");
     const socketId = ref();
     const connection = ref();

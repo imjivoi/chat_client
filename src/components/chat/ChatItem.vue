@@ -35,7 +35,7 @@
 import Avatar from "../Avatar.vue";
 
 import { defineComponent, PropType } from "vue";
-import { IMessage } from "@/store/interfaces/message";
+import { IMessage } from "@/store/chat/types/message";
 export default defineComponent({
   props: {
     last_message: {

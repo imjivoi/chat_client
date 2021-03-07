@@ -7,34 +7,19 @@
 import AppLayout from "@/layouts/AppLayout.vue";
 
 import { computed, defineComponent, onBeforeMount, ref } from "vue";
-import { useStore } from "./composition-api/useStore";
-import { AllActionTypes } from "./store/types/actions.types";
+import { useAuthStore } from "./store/auth/useAuthStore";
 export default defineComponent({
   components: { AppLayout },
 
   setup() {
-    const store = useStore();
-
-    const isLoading = ref(true);
-    const isLogged = computed(() => store.getters.isLogged);
-
-    function logout() {
-      store.dispatch(AllActionTypes.LOGOUT);
-    }
-
+    const auth = useAuthStore();
     onBeforeMount(async () => {
       try {
-        await store.dispatch(AllActionTypes.GET_USER_DATA);
+        await auth.GET_USER_DATA();
       } catch (error) {}
-
-      isLoading.value = false;
     });
 
-    return {
-      isLoading,
-      isLogged,
-      logout,
-    };
+    return {};
   },
 });
 </script>

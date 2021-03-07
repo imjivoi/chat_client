@@ -56,22 +56,8 @@ import Button from "../components/Button.vue";
 import ChatInput from "../components/chat/ChatInput.vue";
 import Avatar from "../components/Avatar.vue";
 
-import { useStore } from "@/composition-api/useStore";
-import { IMessage } from "../store/interfaces/message";
-
-import {
-  computed,
-  defineComponent,
-  inject,
-  nextTick,
-  onBeforeMount,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
-import { AllActionTypes } from "@/store/types/actions.types";
+import { computed, defineComponent, inject, nextTick, ref, watch } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
-import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
 export default defineComponent({
   name: "Chat",
   components: {
@@ -83,67 +69,67 @@ export default defineComponent({
     AdjustmentIcon,
     OptionsIcon,
   },
-  setup() {
-    const store = useStore();
-    const route = useRoute();
+  // setup() {
+  //   const store = useStore();
+  //   const route = useRoute();
 
-    const isLoading = ref(false);
+  //   const isLoading = ref(false);
 
-    const content = ref();
-    const chatId = ref<string | string[]>(route.params.id);
-    const user = computed(() => store.getters.userData);
-    const chat = computed(() => store.getters.activeChat(chatId.value));
-    const participants = computed(() =>
-      chat.value?.participants.filter((i) => i._id !== user.value?._id)
-    );
-    const status = computed(() => {
-      if (
-        chat.value?.typing &&
-        chat.value.typing.status &&
-        chat.value.typing.nickname !== user.value?.username
-      ) {
-        return `${chat.value.typing.nickname} is typing ...`;
-      } else {
-        return "connecting";
-      }
-    });
+  //   const content = ref();
+  //   const chatId = ref<string | string[]>(route.params.id);
+  //   const user = computed(() => store.getters.userData);
+  //   const chat = computed(() => store.getters.activeChat(chatId.value));
+  //   const participants = computed(() =>
+  //     chat.value?.participants.filter((i) => i._id !== user.value?._id)
+  //   );
+  //   const status = computed(() => {
+  //     if (
+  //       chat.value?.typing &&
+  //       chat.value.typing.status &&
+  //       chat.value.typing.nickname !== user.value?.username
+  //     ) {
+  //       return `${chat.value.typing.nickname} is typing ...`;
+  //     } else {
+  //       return "connecting";
+  //     }
+  //   });
 
-    const socket = inject("socket");
+  //   const socket = inject("socket");
 
-    async function fetchMessages() {
-      if (chat.value && !chat.value?.all_messages.count) {
-        await store.dispatch(AllActionTypes.GET_MESSAGES, chatId.value);
-      }
-      isLoading.value = false;
-      toBottom();
-    }
+  //   async function fetchMessages() {
+  //     if (chat.value && !chat.value?.all_messages.count) {
+  //       await store.dispatch(AllActionTypes.GET_MESSAGES, chatId.value);
+  //     }
+  //     isLoading.value = false;
+  //     toBottom();
+  //   }
 
-    function toBottom() {
-      nextTick(() => {
-        content.value.scrollTop = content.value.scrollHeight;
-      });
-    }
+  //   function toBottom() {
+  //     nextTick(() => {
+  //       content.value.scrollTop = content.value.scrollHeight;
+  //     });
+  //   }
 
-    onBeforeRouteUpdate(async (to, from) => {
-      if (to.params.id !== from.params.id) {
-        isLoading.value = true;
-        chatId.value = to.params.id;
-        await fetchMessages();
-      }
-    });
+  //   onBeforeRouteUpdate(async (to, from) => {
+  //     if (to.params.id !== from.params.id) {
+  //       isLoading.value = true;
+  //       chatId.value = to.params.id;
+  //       await fetchMessages();
+  //     }
+  //   });
 
-    watch(chat, () => toBottom(), { deep: true });
+  //   watch(chat, () => toBottom(), { deep: true });
 
-    return {
-      isLoading,
-      chat,
-      user,
-      chatId,
-      status,
-      participants,
-      content,
-    };
-  },
+  //   return {
+  //     isLoading,
+  //     chat,
+  //     user,
+  //     chatId,
+  //     status,
+  //     participants,
+  //     content,
+  //   };
+  // },
 });
 </script>
 

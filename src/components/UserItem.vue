@@ -16,7 +16,7 @@ import Badge from "./Badge.vue";
 import Avatar from "./Avatar.vue";
 
 import { defineComponent, inject, PropType } from "vue";
-import { IUserData } from "@/store/interfaces/user";
+import { IUserData } from "@/store/auth/types/user";
 import { AllActionTypes } from "@/store/types/actions.types";
 import { useStore } from "@/composition-api/useStore";
 import { ICreateChatData } from "@/utils/api/chatAPI";

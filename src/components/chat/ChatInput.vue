@@ -20,8 +20,6 @@ import {
   watch,
 } from "vue";
 import useChatinput from "@/composition-api/useChatInput";
-import { AllActionTypes } from "@/store/types/actions.types";
-import { IUserData } from "@/store/interfaces/user";
 import { useRoute } from "vue-router";
 export default defineComponent({
   components: { Btn, EmojiPicker, SendIcon },

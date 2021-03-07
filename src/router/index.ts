@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import { state } from "../store/modules/auth/state";
+import { state } from "../store/auth/state";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -62,11 +62,6 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  if (!to.path.includes("auth") && !state.isLogged) next({ name: "Login" });
-  else next();
 });
 
 export default router;

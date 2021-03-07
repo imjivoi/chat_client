@@ -23,32 +23,26 @@
 </template>
 
 <script lang="ts">
-import Button from "../../components/Button.vue";
-
-import InputText from "primevue/inputtext";
-
-import { computed, defineComponent, reactive, ref } from "vue";
-import { useStore } from "@/composition-api/useStore";
-import { AllActionTypes } from "@/store/types/actions.types";
+import { defineComponent, reactive, ref } from "vue";
 import notificationService from "@/services/notificationService";
 import useValidation from "@/composition-api/useFormRules";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 
 export default defineComponent({
   name: "Signup",
-  components: { InputText, Button },
   setup(_, ctx) {
     const form = reactive({
       username: "",
       email: "",
       password: "",
     });
-    const store = useStore();
+    const auth = useAuthStore();
     const { rules, formBlock, validation } = useValidation();
 
     async function register() {
       if (await validation()) {
-        store
-          .dispatch(AllActionTypes.REGISTER, {
+        auth
+          .REGISTER({
             username: form.username,
             email: form.email,
             password: form.password,

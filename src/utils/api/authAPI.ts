@@ -1,4 +1,4 @@
-import { IAuth } from "@/store/interfaces/user";
+import { IAuth } from "@/store/auth/types/user";
 import { TokenType } from "@/store/types/token";
 import { HTTP } from "../axios";
 

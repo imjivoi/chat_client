@@ -15,19 +15,19 @@ import SideBar from "@/components/Sidebar.vue";
 import Spinner from "@/components/Spinner.vue";
 
 import useSocket from "@/composition-api/useSocket";
-import { useStore } from "@/composition-api/useStore";
 import { useRoute } from "vue-router";
 
 import { computed, defineComponent, onMounted, provide } from "vue";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 export default defineComponent({
   name: "AppLayoutDefault",
   components: { SideBar, Spinner },
   setup() {
-    const store = useStore();
+    const auth = useAuthStore();
     const route = useRoute();
     const routeTitle = computed(() => route.meta.title);
     const { socket } = useSocket("127.0.0.1:80");
-    const isLoading = computed(() => store.getters.isLoadingAuth);
+    const isLoading = computed(() => auth.isLoading);
     provide("socket", socket);
 
     return { routeTitle, isLoading };

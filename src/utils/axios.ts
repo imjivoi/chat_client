@@ -1,6 +1,6 @@
 import router from "@/router";
 import { store } from "@/store";
-import { AllActionTypes } from "@/store/types/actions.types";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 import axios from "axios";
 import { VueCookieNext } from "vue-cookie-next";
 
@@ -17,7 +17,8 @@ HTTP.interceptors.request.use(function(config) {
 HTTP.interceptors.response.use(undefined, function(err) {
   return new Promise(function(resolve, reject) {
     if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-      store.dispatch(AllActionTypes.LOGOUT);
+      const auth = useAuthStore();
+      auth.LOGOUT();
       router.push("/auth/login");
     }
     throw err;

@@ -1,5 +1,5 @@
 import { IMessage, IMessagesList } from "./message";
-import { IUserData } from "./user";
+import { IUserData } from "../../auth/types/user";
 
 export interface IChatItem {
   participants: Array<IUserData>;
@@ -20,13 +20,9 @@ export interface IChatItem {
 }
 
 export interface IChatState {
-  chats: IChatsList;
-  isLoading?: boolean;
-}
-
-export interface IChatsList {
   list: Array<IChatItem> | [];
   count: number | null;
+  isLoading?: boolean;
 }
 
 export interface IAttachments {

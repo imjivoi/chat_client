@@ -21,10 +21,9 @@
 <script lang="ts">
 import useValidation from "@/composition-api/useFormRules";
 import { defineComponent, onMounted, reactive, ref } from "vue";
-import { useStore } from "@/composition-api/useStore";
-import { AllActionTypes } from "@/store/types/actions.types";
 import notificationService from "@/services/notificationService";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "@/store/auth/useAuthStore";
 export default defineComponent({
   name: "Login",
   setup(_, ctx) {
@@ -34,17 +33,17 @@ export default defineComponent({
     });
     const { rules, formBlock, validation } = useValidation();
 
-    const store = useStore();
+    const auth = useAuthStore();
     const router = useRouter();
 
     async function login() {
       if (await validation()) {
-        store
-          .dispatch(AllActionTypes.GET_AUTH, {
+        auth
+          .GET_AUTH({
             email: form.email,
             password: form.password,
           })
-          .then((res) => {
+          .then(() => {
             notificationService.success("Authorized");
             router.push("/app");
           });

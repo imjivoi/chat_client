@@ -1,5 +1,5 @@
-import { IAttachments } from "@/store/interfaces/chat";
-import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
+import { IAttachments } from "@/store/chat/types/chat";
+import { ChatSocketEvents } from "@/store/chat/types/chat-socket";
 import { toBase64 } from "@/utils/base64encryption";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";

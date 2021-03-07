@@ -40,19 +40,7 @@ import Spinner from "../components/Spinner.vue";
 import Chat from "./Chat.vue";
 import ChatItem from "../components/chat/ChatItem.vue";
 
-import {
-  computed,
-  defineComponent,
-  inject,
-  onMounted,
-  provide,
-  ref,
-} from "vue";
-import { useStore } from "@/composition-api/useStore";
-import { useRoute, useRouter } from "vue-router";
-import { AllActionTypes } from "@/store/types/actions.types";
-import { ChatSocketEvents } from "@/store/interfaces/chat-socket";
-import { AllMutationTypes } from "@/store/types/mutations.types";
+import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
   components: { ChatItem, Chat, Spinner, CutomInput, Search, Button, Plus },
@@ -61,21 +49,8 @@ export default defineComponent({
     const search = ref("");
     const isLoading = ref(false);
 
-    const router = useRouter();
-    const store = useStore();
-    const chats = computed(() => store.getters.chats);
-    const userId = store.getters.userData?._id;
-    function toChat(id: string) {
-      router.push({ name: "Chat", params: { id } });
-    }
-
     return {
-      chats,
-      search,
-      userId,
-
       isLoading,
-      toChat,
     };
   },
 });

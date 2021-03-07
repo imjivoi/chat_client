@@ -3,8 +3,8 @@ import { createApp } from "vue";
 import PrimeVue from "primevue/config";
 import { VueCookieNext } from "vue-cookie-next";
 import Toast from "vue-toastification";
-import SocketIO from "@/plugins/socketIO";
 import ElementPlus from "element-plus";
+import { createPinia } from "pinia";
 
 //styles
 import "element-plus/lib/theme-chalk/index.css";
@@ -17,15 +17,10 @@ import "@/styles/default.scss";
 //modules
 import App from "./App.vue";
 import router from "./router";
-import { store } from "./store";
 import ErrorService from "./services/errorService";
-import { AllMutationTypes } from "./store/types/mutations.types";
+import { useAuthStore } from "./store/auth/useAuthStore";
 
 const app = createApp(App);
-
-//check jwt token
-const token = VueCookieNext.getCookie("accessToken");
-if (token) store.commit(AllMutationTypes.SET_LOGGED, true);
 
 app.directive("click-outside", {
   beforeMount(el, binding, vnode) {
@@ -49,10 +44,19 @@ app
   })
   .use(PrimeVue)
   .use(ElementPlus)
-  //@ts-ignore
-  .use(VueCookieNext)
-  .use(store)
-  .use(router)
-  .mount("#app");
+  .use(createPinia())
+  .use(router);
+
+//check jwt token
+const auth = useAuthStore();
+const token = VueCookieNext.getCookie("accessToken");
+if (token) auth.$state.isLogged = true;
+
+router.beforeEach((to, from, next) => {
+  if (!to.path.includes("auth") && !auth.isLogged) next({ name: "Login" });
+  else next();
+});
+
+app.mount("#app");
 
 app.config.errorHandler = (error) => ErrorService.onError(error);

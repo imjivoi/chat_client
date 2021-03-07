@@ -1,4 +1,4 @@
-import { IAttachments } from "@/store/interfaces/chat";
+import { IAttachments } from "@/store/chat/types/chat";
 
 export function toBase64(file: File) {
   return new Promise((resolve, reject) => {

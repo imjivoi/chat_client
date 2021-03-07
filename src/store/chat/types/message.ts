@@ -1,4 +1,4 @@
-import { IUserData } from "./user";
+import { IUserData } from "../../auth/types/user";
 
 export interface IMessage {
   sender?: IUserData;

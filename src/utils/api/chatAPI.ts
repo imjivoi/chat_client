@@ -1,4 +1,4 @@
-import { IChatItem } from "@/store/interfaces/chat";
+import { IChatItem } from "@/store/chat/types/chat";
 import { HTTP } from "../axios";
 
 const url = "/chats/";
