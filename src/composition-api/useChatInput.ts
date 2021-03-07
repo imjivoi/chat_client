@@ -1,9 +1,9 @@
+import { useAuthStore } from "@/store/auth/useAuthStore";
 import { IAttachments } from "@/store/chat/types/chat";
 import { ChatSocketEvents } from "@/store/chat/types/chat-socket";
 import { toBase64 } from "@/utils/base64encryption";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "./useStore";
 
 export default function useChatInput(socket: any) {
   const message = ref<string | null>(null);
@@ -14,7 +14,7 @@ export default function useChatInput(socket: any) {
   const timeout = ref<any | null>(null);
 
   const route = useRoute();
-  const store = useStore();
+  const auth = useAuthStore();
 
   console.log(route);
   const attachmentsUrl = computed(() => {
@@ -84,7 +84,7 @@ export default function useChatInput(socket: any) {
     socket.emit(ChatSocketEvents.TYPING_MESSAGE, {
       chat_id: route.params.id,
       status: status,
-      nickname: store.getters.userData?.username,
+      nickname: auth.userData?.username,
     });
   }
 

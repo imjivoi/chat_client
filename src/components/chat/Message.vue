@@ -65,10 +65,9 @@
 
 <script lang="ts">
 import Modal from "../Modal.vue";
-import { useStore } from "@/composition-api/useStore";
 import Avatar from "../Avatar.vue";
 
-import { formatDistanceToNow, parseISO } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 //@ts-ignore
 import ClickOutside from "vue-click-outside";
 
