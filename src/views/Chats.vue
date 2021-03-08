@@ -1,11 +1,10 @@
 <template>
-  <section class="chats p-d-flex ">
-    <div class="empty" v-if="isLoading"><Spinner height="100%" /></div>
+  <div class="empty" v-if="isLoading"><Spinner height="100%" /></div>
 
-    <template v-else>
+  <template v-else>
+    <div class="p-d-flex">
       <div class="chats__list">
         <div class="chats__header p-mb-2">
-          <h2>Chats</h2>
           <el-button type="primary" icon="el-icon-plus"
             >Create new chat</el-button
           >
@@ -27,8 +26,8 @@
         <router-view />
         <p v-if="!$route.params.id">Choose a chat</p>
       </div>
-    </template>
-  </section>
+    </div>
+  </template>
 </template>
 
 <script lang="ts">
@@ -58,9 +57,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .chats {
-  height: 100%;
-  margin: 0 0 0 310px;
-  padding: 90px 0 0;
   &__header {
     display: flex;
     justify-content: space-between;
@@ -86,7 +82,6 @@ export default defineComponent({
 .chat__content {
   width: 65%;
   position: relative;
-  margin: 0 0 0 80px;
   // background: #ffffff;
   border-radius: 6px;
 

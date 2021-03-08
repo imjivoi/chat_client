@@ -30,18 +30,19 @@ import {
   Settings,
   Logout,
   User,
+  Chats,
 } from "@/components/icons";
 import { useAuthStore } from "@/store/auth/useAuthStore";
 import { computed, defineComponent } from "vue";
 export default defineComponent({
   name: "Sidebar",
-  components: { Home, Voices, Notifications, Settings, Logout, User },
+  components: { Home, Voices, Notifications, Settings, Logout, User, Chats },
   setup() {
     const auth = useAuthStore();
     const userData = computed(() => auth.userData);
     const sidebarItems = [
       { title: "home", link: "/" },
-      // { title: "chats", link: "/app/chats/" },
+      { title: "chats", link: "/chats/" },
       { title: "voices", link: "/voices/" },
       { title: "notifications", link: "/notifications/" },
       { title: "settings", link: "/settings" },
