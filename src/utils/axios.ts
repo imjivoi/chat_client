@@ -1,5 +1,4 @@
 import router from "@/router";
-import { store } from "@/store";
 import { useAuthStore } from "@/store/auth/useAuthStore";
 import axios from "axios";
 import { VueCookieNext } from "vue-cookie-next";

@@ -5,14 +5,15 @@
 </template>
 
 <script>
-import Default from "./AppDefaultLayout";
+import Main from "./AppMainLayout";
 import Empty from "./AppEmptyLayout";
 export default {
   name: "AppLayout",
-  components: { Default, Empty },
+  components: { Main, Empty },
   computed: {
     layout() {
-      return this.$route.meta.layout || Default;
+      console.log(this.$route.meta.layout);
+      return this.$route.meta.layout || Empty;
     },
   },
 };

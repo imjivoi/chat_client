@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import Avatar from "../Avatar.vue";
+import Avatar from "../common/Avatar.vue";
 
 import { defineComponent, PropType } from "vue";
 import { IMessage } from "@/store/chat/types/message";

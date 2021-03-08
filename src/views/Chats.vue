@@ -33,10 +33,10 @@
 
 <script lang="ts">
 import Plus from "../components/icons/Plus.vue";
-import Button from "../components/Button.vue";
+import Button from "../components/common/Button.vue";
 import Search from "../components/icons/Search.vue";
-import CutomInput from "../components/Input.vue";
-import Spinner from "../components/Spinner.vue";
+import CutomInput from "../components/common/Input.vue";
+import Spinner from "../components/common/Spinner.vue";
 import Chat from "./Chat.vue";
 import ChatItem from "../components/chat/ChatItem.vue";
 

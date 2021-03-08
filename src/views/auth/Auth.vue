@@ -1,6 +1,6 @@
 <template>
   <section class="auth">
-    <p><router-link to="/app">Back to main page</router-link></p>
+    <p><router-link to="/">Back to main page</router-link></p>
     <div class="auth__block">
       <router-view />
     </div>
@@ -9,7 +9,7 @@
 
 <style scoped lang="scss">
 .auth {
-  height: 100%;
+  height: 100vh;
   width: 100vw;
   background: #fff;
 

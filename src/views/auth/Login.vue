@@ -45,7 +45,7 @@ export default defineComponent({
           })
           .then(() => {
             notificationService.success("Authorized");
-            router.push("/app");
+            router.push("/");
           });
       }
     }

@@ -5,7 +5,7 @@
         ><Avatar :image="item.avatar" :nickname="item.nickname"/></template
     ></Badge>
     <div class="user__name">{{ item.nickname }}</div>
-    <Button label="Send" rounded @click="createChat()" />
+    <Button label="Send" rounded />
   </li>
 </template>
 
@@ -17,9 +17,6 @@ import Avatar from "./Avatar.vue";
 
 import { defineComponent, inject, PropType } from "vue";
 import { IUserData } from "@/store/auth/types/user";
-import { AllActionTypes } from "@/store/types/actions.types";
-import { useStore } from "@/composition-api/useStore";
-import { ICreateChatData } from "@/utils/api/chatAPI";
 export default defineComponent({
   props: {
     item: {
@@ -28,19 +25,7 @@ export default defineComponent({
     },
   },
   components: { Badge, Avatar, Button },
-  setup(props, ctx) {
-    const store = useStore();
-
-    function createChat() {
-      const userId = store.getters.userData?._id;
-      if (userId) {
-        const data: ICreateChatData = {};
-        store.dispatch(AllActionTypes.CREATE_CHAT, data);
-      }
-    }
-
-    return { createChat };
-  },
+  setup(props, ctx) {},
 });
 </script>
 

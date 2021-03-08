@@ -16,8 +16,6 @@
 import Button from "./Button.vue";
 
 import { computed, defineComponent } from "vue";
-import { useStore } from "@/composition-api/useStore";
-import { AllActionTypes } from "@/store/types/actions.types";
 export default defineComponent({
   props: {
     isLogged: {

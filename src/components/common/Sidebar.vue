@@ -1,6 +1,6 @@
 <template>
   <aside class="sidebar">
-    <div class="sidebar__profile">
+    <div class="sidebar__profile" v-if="userData">
       <div class="sidebar__profile-avatar">
         <img src="" alt="" v-if="userData.avatar" />
         <User v-else />

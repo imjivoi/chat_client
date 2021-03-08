@@ -6,34 +6,26 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "Home",
     component: () => import("../views/Home.vue"),
-    meta: { title: "Home" },
+    meta: { title: "Home", layout: "Main" },
+  },
+  {
+    path: "/chats/",
+    name: "Chats",
+    meta: { title: "Chats", layout: "Main" },
+
+    component: () => import("../views/Chats.vue"),
     children: [
       {
-        path: "/chats/",
-        name: "Chats",
-        meta: { title: "Chats" },
-
-        component: () => import("../views/Chats.vue"),
-        children: [
-          {
-            path: "/chats/:id",
-            name: "Chat",
-            component: () => import("../views/Chat.vue"),
-          },
-        ],
+        path: "/chats/:id",
+        name: "Chat",
+        component: () => import("../views/Chat.vue"),
       },
-
-      // {
-      //   path: "/friends/",
-      //   name: "Friends",
-      //   component: () => import("../views/Friends.vue"),
-      // },
     ],
   },
   {
     path: "/voices",
     name: "Voices",
-    meta: { title: "Voices" },
+    meta: { title: "Voices", layout: "Main" },
     component: () => import("@/views/Voices.vue"),
   },
   {

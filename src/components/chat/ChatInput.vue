@@ -8,7 +8,7 @@
 <script lang="ts">
 import SendIcon from "../icons/SendIcon.vue";
 import EmojiPicker from "./EmojiPicker.vue";
-import Btn from "../Button.vue";
+import Btn from "../common/Button.vue";
 
 import {
   computed,

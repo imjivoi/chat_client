@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Modal from "../Modal";
+import Modal from "../common/Modal";
 
 const emojis = require("emoji.json/emoji-compact.json");
 export default {
@@ -25,7 +25,7 @@ export default {
 };
 </script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .emoji-picker {
   span {
     margin: 5px;

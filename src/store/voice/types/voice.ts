@@ -11,6 +11,7 @@ export interface IVoice {
 export interface IVoiceState {
   voices: IVoice[] | [];
   isLoading: boolean;
+  activeVoiceId: string | null;
 }
 
 export enum VoiceIoEvents {
@@ -21,4 +22,7 @@ export enum VoiceIoEvents {
   BLOCK_USER = "BLOCK_USER",
   CREATE_INVITE = "CREATE_INVITE",
   NEW_INVITE = "NEW_INVITE",
+  CALL_USER = "CALL_USER",
+  ANSWER_CALL = "ANSWER_CALL",
+  CALL_ACCEPTED = "CALL_ACCEPTED",
 }

@@ -50,11 +50,11 @@
 <script lang="ts">
 import OptionsIcon from "../components/icons/Options.vue";
 import AdjustmentIcon from "../components/icons/Adjustment.vue";
-import Spinner from "../components/Spinner.vue";
+import Spinner from "../components/common/Spinner.vue";
 import Message from "../components/chat/Message.vue";
-import Button from "../components/Button.vue";
+import Button from "../components/common/Button.vue";
 import ChatInput from "../components/chat/ChatInput.vue";
-import Avatar from "../components/Avatar.vue";
+import Avatar from "../components/common/Avatar.vue";
 
 import { computed, defineComponent, inject, nextTick, ref, watch } from "vue";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";

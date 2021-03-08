@@ -2,24 +2,28 @@
   <AppLayout>
     <router-view />
   </AppLayout>
+  <Modal />
 </template>
 <script lang="ts">
+import Modal from "@/components/common/Modal.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
 
+import { useModal, useAuthStore } from "@/store/";
+
 import { computed, defineComponent, onBeforeMount, ref } from "vue";
-import { useAuthStore } from "./store/auth/useAuthStore";
 export default defineComponent({
-  components: { AppLayout },
+  components: { AppLayout, Modal },
 
   setup() {
     const auth = useAuthStore();
+    const modal = useModal();
     onBeforeMount(async () => {
       try {
         await auth.GET_USER_DATA();
       } catch (error) {}
     });
 
-    return {};
+    return { isActiveModal: computed(() => modal.isActive) };
   },
 });
 </script>

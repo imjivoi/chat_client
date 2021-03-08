@@ -11,24 +11,34 @@
 </template>
 
 <script lang="ts">
-import SideBar from "@/components/Sidebar.vue";
-import Spinner from "@/components/Spinner.vue";
+import SideBar from "@/components/common/Sidebar.vue";
+import Spinner from "@/components/common/Spinner.vue";
 
 import useSocket from "@/composition-api/useSocket";
 import { useRoute } from "vue-router";
 
-import { computed, defineComponent, onMounted, provide } from "vue";
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  provide,
+} from "vue";
 import { useAuthStore } from "@/store/auth/useAuthStore";
+import { useVoiceStore } from "@/store";
 export default defineComponent({
   name: "AppLayoutDefault",
   components: { SideBar, Spinner },
   setup() {
     const auth = useAuthStore();
+    const voice = useVoiceStore();
     const route = useRoute();
     const routeTitle = computed(() => route.meta.title);
     const { socket } = useSocket("127.0.0.1:80");
     const isLoading = computed(() => auth.isLoading);
     provide("socket", socket);
+
+    onBeforeMount(() => voice.GET_VOICES());
 
     return { routeTitle, isLoading };
   },

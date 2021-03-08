@@ -64,8 +64,8 @@
 </template>
 
 <script lang="ts">
-import Modal from "../Modal.vue";
-import Avatar from "../Avatar.vue";
+import Modal from "../common/Modal.vue";
+import Avatar from "../common/Avatar.vue";
 
 import { formatDistanceToNow } from "date-fns";
 //@ts-ignore
