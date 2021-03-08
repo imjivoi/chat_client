@@ -2,8 +2,8 @@
   <aside class="sidebar">
     <div class="sidebar__profile" v-if="userData">
       <div class="sidebar__profile-avatar">
-        <img src="" alt="" v-if="userData.avatar" />
-        <User v-else />
+        <el-avatar :src="userData.avatar" v-if="userData.avatar" />
+        <el-avatar icon="el-icon-user-solid" v-else></el-avatar>
       </div>
       <div class="sidebar__profile-name">{{ userData.username }}</div>
     </div>

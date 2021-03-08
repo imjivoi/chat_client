@@ -3,11 +3,7 @@
 </template>
 
 <script>
-export default {
-  mounted() {
-    console.log("empty");
-  },
-};
+export default {};
 </script>
 
 <style></style>

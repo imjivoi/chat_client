@@ -24,21 +24,26 @@ import {
   onMounted,
   provide,
 } from "vue";
-import { useAuthStore } from "@/store/auth/useAuthStore";
-import { useVoiceStore } from "@/store";
+import { useChatStore, useVoiceStore, useAuthStore } from "@/store";
+import { useFriendshipStore } from "@/store/friendship/useFriendshipStore";
 export default defineComponent({
   name: "AppLayoutDefault",
   components: { SideBar, Spinner },
   setup() {
     const auth = useAuthStore();
     const voice = useVoiceStore();
+    const chat = useChatStore();
+    const friends = useFriendshipStore();
     const route = useRoute();
     const routeTitle = computed(() => route.meta.title);
     const { socket } = useSocket("127.0.0.1:80");
     const isLoading = computed(() => auth.isLoading);
     provide("socket", socket);
 
-    onBeforeMount(() => voice.GET_VOICES());
+    onBeforeMount(() => {
+      voice.GET_VOICES();
+      friends.GET_ALL();
+    });
 
     return { routeTitle, isLoading };
   },
@@ -51,6 +56,7 @@ export default defineComponent({
   padding: 50px 35px 0 35px;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 
   h2 {
     margin: 0 0 50px;

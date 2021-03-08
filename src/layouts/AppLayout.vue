@@ -12,7 +12,6 @@ export default {
   components: { Main, Empty },
   computed: {
     layout() {
-      console.log(this.$route.meta.layout);
       return this.$route.meta.layout || Empty;
     },
   },

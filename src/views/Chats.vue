@@ -2,25 +2,18 @@
   <div class="empty" v-if="isLoading"><Spinner height="100%" /></div>
 
   <template v-else>
-    <div class="p-d-flex">
-      <div class="chats__list">
-        <div class="chats__header p-mb-2">
-          <el-button type="primary" icon="el-icon-plus"
-            >Create new chat</el-button
-          >
+    <div class="p-d-flex " style="height:88%">
+      <div style="width:300px">
+        <div class="p-mb-2">
+          <el-tabs v-model="activeTab" style="width:100%" stretch>
+            <el-tab-pane label="Chats" name="Chats" style="text-align:left"
+              ><ChatTab />
+            </el-tab-pane>
+            <el-tab-pane label="Friends" name="Friends" style="text-align:left"
+              ><FriendsTab
+            /></el-tab-pane>
+          </el-tabs>
         </div>
-        <CutomInput>
-          <template v-slot:icon> <Search class="svg" /> </template>
-        </CutomInput>
-        <ul class="chats__items">
-          <ChatItem
-            v-for="chat in chats"
-            :key="chat._id"
-            :last_message="chat.last_message"
-            :id="chat._id"
-            @click="toChat(chat._id)"
-          />
-        </ul>
       </div>
       <div class="chat__content">
         <router-view />
@@ -31,25 +24,22 @@
 </template>
 
 <script lang="ts">
-import Plus from "../components/icons/Plus.vue";
-import Button from "../components/common/Button.vue";
-import Search from "../components/icons/Search.vue";
-import CutomInput from "../components/common/Input.vue";
+import FriendsTab from "@/components/chat/FriendsTab.vue";
+import ChatTab from "@/components/chat/ChatTab.vue";
 import Spinner from "../components/common/Spinner.vue";
-import Chat from "./Chat.vue";
-import ChatItem from "../components/chat/ChatItem.vue";
 
 import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
-  components: { ChatItem, Chat, Spinner, CutomInput, Search, Button, Plus },
+  components: { Spinner, ChatTab, FriendsTab },
   name: "Chats",
   setup() {
     const search = ref("");
     const isLoading = ref(false);
-
+    const activeTab = ref("Chats");
     return {
       isLoading,
+      activeTab,
     };
   },
 });
@@ -69,14 +59,6 @@ export default defineComponent({
   &__list {
     width: 300px;
   }
-
-  &__items {
-    margin: 20px 0 0;
-    height: 85%;
-    overflow-y: auto;
-    width: 106%;
-    padding: 0 15px 0 0;
-  }
 }
 
 .chat__content {
@@ -84,6 +66,7 @@ export default defineComponent({
   position: relative;
   // background: #ffffff;
   border-radius: 6px;
+  height: 100%;
 
   p {
     position: absolute;
@@ -92,6 +75,17 @@ export default defineComponent({
     transform: translate(-50%, -50%);
     color: var(--primary-color);
     font-size: 2em;
+  }
+}
+.el-tabs {
+  .el-tabs__header {
+    .el-tabs__nav-wrap {
+      display: none;
+
+      &::after {
+        display: none;
+      }
+    }
   }
 }
 </style>
