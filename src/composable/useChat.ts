@@ -2,21 +2,21 @@ import { useAuthStore } from "@/store/auth/useAuthStore";
 import { IAttachments } from "@/store/chat/types/chat";
 import { ChatSocketEvents } from "@/store/chat/types/chat-socket";
 import { toBase64 } from "@/utils/base64encryption";
-import { computed,  ref  } from "vue";
+import {computed, inject, onMounted, ref} from "vue";
 import { useRoute } from "vue-router";
+import {Socket} from "socket.io"
 
-export default function useChatInput(socket: any) {
+export default function useChat() {
+  const socket=inject('socket') as Socket
   const message = ref<string | null>(null);
   const attachments = ref<Array<File>>([]);
   const activeEmojiPicker = ref<boolean>(false);
   const activeAudioRecord = ref<boolean>(false);
   const typing = ref<boolean>(false);
   const timeout = ref<any | null>(null);
-
   const route = useRoute();
   const auth = useAuthStore();
 
-  console.log(route);
   const attachmentsUrl = computed(() => {
     let newArr = [];
     for (let i = 0; i < attachments.value.length; i++) {
@@ -88,6 +88,10 @@ export default function useChatInput(socket: any) {
     });
   }
 
+  function createChat(name:string){
+    socket.emit(ChatSocketEvents.CREATE_CHAT, {name})
+  }
+onMounted(()=>console.log('mounted'))
   return {
     message,
     attachments,
@@ -101,5 +105,6 @@ export default function useChatInput(socket: any) {
     setEmoji,
     typing,
     timeout,
+    createChat
   };
 }

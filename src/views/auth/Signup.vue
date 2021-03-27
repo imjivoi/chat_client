@@ -1,7 +1,7 @@
 <template>
   <div class="signup">
-    <h1 class="p-mb-4">Registration</h1>
-    <el-form :model="form" ref="formBlock" class="p-mb-2" :rules="rules">
+    <h1 class="mb-2">Registration</h1>
+    <el-form :model="form" ref="formBlock" class="mb-1" :rules="rules">
       <el-form-item prop="username">
         <el-input placeholder="Username" v-model="form.username"></el-input>
       </el-form-item>

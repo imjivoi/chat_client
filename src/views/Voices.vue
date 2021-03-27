@@ -25,7 +25,7 @@
 <script lang="ts">
 import Audio from "@/components/voice/Audio.vue";
 import { useModal } from "@/store/";
-import useVoice from "@/composition-api/useGroupVoice";
+import {useVoice} from "@/composable";
 import { useVoiceStore } from "@/store";
 import {
   computed,

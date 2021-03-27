@@ -1,51 +1,67 @@
 <template>
-  <Spinner height="100vh" width="100vw" text="Loading..." v-if="isLoading" />
+  <Spinner v-if="isLoading" height="100vh" text="Loading..." width="100vw"/>
 
-  <div class="content" v-else>
-    <SideBar />
+  <div v-else class="content">
+    <SideBar/>
     <div class="wrapper">
       <h2>{{ routeTitle }}</h2>
-      <router-view />
+      <router-view/>
     </div>
   </div>
+  <Modal/>
+
 </template>
 
 <script lang="ts">
+import Modal from "@/components/common/Modal.vue";
 import SideBar from "@/components/common/Sidebar.vue";
 import Spinner from "@/components/common/Spinner.vue";
 
-import { useSocket } from "@/composable";
-import { useRoute } from "vue-router";
+import {useSocket} from "@/composable";
+import {useRoute} from "vue-router";
 
-import { computed, defineComponent, onBeforeMount,  provide } from "vue";
-import { useChatStore, useVoiceStore, useAuthStore } from "@/store";
-import { useFriendshipStore } from "@/store/friendship/useFriendshipStore";
+import {computed, defineComponent, onMounted, provide} from "vue";
+import {useAuthStore, useChatStore} from "@/store";
+import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
+import {IMessage} from "@/store/chat/types/message";
+import {IChatItem, IChatState} from "@/store/chat/types/chat";
+
 export default defineComponent({
   name: "AppLayoutDefault",
-  components: { SideBar, Spinner },
+  components: {SideBar, Spinner, Modal},
   setup() {
     const auth = useAuthStore();
-    const voice = useVoiceStore();
-    const friends = useFriendshipStore();
+    const chat = useChatStore()
     const route = useRoute();
     const routeTitle = computed(() => route.meta.title);
-    const { socket } = useSocket("127.0.0.1:80");
+    const {socket} = useSocket("127.0.0.1:30");
     const isLoading = computed(() => auth.isLoading);
     provide("socket", socket);
 
-    onBeforeMount(() => {
-      voice.GET_VOICES();
-      friends.GET_ALL();
-    });
+    onMounted(() => {
+      console.log(chat)
+      socket.on(ChatSocketEvents.NEW_MESSAGE, (message: IMessage) => {
+      });
+      socket.on(ChatSocketEvents.CREATE_CHAT, (newChat: IChatItem) => {
+        chat.list.push(newChat)
+      })
+      socket.on(ChatSocketEvents.FETCH_CHATS, (chats: IChatState) => {
+        chat.$patch({
+          list:chats.list,
+          count:chats.count
+        })
+      })
 
-    return { routeTitle, isLoading };
+    })
+
+    return {routeTitle, isLoading};
   }
 });
 </script>
 
 <style lang="scss" scoped>
 .wrapper {
-  margin: 0 0 0 250px;
+  margin: 0 0 0 230px;
   padding: 50px 35px 0 35px;
   height: 100vh;
   overflow: hidden;

@@ -1,29 +1,31 @@
 <template>
   <transition name="fade">
-    <div class="modal" v-if="isActiveModal">
+    <div v-show="isActiveModal" class="modal">
       <div id="modal-content">
         <div class="header">
           <el-button
+            circle
             icon="el-icon-close"
             type="text"
-            circle
             @click="hideModal"
           ></el-button>
         </div>
-        <component :is="acitveComponent" />
+        <component :is="acitveComponent"/>
       </div>
     </div>
   </transition>
 </template>
 
 <script lang="ts">
+import Chat from "@/components/chat/CreateChat.vue"
 import Voice from "@/components/voice/CreateVoice.vue";
-import { useModal } from "@/store";
+import {useModal} from "@/store";
 
-import { computed, defineComponent } from "vue";
+import {computed, defineComponent, inject} from "vue";
+
 export default defineComponent({
   name: "Modal",
-  components: { Voice },
+  components: {Voice, Chat},
   setup() {
     const modal = useModal();
     const acitveComponent = computed(() => modal.type);
@@ -50,6 +52,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+
   #modal-content {
     min-width: 30%;
     max-width: 300px;

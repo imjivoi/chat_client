@@ -1,12 +1,12 @@
 import authAPI from "@/utils/api/authAPI";
-import { defineStore } from "pinia";
-import { VueCookieNext } from "vue-cookie-next";
+import {defineStore} from "pinia";
+import {VueCookieNext} from "vue-cookie-next";
 import notificationService from "@/services/notificationService";
 import router from "@/router";
-import { IAuth } from "./types/user";
-import { state } from "./state";
-import { getDefaultState } from "./default-state";
-import { setAuthHeader } from "@/utils/axios";
+import {IAuth} from "./types/user";
+import {state} from "./state";
+import {getDefaultState} from "./default-state";
+import {setAuthHeader} from "@/utils/axios";
 
 export const useAuthStore = defineStore({
   id: "auth",
@@ -36,16 +36,14 @@ export const useAuthStore = defineStore({
       return new Promise((resolve, reject) => {
         const token = VueCookieNext.getCookie("accessToken");
         if (!token) {
-          reject(token);
-          this.LOGOUT();
-          return router.push({ name: "Login" });
+          reject('Token is empty');
+          return;
         }
         this.isLoading = true;
         return authAPI
           .getUser()
           .then(res => {
             this.userData = res.data;
-            router.push("/");
           })
           .catch(error => reject(error))
           .finally(() => {
@@ -55,17 +53,17 @@ export const useAuthStore = defineStore({
     },
     LOGOUT() {
       this.$state = getDefaultState();
-      router.push({ name: "Login" });
+      router.push({name: "Welcome"});
     },
     REGISTER(payload: IAuth) {
       return new Promise((resolve, reject) => {
         this.isLoading = true;
         authAPI
           .register(payload)
-          .then(({ data }) => {
+          .then(({data}) => {
             this.userData = data;
             this.GET_AUTH(payload);
-            router.push({ name: "Home" });
+            router.push({name: "Home"});
             resolve(data);
           })
           .catch(error => reject(error));

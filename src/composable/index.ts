@@ -1,5 +1,6 @@
-import useChatInput from "./useChatInput";
+import useChat from "./useChat";
 import useFormRules from "./useFormRules";
 import useSocket from "./useSocket";
+import useVoice from "@/composable/useVoice";
 
-export { useChatInput, useFormRules, useSocket };
+export { useChat, useFormRules, useSocket,useVoice };

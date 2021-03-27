@@ -1,12 +1,12 @@
 <template>
   <div class="login">
-    <h1 class="p-mb-4">Login</h1>
-    <el-form :model="form" ref="formBlock" class="p-mb-2" :rules="rules">
+    <h1 class="mb-2">Login</h1>
+    <el-form :model="form" ref="formBlock" class="mb-1" :rules="rules">
       <el-form-item prop="email">
         <el-input placeholder="Email" v-model="form.email"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input placeholder="Password" v-model="form.password"></el-input>
+        <el-input placeholder="Password" v-model="form.password" show-password></el-input>
       </el-form-item>
       <el-button type="primary" @click="login" style="width:100%">Login</el-button>
     </el-form>

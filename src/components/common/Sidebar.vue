@@ -9,7 +9,7 @@
     </div>
     <ul>
       <li v-for="item in sidebarItems" :key="item.title">
-        <router-link :to="item.link"
+        <router-link :to="{name:item.linkName}"
           ><component
             :is="capitalizeFirstLetter(item.title)"
             class="icon"
@@ -41,11 +41,10 @@ export default defineComponent({
     const auth = useAuthStore();
     const userData = computed(() => auth.userData);
     const sidebarItems = [
-      { title: "home", link: "/" },
-      { title: "chats", link: "/chats/" },
-      { title: "voices", link: "/voices/" },
-      { title: "notifications", link: "/notifications/" },
-      { title: "settings", link: "/settings" },
+      { title: "home", linkName: "Home" },
+      { title: "chats", linkName: "Chats" },
+      { title: "voices", linkName: "Voices" },
+      { title: "settings", linkName: "Settings" },
     ];
 
     function capitalizeFirstLetter(string: string) {
@@ -66,7 +65,7 @@ export default defineComponent({
   left: 0;
   top: 0;
   height: 100%;
-  width: 250px;
+  width: 230px;
   box-shadow: $box_shadow;
   background: #fff;
   &__profile {

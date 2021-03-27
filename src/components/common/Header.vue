@@ -1,13 +1,8 @@
 <template>
   <header>
-    <div class="header__right" v-if="!isLoading">
-      <div v-if="!isLogged">
-        <Button label="Login" link="/auth/login" style="margin-right: 10px" />
-        <Button label="Sign up" link="/auth/signup" outline />
-      </div>
-      <div v-else>
-        <Button label="Sign out" outline @click="$emit('logout')" />
-      </div>
+    <div class="header__right flex" >
+        <el-button @click="routeTo('Login')">Login</el-button>
+        <el-button type="primary" @click="routeTo('Signup')">Sign up</el-button>
     </div>
   </header>
 </template>
@@ -15,22 +10,17 @@
 <script lang="ts">
 import Button from "./Button.vue";
 
-import { computed, defineComponent } from "vue";
+import {  defineComponent } from "vue";
 export default defineComponent({
-  props: {
-    isLogged: {
-      type: Boolean,
-      required: true,
-    },
-    isLoading: {
-      type: Boolean,
-      required: true,
-    },
-  },
   components: {
     Button,
   },
-  emit: ["logout"],
+
+  methods:{
+    routeTo(name:string){
+      this.$router.push({name})
+    }
+  }
 });
 </script>
 

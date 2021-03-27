@@ -9,9 +9,6 @@ import { createPinia } from "pinia";
 //styles
 import "element-plus/lib/theme-chalk/index.css";
 import "vue-toastification/dist/index.css";
-import "primevue/resources/themes/saga-blue/theme.css";
-import "primevue/resources/primevue.min.css";
-import "primeflex/primeflex.css";
 import "@/styles/main.scss";
 
 //modules
@@ -57,7 +54,9 @@ if (token) {
 }
 
 router.beforeEach((to, from, next) => {
-  if (!to.path.includes("auth") && !auth.isLogged) next({ name: "Login" });
+  if ( to.path.includes('app') && !auth.isLogged) {
+    next({name: "Welcome"})
+  }
   else next();
 });
 

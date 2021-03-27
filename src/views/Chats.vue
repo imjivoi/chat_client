@@ -2,17 +2,23 @@
   <div class="empty" v-if="isLoading"><Spinner height="100%" /></div>
 
   <template v-else>
-    <div class="p-d-flex " style="height:88%">
+    <div class="flex " style="height:88%" v-if="chat.count">
       <div style="width:300px">
-        <div class="p-mb-2">
-          <el-tabs v-model="activeTab" style="width:100%" stretch>
-            <el-tab-pane label="Chats" name="Chats" style="text-align:left"
-              ><ChatTab />
-            </el-tab-pane>
-            <el-tab-pane label="Friends" name="Friends" style="text-align:left"
-              ><FriendsTab
-            /></el-tab-pane>
-          </el-tabs>
+        <div class="mb-2">
+          <el-input
+            placeholder="Find chat"
+            prefix-icon="el-icon-search"
+            v-model="search">
+          </el-input>
+          <ul class="chats__items">
+            <ChatItem
+              v-for="chat in chats"
+              :key="chat._id"
+              :last_message="chat.last_message"
+              :id="chat._id"
+              @click="toChat(chat._id)"
+            />
+          </ul>
         </div>
       </div>
       <div class="chat__content">
@@ -20,26 +26,39 @@
         <p v-if="!$route.params.id">Choose a chat</p>
       </div>
     </div>
+    <div v-else style="height:88%" class="mt-5">
+      <h3>Click button to create chat</h3>
+      <el-button icon="el-icon-plus" type="primary" class="mt-2" @click="showModal">Create chat</el-button>
+    </div>
   </template>
 </template>
 
 <script lang="ts">
-import FriendsTab from "@/components/chat/FriendsTab.vue";
-import ChatTab from "@/components/chat/ChatTab.vue";
-import Spinner from "../components/common/Spinner.vue";
+import { Search } from "@/components/icons";
+import CustomInput from "@/components/common/Input.vue";
+import ChatItem from "@/components/chat/ChatItem.vue";
+import Spinner from "@/components/common/Spinner.vue";
 
-import { computed, defineComponent, ref } from "vue";
+import {defineComponent, inject, ref} from "vue";
+import {useChatStore, useModal} from "@/store";
 
 export default defineComponent({
-  components: { Spinner, ChatTab, FriendsTab },
+  components: { Spinner,  CustomInput, Search, ChatItem },
   name: "Chats",
   setup() {
     const search = ref("");
     const isLoading = ref(false);
-    const activeTab = ref("Chats");
+    const modal=useModal()
+    const chat=useChatStore()
+
+    const showModal=()=>{
+      modal.SHOW('Chat')
+    }
     return {
       isLoading,
-      activeTab,
+      search,
+      chat,
+      showModal
     };
   },
 });
@@ -73,19 +92,15 @@ export default defineComponent({
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--primary-color);
+    color: $color_blue;
     font-size: 2em;
   }
 }
-.el-tabs {
-  .el-tabs__header {
-    .el-tabs__nav-wrap {
-      display: none;
-
-      &::after {
-        display: none;
-      }
-    }
-  }
+.chats__items {
+  margin: 20px 0 0;
+  height: 85%;
+  overflow-y: auto;
+  width: 106%;
+  padding: 0 15px 0 0;
 }
 </style>

@@ -2,6 +2,7 @@ import router from "@/router";
 import chatAPI, { ICreateChatData } from "@/utils/api/chatAPI";
 import { defineStore } from "pinia";
 import { state } from "./state";
+import {inject} from "vue";
 
 export const useChatStore = defineStore({
   id: "chat",

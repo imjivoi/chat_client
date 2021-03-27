@@ -1,11 +1,7 @@
-import { IAttachments } from "./chat";
-import { IMessage } from "./message";
+import {IAttachments} from "./chat";
+import {IMessage} from "./message";
 
-export interface IChatSocketState {
-  ws: WebSocket | null;
-  status: SocketStatusConnect;
-  quantityConnectErrors: number;
-}
+
 
 export enum ChatSocketEvents {
   NEW_MESSAGE = "NEW_MESSAGE",
@@ -14,7 +10,7 @@ export enum ChatSocketEvents {
   DELETE_USER = "DELETE_USER",
   TYPING_MESSAGE = "TYPING_MESSAGE",
   FETCH_CHATS = "FETCH_CHATS",
-  NEW_VOICE = "NEW_VOICE",
+  CREATE_CHAT = "CREATE_CHAT"
 }
 
 export enum SocketStatusConnect {
@@ -48,28 +44,28 @@ export type ChatSocketSendDataType<T = ChatSocketEvents> = {
   data: SocketChatData<T>;
 };
 
-export type SocketChatData<
-  T = ChatSocketEvents
-> = T extends ChatSocketEvents.DELETE_MESSAGE
+export type SocketChatData<T = ChatSocketEvents> = T extends ChatSocketEvents.DELETE_MESSAGE
   ? IChatSocketDeleteMessageData
   : T extends ChatSocketEvents.DELETE_USER
-  ? IChatSocketUserData
-  : T extends ChatSocketEvents.MESSAGE_STATUS
-  ? IChatSocketMessageStatus
-  : T extends ChatSocketEvents.NEW_MESSAGE
-  ? IChatSocketMessageData
-  : T extends ChatSocketEvents.TYPING_MESSAGE
-  ? IChatSocketTypingData
-  : any;
+    ? IChatSocketUserData
+    : T extends ChatSocketEvents.MESSAGE_STATUS
+      ? IChatSocketMessageStatus
+      : T extends ChatSocketEvents.NEW_MESSAGE
+        ? IChatSocketMessageData
+        : T extends ChatSocketEvents.TYPING_MESSAGE
+          ? IChatSocketTypingData
+          : any;
 
 interface IChatSocketUserData {
   chat_id: string;
   user_id: string;
 }
+
 export interface IChatSocketMessageStatus {
   chat_id: string;
   user_id: string | null | undefined;
 }
+
 interface IChatSocketDeleteMessageData {
   chat_id: string;
   message_id: string;

@@ -11,7 +11,7 @@ import EmojiPicker from "./EmojiPicker.vue";
 import Btn from "../common/Button.vue";
 
 import {  defineComponent, inject, watch } from "vue";
-import { useChatInput } from "@/composable";
+import { useChat } from "@/composable";
 import { useRoute } from "vue-router";
 export default defineComponent({
   components: { Btn, EmojiPicker, SendIcon },
@@ -26,7 +26,7 @@ export default defineComponent({
       activeEmojiPicker,
       setEmoji,
       sendMessage
-    } = useChatInput(inject("socket"));
+    } = useChat();
 
     function hideEmojiPicker() {
       console.log(11);
