@@ -3,7 +3,7 @@ import { VoiceIoEvents } from "@/store/voice/types/voice";
 //@ts-ignore
 
 import Peer from "simple-peer";
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject,  ref } from "vue";
 
 export default function useVoice() {
   const auth = useAuthStore();

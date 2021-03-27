@@ -14,16 +14,10 @@
 import SideBar from "@/components/common/Sidebar.vue";
 import Spinner from "@/components/common/Spinner.vue";
 
-import useSocket from "@/composition-api/useSocket";
+import { useSocket } from "@/composable";
 import { useRoute } from "vue-router";
 
-import {
-  computed,
-  defineComponent,
-  onBeforeMount,
-  onMounted,
-  provide,
-} from "vue";
+import { computed, defineComponent, onBeforeMount,  provide } from "vue";
 import { useChatStore, useVoiceStore, useAuthStore } from "@/store";
 import { useFriendshipStore } from "@/store/friendship/useFriendshipStore";
 export default defineComponent({
@@ -32,7 +26,6 @@ export default defineComponent({
   setup() {
     const auth = useAuthStore();
     const voice = useVoiceStore();
-    const chat = useChatStore();
     const friends = useFriendshipStore();
     const route = useRoute();
     const routeTitle = computed(() => route.meta.title);
@@ -46,7 +39,7 @@ export default defineComponent({
     });
 
     return { routeTitle, isLoading };
-  },
+  }
 });
 </script>
 

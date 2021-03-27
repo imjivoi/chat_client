@@ -4,14 +4,11 @@ import { VoiceIoEvents } from "@/store/voice/types/voice";
 
 import Peer from "simple-peer";
 import { Socket } from "socket.io";
-import { computed, inject, onMounted, reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 
 export default function useVoice(socket: Socket | undefined) {
-  const auth = useAuthStore();
-  const userData = computed(() => auth.userData);
   const peers = reactive<any[]>([]);
 
-  const socketRef = ref();
   const userStream = ref();
   const peersRef = reactive<any[]>([]);
 

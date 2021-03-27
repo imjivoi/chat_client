@@ -12,13 +12,14 @@ import "vue-toastification/dist/index.css";
 import "primevue/resources/themes/saga-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeflex/primeflex.css";
-import "@/styles/default.scss";
+import "@/styles/main.scss";
 
 //modules
 import App from "./App.vue";
 import router from "./router";
 import ErrorService from "./services/errorService";
-import { useAuthStore } from "./store/auth/useAuthStore";
+import { useAuthStore } from "./store/";
+import {  setAuthHeader } from "./utils/axios"
 
 const app = createApp(App);
 
@@ -33,14 +34,14 @@ app.directive("click-outside", {
   },
   unmounted(el) {
     document.body.removeEventListener("click", el.clickOutsideEvent);
-  },
+  }
 });
 
 app
   .use(Toast, {
     transition: "Vue-Toastification__fade",
     maxToasts: 5,
-    newestOnTop: true,
+    newestOnTop: true
   })
   .use(PrimeVue)
   .use(ElementPlus)
@@ -50,7 +51,10 @@ app
 //check jwt token
 const auth = useAuthStore();
 const token = VueCookieNext.getCookie("accessToken");
-if (token) auth.$state.isLogged = true;
+if (token) {
+  auth.$state.isLogged = true;
+  setAuthHeader(token);
+}
 
 router.beforeEach((to, from, next) => {
   if (!to.path.includes("auth") && !auth.isLogged) next({ name: "Login" });
@@ -59,4 +63,4 @@ router.beforeEach((to, from, next) => {
 
 app.mount("#app");
 
-app.config.errorHandler = (error) => ErrorService.onError(error);
+app.config.errorHandler = error => ErrorService.onError(error);

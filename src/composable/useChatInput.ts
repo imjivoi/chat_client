@@ -2,7 +2,7 @@ import { useAuthStore } from "@/store/auth/useAuthStore";
 import { IAttachments } from "@/store/chat/types/chat";
 import { ChatSocketEvents } from "@/store/chat/types/chat-socket";
 import { toBase64 } from "@/utils/base64encryption";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed,  ref  } from "vue";
 import { useRoute } from "vue-router";
 
 export default function useChatInput(socket: any) {

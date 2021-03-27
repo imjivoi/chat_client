@@ -10,20 +10,12 @@ import SendIcon from "../icons/SendIcon.vue";
 import EmojiPicker from "./EmojiPicker.vue";
 import Btn from "../common/Button.vue";
 
-import {
-  computed,
-  defineComponent,
-  inject,
-  onMounted,
-  PropType,
-  ref,
-  watch,
-} from "vue";
-import useChatinput from "@/composition-api/useChatInput";
+import {  defineComponent, inject, watch } from "vue";
+import { useChatInput } from "@/composable";
 import { useRoute } from "vue-router";
 export default defineComponent({
   components: { Btn, EmojiPicker, SendIcon },
-  setup({}, ctx) {
+  setup() {
     const {
       sendTyping,
       setAttachments,
@@ -33,9 +25,8 @@ export default defineComponent({
       typing,
       activeEmojiPicker,
       setEmoji,
-      sendMessage,
-    } = useChatinput(inject("socket"));
-    const route = useRoute();
+      sendMessage
+    } = useChatInput(inject("socket"));
 
     function hideEmojiPicker() {
       console.log(11);
@@ -63,15 +54,15 @@ export default defineComponent({
       activeEmojiPicker,
       hideEmojiPicker,
       setEmoji,
-      sendMessage,
+      sendMessage
     };
   },
   watch: {
     chatId: function() {
       this.message = null;
       this.attachments = [];
-    },
-  },
+    }
+  }
 });
 </script>
 
@@ -113,8 +104,7 @@ export default defineComponent({
     background: linear-gradient(325.78deg, #2a8bf2 14.76%, #7cb8f7 87.3%);
     /* Shadow Active Icon */
 
-    box-shadow: 4px 4px 25px rgba(42, 139, 242, 0.15),
-      2px 2px 25px rgba(42, 139, 242, 0.05),
+    box-shadow: 4px 4px 25px rgba(42, 139, 242, 0.15), 2px 2px 25px rgba(42, 139, 242, 0.05),
       4px 6px 10px rgba(42, 139, 242, 0.15);
     width: 43px;
     height: 40px;

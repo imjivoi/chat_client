@@ -1,48 +1,56 @@
 import authAPI from "@/utils/api/authAPI";
 import { defineStore } from "pinia";
-import { state } from "./state";
-import { IAuth } from "./types/user";
 import { VueCookieNext } from "vue-cookie-next";
 import notificationService from "@/services/notificationService";
 import router from "@/router";
+import { IAuth } from "./types/user";
+import { state } from "./state";
 import { getDefaultState } from "./default-state";
+import { setAuthHeader } from "@/utils/axios";
 
 export const useAuthStore = defineStore({
   id: "auth",
   state: () => state,
   actions: {
     GET_AUTH(payload: IAuth) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          this.isLoading = true;
-          const res = await authAPI.getToken(payload);
-          VueCookieNext.setCookie("accessToken", res.data.accessToken);
-          this.isLogged = true;
-          if (this.userData === null) this.GET_USER_DATA();
-          resolve(res.data);
-        } catch (error) {
-          notificationService.error(error.response.data.detail);
-          reject(error);
-        }
+      return new Promise((resolve, reject) => {
+        this.isLoading = true;
+        authAPI
+          .getToken(payload)
+          .then(res => {
+            VueCookieNext.setCookie("accessToken", res.data.accessToken);
+            this.isLogged = true;
+            setAuthHeader(res.data.accessToken);
+
+            if (this.userData === null) this.GET_USER_DATA();
+            resolve(res.data);
+          })
+          .catch(error => {
+            notificationService.error(error.response.data.detail);
+            reject(error);
+          });
+        this.isLoading = false;
       });
     },
     GET_USER_DATA() {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const token = VueCookieNext.getCookie("accessToken");
-          if (!token) {
-            reject(token);
-            return router.push("/auth/login");
-          }
-          this.isLoading = true;
-          const res = await authAPI.getUser();
-          this.userData = res.data;
-          resolve(res.data);
-        } catch (error) {
-          router.push("/auth/login");
-          reject(error);
+      return new Promise((resolve, reject) => {
+        const token = VueCookieNext.getCookie("accessToken");
+        if (!token) {
+          reject(token);
+          this.LOGOUT();
+          return router.push({ name: "Login" });
         }
-        this.isLoading = false;
+        this.isLoading = true;
+        return authAPI
+          .getUser()
+          .then(res => {
+            this.userData = res.data;
+            router.push("/");
+          })
+          .catch(error => reject(error))
+          .finally(() => {
+            this.isLoading = false;
+          });
       });
     },
     LOGOUT() {
@@ -50,20 +58,19 @@ export const useAuthStore = defineStore({
       router.push({ name: "Login" });
     },
     REGISTER(payload: IAuth) {
-      return new Promise(async (resolve, reject) => {
+      return new Promise((resolve, reject) => {
         this.isLoading = true;
-        try {
-          const { data } = await authAPI.register(payload);
-          this.userData = data;
-          await this.GET_AUTH(payload);
-          router.push("/");
-
-          resolve(data);
-        } catch (error) {
-          reject(error);
-        }
+        authAPI
+          .register(payload)
+          .then(({ data }) => {
+            this.userData = data;
+            this.GET_AUTH(payload);
+            router.push({ name: "Home" });
+            resolve(data);
+          })
+          .catch(error => reject(error));
         this.isLoading = false;
       });
-    },
-  },
+    }
+  }
 });

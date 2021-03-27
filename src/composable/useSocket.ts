@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, provide } from "@vue/runtime-core";
+import { onMounted, onUnmounted } from "@vue/runtime-core";
 import { VueCookieNext } from "vue-cookie-next";
 import io from "socket.io-client";
 

@@ -8,30 +8,26 @@
       <el-form-item prop="password">
         <el-input placeholder="Password" v-model="form.password"></el-input>
       </el-form-item>
-      <el-button type="primary" @click="login" style="width:100%"
-        >Login</el-button
-      >
+      <el-button type="primary" @click="login" style="width:100%">Login</el-button>
     </el-form>
-    <p>
-      Don't registered yet? <router-link to="/auth/signup/">Signup</router-link>
-    </p>
+    <p>Don't registered yet? <router-link to="/auth/signup/">Signup</router-link></p>
   </div>
 </template>
 
 <script lang="ts">
-import useValidation from "@/composition-api/useFormRules";
-import { defineComponent, onMounted, reactive, ref } from "vue";
+import { useFormRules } from "@/composable";
+import { defineComponent,  reactive } from "vue";
 import notificationService from "@/services/notificationService";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/store/auth/useAuthStore";
+import { useAuthStore } from "@/store";
 export default defineComponent({
   name: "Login",
-  setup(_, ctx) {
+  setup() {
     const form = reactive({
       email: "",
-      password: "",
+      password: ""
     });
-    const { rules, formBlock, validation } = useValidation();
+    const { rules, formBlock, validation } = useFormRules();
 
     const auth = useAuthStore();
     const router = useRouter();
@@ -41,7 +37,7 @@ export default defineComponent({
         auth
           .GET_AUTH({
             email: form.email,
-            password: form.password,
+            password: form.password
           })
           .then(() => {
             notificationService.success("Authorized");
@@ -54,9 +50,9 @@ export default defineComponent({
       form,
       login,
       formBlock,
-      rules,
+      rules
     };
-  },
+  }
 });
 </script>
 
