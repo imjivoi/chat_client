@@ -1,70 +1,85 @@
 <template>
-  <div class="empty" v-if="isLoading"><Spinner height="100%" /></div>
+  <div v-if="isLoading" class="empty">
+    <Spinner height="100%"/>
+  </div>
 
   <template v-else>
-    <div class="flex " style="height:88%" v-if="chat.count">
+    <div v-if="chatCount" class="flex justify-between" style="height:88%">
       <div style="width:300px">
         <div class="mb-2">
           <el-input
+            v-model="search"
             placeholder="Find chat"
-            prefix-icon="el-icon-search"
-            v-model="search">
+            prefix-icon="el-icon-search">
           </el-input>
           <ul class="chats__items">
             <ChatItem
-              v-for="chat in chats"
+              v-for="chat in chatsList"
+              :id="chat._id"
               :key="chat._id"
               :last_message="chat.last_message"
-              :id="chat._id"
               @click="toChat(chat._id)"
             />
           </ul>
         </div>
       </div>
       <div class="chat__content">
-        <router-view />
+        <router-view/>
         <p v-if="!$route.params.id">Choose a chat</p>
       </div>
     </div>
-    <div v-else style="height:88%" class="mt-5">
+    <div v-else class="mt-5" style="height:88%">
       <h3>Click button to create chat</h3>
-      <el-button icon="el-icon-plus" type="primary" class="mt-2" @click="showModal">Create chat</el-button>
+      <el-button class="mt-2" icon="el-icon-plus" type="primary"
+                 @click="showModal">Create chat
+      </el-button>
     </div>
   </template>
 </template>
 
 <script lang="ts">
-import { Search } from "@/components/icons";
+import {Search} from "@/components/icons";
 import CustomInput from "@/components/common/Input.vue";
 import ChatItem from "@/components/chat/ChatItem.vue";
 import Spinner from "@/components/common/Spinner.vue";
 
-import {defineComponent, inject, ref} from "vue";
+import {computed, defineComponent, ref} from "vue";
 import {useChatStore, useModal} from "@/store";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
-  components: { Spinner,  CustomInput, Search, ChatItem },
+  components: {Spinner, CustomInput, Search, ChatItem},
   name: "Chats",
   setup() {
     const search = ref("");
     const isLoading = ref(false);
-    const modal=useModal()
-    const chat=useChatStore()
+    const router = useRouter()
+    const modal = useModal()
+    const chat = useChatStore()
+    const chatsList = computed(() => chat.list)
+    const chatCount = computed(() => chat.count)
 
-    const showModal=()=>{
+    const showModal = () => {
       modal.SHOW('Chat')
     }
+
+    function toChat(id: string) {
+      router.push({name: 'Chat', params: {id}})
+    }
+
     return {
       isLoading,
       search,
-      chat,
-      showModal
+      chatsList,
+      chatCount,
+      showModal,
+      toChat
     };
   },
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .chats {
   &__header {
     display: flex;
@@ -75,6 +90,7 @@ export default defineComponent({
   h2 {
     font-size: 28px;
   }
+
   &__list {
     width: 300px;
   }
@@ -96,11 +112,11 @@ export default defineComponent({
     font-size: 2em;
   }
 }
+
 .chats__items {
   margin: 20px 0 0;
   height: 85%;
   overflow-y: auto;
-  width: 106%;
-  padding: 0 15px 0 0;
+  overflow-x: hidden;
 }
 </style>

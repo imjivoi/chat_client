@@ -34,7 +34,7 @@ export default defineComponent({
     const chat = useChatStore()
     const route = useRoute();
     const routeTitle = computed(() => route.meta.title);
-    const {socket} = useSocket("127.0.0.1:30");
+    const {socket} = useSocket("127.0.0.1:80");
     const isLoading = computed(() => auth.isLoading);
     provide("socket", socket);
 

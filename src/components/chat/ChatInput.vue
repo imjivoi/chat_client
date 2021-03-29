@@ -29,7 +29,6 @@ export default defineComponent({
     } = useChat();
 
     function hideEmojiPicker() {
-      console.log(11);
       activeEmojiPicker.value = false;
     }
 

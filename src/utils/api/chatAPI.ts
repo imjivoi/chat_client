@@ -1,5 +1,4 @@
-import { IChatItem } from "@/store/chat/types/chat";
-import { HTTP } from "../axios";
+import {HTTP} from "../axios";
 
 const url = "/chats/";
 
@@ -21,7 +20,7 @@ export default {
     return HTTP.delete(`${url}?id=${id}`);
   },
   exitFromChat(chat_id: string | null) {
-    return HTTP.put(url + "exit/", { chat_id: chat_id });
+    return HTTP.put(url + "exit/", {chat_id: chat_id});
   },
   deleteUserFromChat(chat_id: string, user_id: string) {
     return HTTP.delete(`${url}+delete/?chat_id=${chat_id}&user_id=${user_id}`);
@@ -41,4 +40,9 @@ export default {
   getMessages(chat_id: string | string[]) {
     return HTTP.get(`${url}messages/?chat_id=${chat_id}`);
   },
+  createInvite(chat_id: string | string[], expiresAt: number) {
+    return HTTP.post(url + 'invite', {
+      chat_id, expiresAt
+    })
+  }
 };

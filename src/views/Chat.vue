@@ -2,27 +2,27 @@
   <div v-show="!isLoading">
     <div class="chat__header">
       <div class="chat__header-left">
-        <Avatar
-          image="https://res.cloudinary.com/dqgfkzejx/image/upload/v1611968865/avatar/jivoi.jpg"
-          nickname="nickname"
-          size="54"
-        />
+        <!--        <el-avatar size="medium" sr></el-avatar>-->
 
         <div class="chat__info p-ml-5">
           <div class="chat__name">
-            <h3>nickname</h3>
+            <h3>{{ currentChat.name }}</h3>
           </div>
           <div class="chat__status p-mt-1">{{ status }}</div>
         </div>
       </div>
 
       <div class="chat__options">
-        <button><AdjustmentIcon /></button>
-        <button><OptionsIcon /></button>
+        <button>
+          <AdjustmentIcon/>
+        </button>
+        <button @click="dialogVisible=true">
+          <OptionsIcon/>
+        </button>
       </div>
     </div>
     <div class="chat__messages">
-      <div class="chat__messages-content" ref="content">
+      <div ref="content" class="chat__messages-content">
         <!-- <Message
           v-for="message in messages"
           :key="message.id"
@@ -36,15 +36,21 @@
           :isMe="true"
         /> -->
       </div>
-      <ChatInput />
+      <ChatInput/>
     </div>
   </div>
   <Spinner
-    height="100%"
-    :textSize="0.6"
-    text="Loading messages..."
     v-if="isLoading"
+    :textSize="0.6"
+    height="100%"
+    text="Loading messages..."
   />
+  <el-dialog
+    v-model="dialogVisible"
+    title="Chat options"
+    width="30%">
+    <el-button type="primary" @click="createInvite">Create invite</el-button>
+  </el-dialog>
 </template>
 
 <script lang="ts">
@@ -56,8 +62,11 @@ import Button from "../components/common/Button.vue";
 import ChatInput from "../components/chat/ChatInput.vue";
 import Avatar from "../components/common/Avatar.vue";
 
-import { computed, defineComponent, inject, nextTick, ref, watch } from "vue";
-import { onBeforeRouteUpdate, useRoute } from "vue-router";
+import {computed, defineComponent, nextTick, ref, watch} from "vue";
+import {useRoute} from "vue-router";
+import {useAuthStore, useChatStore} from "@/store";
+import chatAPI from "@/utils/api/chatAPI";
+
 export default defineComponent({
   name: "Chat",
   components: {
@@ -69,71 +78,66 @@ export default defineComponent({
     AdjustmentIcon,
     OptionsIcon,
   },
-  // setup() {
-  //   const store = useStore();
-  //   const route = useRoute();
+  setup() {
+    const user = useAuthStore();
+    const chat = useChatStore()
+    const route = useRoute();
+    const content = ref();
 
-  //   const isLoading = ref(false);
+    const dialogVisible = ref(false)
+    const isLoading = ref(false);
 
-  //   const content = ref();
-  //   const chatId = ref<string | string[]>(route.params.id);
-  //   const user = computed(() => store.getters.userData);
-  //   const chat = computed(() => store.getters.activeChat(chatId.value));
-  //   const participants = computed(() =>
-  //     chat.value?.participants.filter((i) => i._id !== user.value?._id)
-  //   );
-  //   const status = computed(() => {
-  //     if (
-  //       chat.value?.typing &&
-  //       chat.value.typing.status &&
-  //       chat.value.typing.nickname !== user.value?.username
-  //     ) {
-  //       return `${chat.value.typing.nickname} is typing ...`;
-  //     } else {
-  //       return "connecting";
-  //     }
-  //   });
+    const chatId = computed(() => route.params.id);
+    const currentChat = computed(() => chat.list.find(chat => chat._id === chatId.value));
+    const participants = computed(() =>
+      currentChat.value?.participants.filter((i) => i._id !== user.userData?._id)
+    );
+    const status = computed(() => {
+      if (
+        currentChat.value?.typing &&
+        currentChat.value.typing.status &&
+        currentChat.value.typing.nickname !== user.userData?.username
+      ) {
+        return `${currentChat.value.typing.nickname} is typing ...`;
+      } else {
+        return "connecting";
+      }
+    });
 
-  //   const socket = inject("socket");
+    async function createInvite() {
+      const today = new Date()
+      const tomorrow = new Date(today)
+      const expiresAt = tomorrow.setDate(tomorrow.getDate() + 1)
+      const res = await chatAPI.createInvite(chatId.value, expiresAt)
+      console.log(res)
+    }
 
-  //   async function fetchMessages() {
-  //     if (chat.value && !chat.value?.all_messages.count) {
-  //       await store.dispatch(AllActionTypes.GET_MESSAGES, chatId.value);
-  //     }
-  //     isLoading.value = false;
-  //     toBottom();
-  //   }
 
-  //   function toBottom() {
-  //     nextTick(() => {
-  //       content.value.scrollTop = content.value.scrollHeight;
-  //     });
-  //   }
+    function toBottom() {
+      nextTick(() => {
+        content.value.scrollTop = content.value.scrollHeight;
+      });
+    }
 
-  //   onBeforeRouteUpdate(async (to, from) => {
-  //     if (to.params.id !== from.params.id) {
-  //       isLoading.value = true;
-  //       chatId.value = to.params.id;
-  //       await fetchMessages();
-  //     }
-  //   });
 
-  //   watch(chat, () => toBottom(), { deep: true });
+    watch(() => currentChat, () => toBottom(), {deep: true});
 
-  //   return {
-  //     isLoading,
-  //     chat,
-  //     user,
-  //     chatId,
-  //     status,
-  //     participants,
-  //     content,
-  //   };
-  // },
+    return {
+      isLoading,
+      currentChat,
+      user,
+      chatId,
+      status,
+      participants,
+      content,
+      dialogVisible,
+      createInvite
+    };
+  },
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .chat__header {
   width: 100%;
   height: 80px;
@@ -152,10 +156,12 @@ export default defineComponent({
     align-items: center;
     text-align: left;
   }
+
   .chat__name {
     font-size: 14px;
     margin: 0 0 6px;
   }
+
   .chat__status {
     font-size: 12px;
     color: $color_blue;
@@ -164,14 +170,15 @@ export default defineComponent({
 
   .chat__options {
     display: flex;
+
     button {
       width: 52px;
       height: 52px;
       background: #fff;
       border: none;
       box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.03),
-        0px 7px 25px rgba(42, 139, 242, 0.03),
-        0px 5px 25px rgba(42, 139, 242, 0.07);
+      0px 7px 25px rgba(42, 139, 242, 0.03),
+      0px 5px 25px rgba(42, 139, 242, 0.07);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -189,6 +196,7 @@ export default defineComponent({
     }
   }
 }
+
 .chat__messages {
   padding: 10px 20px 0;
   background: #fff;

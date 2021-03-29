@@ -3,10 +3,7 @@
     <template v-if="last_message">
       <div class="chat-item__header">
         <div class="chat-item__header-left">
-          <Avatar
-            image="https://res.cloudinary.com/dqgfkzejx/image/upload/v1611968865/avatar/jivoi.jpg"
-            style="margin:0 10px 0 0"
-          />
+          <el-avatar size="medium" :src="last_message.sender.avatar"></el-avatar>
           <div class="chat-item__header-info">
             <h3>{{ last_message.sender.nickname }}</h3>
             <p>last online 5 hours ago</p>
@@ -27,7 +24,7 @@
         </div>
       </div>
     </template>
-    <template v-else>Create message</template>
+    <template v-else>Click to start</template>
   </div>
 </template>
 
