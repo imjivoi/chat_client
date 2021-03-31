@@ -3,7 +3,7 @@
     <div class="chat__header">
       <div class="chat__header-left">
         <!--        <el-avatar size="medium" sr></el-avatar>-->
-
+        <el-page-header @back="$router.go(-1)"></el-page-header>
         <div class="chat__info p-ml-5">
           <div class="chat__name">
             <h3>{{ currentChat.name }}</h3>

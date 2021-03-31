@@ -1,13 +1,13 @@
-import { useAuthStore } from "@/store/auth/useAuthStore";
-import { IAttachments } from "@/store/chat/types/chat";
-import { ChatSocketEvents } from "@/store/chat/types/chat-socket";
-import { toBase64 } from "@/utils/base64encryption";
-import {computed, inject, onMounted, ref} from "vue";
-import { useRoute } from "vue-router";
+import {useAuthStore} from "@/store/auth/useAuthStore";
+import {IAttachments} from "@/store/chat/types/chat";
+import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
+import {toBase64} from "@/utils/base64encryption";
+import {computed, inject, ref} from "vue";
+import {useRoute} from "vue-router";
 import {Socket} from "socket.io"
 
 export default function useChat() {
-  const socket=inject('socket') as Socket
+  const socket = inject('socket') as Socket
   const message = ref<string | null>(null);
   const attachments = ref<Array<File>>([]);
   const activeEmojiPicker = ref<boolean>(false);
@@ -74,12 +74,15 @@ export default function useChat() {
       attachments.value = [...files];
     }
   }
+
   function deleteFile(index: number) {
     attachments.value?.splice(index, 1);
   }
+
   function setEmoji(emoji: any) {
     message.value ? (message.value += emoji) : (message.value = emoji);
   }
+
   function sendTyping(status: boolean) {
     socket.emit(ChatSocketEvents.TYPING_MESSAGE, {
       chat_id: route.params.id,
@@ -88,10 +91,10 @@ export default function useChat() {
     });
   }
 
-  function createChat(name:string){
+  function createChat(name: string) {
     socket.emit(ChatSocketEvents.CREATE_CHAT, {name})
   }
-onMounted(()=>console.log('mounted'))
+
   return {
     message,
     attachments,

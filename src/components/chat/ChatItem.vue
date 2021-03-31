@@ -1,11 +1,11 @@
 <template>
-  <div class="chat-item">
+  <li class="chat-item">
     <template v-if="last_message">
       <div class="chat-item__header">
         <div class="chat-item__header-left">
-          <el-avatar size="medium" :src="last_message.sender.avatar"></el-avatar>
+          <el-avatar size="medium" :src="last_message.sender.avatar" class="mr-1"></el-avatar>
           <div class="chat-item__header-info">
-            <h3>{{ last_message.sender.nickname }}</h3>
+            <h3>{{ last_message.sender.username }}</h3>
             <p>last online 5 hours ago</p>
           </div>
         </div>
@@ -25,7 +25,7 @@
       </div>
     </template>
     <template v-else>Click to start</template>
-  </div>
+  </li>
 </template>
 
 <script lang="ts">
@@ -52,10 +52,10 @@ export default defineComponent({
   background: #ffffff;
   border-radius: 6px;
   width: 100%;
-  padding: 20px;
+  padding: 15px;
   cursor: pointer;
-  margin: 0 0 20px;
   transition: $transition;
+  overflow: hidden;
 
   &:hover {
     background: $background_blue_gradient;

@@ -39,7 +39,6 @@ export default defineComponent({
     provide("socket", socket);
 
     onMounted(() => {
-      console.log(chat)
       socket.on(ChatSocketEvents.NEW_MESSAGE, (message: IMessage) => {
       });
       socket.on(ChatSocketEvents.CREATE_CHAT, (newChat: IChatItem) => {
@@ -47,8 +46,8 @@ export default defineComponent({
       })
       socket.on(ChatSocketEvents.FETCH_CHATS, (chats: IChatState) => {
         chat.$patch({
-          list:chats.list,
-          count:chats.count
+          list: chats.list,
+          count: chats.count
         })
       })
 

@@ -1,25 +1,30 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path:'/',
-    name:'Welcome',
-    component:()=>import ('@/views/Welcome.vue'),
-    meta:{layout: 'Empty'}
+    path: '/',
+    name: 'Welcome',
+    component: () => import ('@/views/Welcome.vue'),
+    meta: {layout: 'Empty'}
   },
   {
     path: "/app",
     name: "Home",
     component: () => import("../views/Home.vue"),
-    meta: { title: "Home", layout: "Main" },
+    meta: {title: "Home", layout: "Main"},
   },
   {
     path: "/app/chats/",
     name: "Chats",
-    meta: { title: "Chats", layout: "Main" },
+    meta: {title: "Chats", layout: "Main"},
 
     component: () => import("../views/Chats.vue"),
     children: [
+      {
+        path: "/app/chats/",
+        name: "ChatItems",
+        component: () => import("@/components/chat/ChatItems.vue")
+      },
       {
         path: "/app/chats/:id",
         name: "Chat",
@@ -30,21 +35,21 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/app/voices",
     name: "Voices",
-    meta: { title: "Voices", layout: "Main" },
+    meta: {title: "Voices", layout: "Main"},
     component: () => import("@/views/Voices.vue"),
   },
   {
-    path:'/app/settings',
-    name:'Settings',
-    meta:{title: 'Settings',layout: 'Main'},
-    component:()=>import ('@/views/Settings.vue')
+    path: '/app/settings',
+    name: 'Settings',
+    meta: {title: 'Settings', layout: 'Main'},
+    component: () => import ('@/views/Settings.vue')
   },
   {
     path: "/auth",
     component: () => import("../views/auth/Auth.vue"),
     name: "Auth",
     redirect: (to) => {
-      return { path: "/auth/login/" };
+      return {path: "/auth/login/"};
     },
     children: [
       {
