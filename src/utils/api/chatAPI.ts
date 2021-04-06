@@ -44,5 +44,8 @@ export default {
     return HTTP.post(url + 'invite', {
       chat_id, expiresAt
     })
+  },
+  getInvite(chat_id:string | string[]){
+    return HTTP.get(`${url}invite/${chat_id}`)
   }
 };

@@ -2,7 +2,7 @@ import {IMessage, IMessagesList} from "./message";
 import {IUserData} from "../../auth/types/user";
 
 export interface IChatItem {
-  participants: Array<IUserData>;
+  participants: Array<IParticipant>;
   created: string;
   _id: string;
   all_messages: IMessagesList;
@@ -17,6 +17,7 @@ export interface IChatItem {
   total_messages: number;
   unreaded_messages: number;
   last_message: IMessage | null;
+  invite?:IChatInvite
 }
 
 export interface IChatState {
@@ -28,4 +29,16 @@ export interface IChatState {
 export interface IAttachments {
   file: string | ArrayBuffer | null;
   title: string;
+}
+
+export interface IParticipant{
+  _id:string;
+  accepted:boolean;
+  blocked:boolean;
+  user:IUserData
+}
+
+export interface IChatInvite{
+  _id:string;
+
 }

@@ -10,8 +10,9 @@ import SendIcon from "./SendIcon.vue";
 import Settings from "./Settings.vue";
 import Voices from "./Voices.vue";
 import User from "./User.vue";
+import Back from "./Back.vue"
 
-export {
+export {Back,
   Adjustment,
   Chats,
   Home,
