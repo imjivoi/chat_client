@@ -49,6 +49,7 @@ export default defineComponent({
 
     onMounted(() => {
       socket.on(ChatSocketEvents.NEW_MESSAGE, (message: IMessage) => {
+        console.log(message)
       });
       socket.on(ChatSocketEvents.CREATE_CHAT, (newChat: IChatItem) => {
         chat.list.push(newChat)

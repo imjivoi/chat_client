@@ -22,18 +22,12 @@
     </div>
     <div class="chat__messages">
       <div ref="content" class="chat__messages-content">
-        <!-- <Message
-          v-for="message in messages"
-          :key="message.id"
-          :messageData="message"
-          :isMe="false"
-        />
         <Message
-          v-for="message in messages"
+          v-for="message in currentChat.all_messages.list"
           :key="message.id"
           :messageData="message"
-          :isMe="true"
-        /> -->
+          :isMe="message.sender._id===user.userData._id"
+        />
       </div>
       <ChatInput/>
     </div>
@@ -88,7 +82,7 @@ export default defineComponent({
 
     const chatId = computed(() => route.params.id);
     const currentChat = computed(() => chat.list.find(chat => chat._id === chatId.value));
-    const isLoading = computed(()=>chat.isLoading);
+    const isLoading = computed(() => chat.isLoading);
 
     const participants = computed(() =>
       currentChat.value?.participants.filter((i) => i._id !== user.userData?._id)
@@ -116,7 +110,8 @@ export default defineComponent({
 
     function toBottom() {
       nextTick(() => {
-        content.value.scrollTop = content.value.scrollHeight;
+        if (content.value)
+          content.value.scrollTop = content.value.scrollHeight;
       });
     }
 

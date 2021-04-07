@@ -27,7 +27,7 @@ export default defineComponent({
     function createInvite() {
       //TODO:доделать создание и вывод инвайта
 
-      chatStore.CREATE_INVITE()
+      // chatStore.CREATE_INVITE()
     }
 
     onMounted(() => {

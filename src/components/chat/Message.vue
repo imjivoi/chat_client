@@ -22,12 +22,13 @@
     <div class="message__content">
       <div
         class="message__text"
-        :style="messageData.attachments.length ? `margin-bottom:10px` : ''"
+        :style="messageData.attachments && messageData.attachments.length ? `margin-bottom:10px` :
+         ''"
         v-if="messageData.text"
       >
         <p>{{ messageData.text }}</p>
       </div>
-      <div class="message__attachments" v-if="messageData.attachments !== null">
+      <div class="message__attachments" v-if="messageData.attachments ">
         <ul>
           <li v-for="i in messageData.attachments" :key="i.id">
             <i class="bx bxs-file" v-if="i.type === 'File'"></i>
@@ -41,21 +42,20 @@
         </ul>
       </div>
       <div class="message__time">
-        <!-- {{ createdAt }} -->
-        345345
+         {{ createdAt }}
       </div>
     </div>
     <div class="message__user-avatar">
       <Avatar
-        :image="messageData.user.avatar"
-        :nickname="messageData.user.nickname"
+        :image="messageData.sender.avatar"
+        :nickname="messageData.sender.username"
       />
     </div>
     <div class="message__readed">
       <i
         class="bx bx-check-double"
         style="font-size: 20px"
-        v-if="messageData.is_readed"
+        v-if="messageData.isReaded"
       ></i>
 
       <i class="bx bx-check" style="font-size: 20px" v-else></i>
@@ -92,7 +92,7 @@ export default defineComponent({
     const baseUrl = process.env.VUE_APP_BASE_URL;
 
     const createdAt = computed(() =>
-      formatDistanceToNow(new Date(props.messageData.created))
+      formatDistanceToNow(new Date(props.messageData.createdAt))
     );
 
     function hideMessageOptions() {

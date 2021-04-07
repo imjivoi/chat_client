@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "/app/chats/:id",
         name: "Chat",
         component: () => import("../views/Chat.vue"),
-        meta: {back: true}
+        meta: {back: true,title: ''}
       },
     ],
   },
