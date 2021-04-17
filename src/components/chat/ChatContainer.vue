@@ -23,7 +23,7 @@
     <div class="chat__messages">
       <div ref="content" class="chat__messages-content">
         <Message
-          v-for="message in currentChat.all_messages.list"
+          v-for="message in currentChat.messages"
           :key="message.id"
           :messageData="message"
           :isMe="message.sender._id===user.userData._id"

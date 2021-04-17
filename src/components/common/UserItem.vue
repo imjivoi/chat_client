@@ -1,32 +1,52 @@
 <template>
-  <li class="p-mb-2 p-d-flex p-ai-center p-jc-between p-p-2">
-    <div class="user__name">{{ item.username }}</div>
+  <li class="flex align-center mb-1">
+    <el-row class="flex align-center">
+      <el-avatar size="medium" :src="isAvatar" class="mr-1"></el-avatar>
+      <div class="user__name">{{ username }}</div>
+    </el-row>
+
+    <span class="role" v-if="isAdmin">Admin</span>
   </li>
 </template>
 
 <script lang="ts">
-import Button from "./Button.vue";
-import Badge from "./Badge.vue";
-
-import Avatar from "./Avatar.vue";
 
 import { defineComponent, inject, PropType } from "vue";
 import { IUserData } from "@/store/auth/types/user";
 export default defineComponent({
   props: {
-    item: {
-      type: Object as PropType<IUserData>,
+    username: {
+      type:String,
       required: true,
     },
+    avatar:{
+      type:String,
+      required: true,
+    },
+    isAdmin:{
+      type:Boolean,
+      required:true
+    }
   },
-  components: { Badge, Avatar, Button },
-  setup(props, ctx) {},
+  computed:{
+    isAvatar():string{
+      return this.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+    }
+  }
 });
 </script>
 
 <style scoped lang="scss">
 li {
   @include list_item_mixin;
+  position: relative;
+  .role{
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: $color_gray;
+  }
 }
 .user__name {
   font-weight: 600;

@@ -2,27 +2,44 @@
   <div class="info">
     <h4>Participants</h4>
     <ul class="participant-list">
-      <li v-for="participant in chat.participants">
-        {{ participant.user.username }}
+      <li v-for="participant in participants">
+        <UserItem
+          :username="participant.user.username"
+          :avatar="participant.user.avatar"
+          :is-admin="chat.admin._id===participant.user._id"
+        />
       </li>
     </ul>
     <div class="invite">
       <h4>Invite</h4>
+      <div class="mt-1 mh-auto">
+        <el-button v-if="!chat.invite">Create invite</el-button>
+        <template v-else>
+
+        </template>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import UserItem from "@/components/common/UserItem.vue";
+
 import {computed, defineComponent, onMounted} from "vue"
 import {useChatStore} from "../../store";
 import {useRoute} from "vue-router";
 
 export default defineComponent({
   name: "ChatInfo",
+  components: {UserItem},
   setup() {
     const route = useRoute()
     const chatStore = useChatStore()
     const chat = computed(() => chatStore.list.find(chat => chat._id === route.params.id))
+    const
+      participants = computed(() =>
+        chat.value?.participants.sort((a, b) => a.user._id ===
+        chat.value?.admin._id ? 1 : 0))
 
     function createInvite() {
       //TODO:доделать создание и вывод инвайта
@@ -31,12 +48,10 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      if (chat.value && !chat.value.invite) {
-        chatStore.GET_INVITE(route.params.id)
-      }
+      console.log(chat.value)
     })
     return {
-      chat
+      participants,chat
     }
   }
 })
@@ -59,6 +74,7 @@ export default defineComponent({
 
   li {
     text-align: left;
+    font-weight: 500;
   }
 }
 
@@ -68,6 +84,10 @@ export default defineComponent({
   left: 20px;
   height: 150px;
   width: 100%;
+}
+
+h4 {
+  color: $color_gray;
 }
 
 </style>

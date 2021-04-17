@@ -1,10 +1,10 @@
 //libraries
-import { createApp } from "vue";
-import PrimeVue from "primevue/config";
-import { VueCookieNext } from "vue-cookie-next";
+import {createApp} from "vue";
+import {VueCookieNext} from "vue-cookie-next";
 import Toast from "vue-toastification";
 import ElementPlus from "element-plus";
-import { createPinia } from "pinia";
+import {createPinia} from "pinia"; //@ts-ignore
+import {i18n} from "@/resource/i18n";
 
 //styles
 import "element-plus/lib/theme-chalk/index.css";
@@ -15,14 +15,14 @@ import "@/styles/main.scss";
 import App from "./App.vue";
 import router from "./router";
 import ErrorService from "./services/errorService";
-import { useAuthStore } from "./store/";
-import {  setAuthHeader } from "./utils/axios"
+import {useAuthStore} from "./store/";
+import {setAuthHeader} from "./utils/axios"
 
 const app = createApp(App);
 
 app.directive("click-outside", {
   beforeMount(el, binding, vnode) {
-    el.clickOutsideEvent = function(event: any) {
+    el.clickOutsideEvent = function (event: any) {
       if (!(el === event.target || el.contains(event.target))) {
         binding.value(event, el);
       }
@@ -40,7 +40,7 @@ app
     maxToasts: 5,
     newestOnTop: true
   })
-  .use(PrimeVue)
+  .use(i18n)
   .use(ElementPlus)
   .use(createPinia())
   .use(router);
@@ -54,10 +54,9 @@ if (token) {
 }
 
 router.beforeEach((to, from, next) => {
-  if ( to.path.includes('app') && !auth.isLogged) {
+  if (to.path.includes('app') && !auth.isLogged) {
     next({name: "Welcome"})
-  }
-  else next();
+  } else next();
 });
 
 app.mount("#app");

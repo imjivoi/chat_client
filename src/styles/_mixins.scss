@@ -9,11 +9,14 @@
   width: 100%;
   cursor: pointer;
   border-radius: $BR;
+  padding: 10px;
+  box-shadow: $box_shadow;
+  transition: $transition;
 
   &:hover {
-    background: #bab4cf;
+    box-shadow: $box_shadow_hover;
   }
   .active {
-    background: #bab4cf;
+    box-shadow: $box_shadow_hover;
   }
 }
