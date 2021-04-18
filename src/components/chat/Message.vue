@@ -46,10 +46,7 @@
       </div>
     </div>
     <div class="message__user-avatar">
-      <Avatar
-        :image="messageData.sender.avatar"
-        :nickname="messageData.sender.username"
-      />
+      <el-avatar :src="messageData.sender.avatar"></el-avatar>
     </div>
     <div class="message__readed">
       <i
@@ -65,7 +62,6 @@
 
 <script lang="ts">
 import Modal from "../common/Modal.vue";
-import Avatar from "../common/Avatar.vue";
 
 import { formatDistanceToNow } from "date-fns";
 //@ts-ignore
@@ -74,7 +70,7 @@ import ClickOutside from "vue-click-outside";
 import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
-  components: { Avatar, Modal },
+  components: {  Modal },
   props: {
     messageData: {
       type: Object,

@@ -1,4 +1,4 @@
-import authAPI from "@/utils/api/authAPI";
+import authAPI from "@/api/authAPI";
 import {defineStore} from "pinia";
 import {VueCookieNext} from "vue-cookie-next";
 import notificationService from "@/services/notificationService";

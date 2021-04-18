@@ -10,7 +10,9 @@ export enum ChatSocketEvents {
   DELETE_USER = "DELETE_USER",
   TYPING_MESSAGE = "TYPING_MESSAGE",
   FETCH_CHATS = "FETCH_CHATS",
-  CREATE_CHAT = "CREATE_CHAT"
+  CREATE_CHAT = "CREATE_CHAT",
+  INVITE_REQUEST='INVITE_REQUEST',
+
 }
 
 export enum SocketStatusConnect {

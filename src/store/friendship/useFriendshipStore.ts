@@ -1,4 +1,4 @@
-import friendsAPI from "@/utils/api/friendsAPI";
+import friendsAPI from "@/api/friendsAPI";
 import {defineStore} from "pinia";
 
 export const useFriendshipStore = defineStore({

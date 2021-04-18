@@ -1,31 +1,21 @@
-import Vue from "vue";
 
-import { useToast } from "vue-toastification";
-const toast = useToast();
+import { ElMessage } from 'element-plus';
 const options = {
-  timeout: 2000,
-  closeOnClick: true,
-  pauseOnFocusLoss: true,
-  pauseOnHover: true,
-  draggable: true,
-  draggablePercent: 0.6,
-  showCloseButtonOnHover: false,
-  hideProgressBar: true,
-  closeButton: "button",
-  icon: true,
-  rtl: false,
+  showClose:true
 };
+
+
 export default {
-  error(text: string) {
-    return toast.error(text, options);
+  error(message: string) {
+    return ElMessage.error(message);
   },
-  success(text: string) {
-    return toast.success(text, options);
+  success(message: string) {
+    return ElMessage.success(message);
   },
-  default(text: string) {
-    return toast.info(text, options);
+  default(message: string) {
+    return ElMessage.info(message);
   },
-  warning(text: string) {
-    return toast.warning(text, options);
+  warning(message: string) {
+    return ElMessage.warning(message);
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!isLoading" class="chat">
+  <div v-if="currentChat" class="chat">
     <div class="chat__header">
       <div class="chat__header-left">
         <!--        <el-avatar size="medium" sr></el-avatar>-->
@@ -32,19 +32,8 @@
       <ChatInput/>
     </div>
   </div>
-  <Spinner
-    v-if="isLoading"
-    :textSize="0.6"
-    height="100%"
-    text="Loading messages..."
-  />
-  <el-dialog
-    v-model="dialogVisible"
-    title="Chat options"
-    width="30%">
-    <el-button type="primary" @click="createInvite">Create invite</el-button>
-  </el-dialog>
 
+<Spinner v-else/>
 </template>
 
 <script lang="ts">
@@ -52,21 +41,17 @@ import OptionsIcon from "../icons/Options.vue";
 import AdjustmentIcon from "../icons/Adjustment.vue";
 import Spinner from "../common/Spinner.vue";
 import Message from "../chat/Message.vue";
-import Button from "../common/Button.vue";
 import ChatInput from "../chat/ChatInput.vue";
-import Avatar from "../common/Avatar.vue";
 
 import {computed, defineComponent, nextTick, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {useAuthStore, useChatStore} from "@/store";
-import chatAPI from "@/utils/api/chatAPI";
+import chatAPI from "@/api/chatAPI";
 
 export default defineComponent({
   name: "ChatContainer",
   components: {
     ChatInput,
-    Button,
-    Avatar,
     Message,
     Spinner,
     AdjustmentIcon,
@@ -82,7 +67,6 @@ export default defineComponent({
 
     const chatId = computed(() => route.params.id);
     const currentChat = computed(() => chat.list.find(chat => chat._id === chatId.value));
-    const isLoading = computed(() => chat.isLoading);
 
     const participants = computed(() =>
       currentChat.value?.participants.filter((i) => i._id !== user.userData?._id)
@@ -119,7 +103,7 @@ export default defineComponent({
     watch(() => currentChat, () => toBottom(), {deep: true});
 
     return {
-      isLoading,
+
       currentChat,
       user,
       chatId,

@@ -24,9 +24,7 @@ export default {
     width: {
       type: String,
     },
-    height: {
-      type: String,
-    },
+
   },
 };
 </script>

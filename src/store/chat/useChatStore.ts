@@ -1,5 +1,5 @@
 import router from "@/router";
-import chatAPI, {ICreateChatData} from "@/utils/api/chatAPI";
+import chatAPI, {ICreateChatData} from "@/api/chatAPI";
 import {defineStore} from "pinia";
 import {state} from "./state";
 
@@ -21,14 +21,14 @@ export const useChatStore = defineStore({
       });
     },
     async GET_MESSAGES(payload: string | string[]) {
-      try {
-        const {data} = await chatAPI.getMessages(payload);
-        let chat = this.list.find((chat) => chat._id === payload);
-        if (chat) {
-          chat.all_messages.list.push(...data);
-        }
-      } catch (error) {
-      }
+      // try {
+      //   const {data} = await chatAPI.getMessages(payload);
+      //   let chat = this.list.find((chat) => chat._id === payload);
+      //   if (chat) {
+      //     chat.all_messages.list.push(...data);
+      //   }
+      // } catch (error) {
+      // }
     },
     CREATE_CHAT(payload: ICreateChatData) {
       return new Promise(async (resolve, reject) => {
@@ -63,7 +63,44 @@ export const useChatStore = defineStore({
     async CREATE_INVITE(id: string | string[], expiresAt?: number
     ) {
       const {data} = await chatAPI.createInvite(id, expiresAt)
-      console.log(data)
+      let chat = this.list.find(chat => chat._id === id)
+      if (chat) {
+        chat.invite = data
+
+      }
+    },
+    SEND_REQUEST(key: string) {
+
+      return new Promise((resolve) => {
+        chatAPI.getInvite(key)
+          .then(res => {
+
+            resolve(res)
+          })
+          .catch(e => {
+            const {status, data} = e.response
+
+            if (status === 302) {
+              router.push({
+                name: 'Chat', params: {
+                  id: data.chat_id
+                }
+              })
+              return
+
+            } else {
+              router.push({
+                name: 'Error', query: {
+                  status: status,
+                  message: data.message
+                }
+              })
+            }
+
+          })
+
+      })
+
     }
   },
 });

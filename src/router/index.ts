@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "/app/chats/:id",
         name: "Chat",
         component: () => import("../views/Chat.vue"),
-        meta: {back: true,title: ''}
+        meta: {back: true, title: ''}
       },
     ],
   },
@@ -44,6 +44,18 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Settings',
     meta: {title: 'Settings', layout: 'Main'},
     component: () => import ('@/views/Settings.vue')
+  },
+  {
+    path: '/app/invite/:key',
+    name: 'Invite',
+    meta: {title: 'Invite', layout: 'Main'},
+    component: () => import('@/views/Invite.vue')
+  },
+  {
+    path: '/error',
+    name: 'Error',
+    meta: {layout: 'Empty'},
+    component: () => import('@/views/Error.vue')
   },
   {
     path: "/auth",

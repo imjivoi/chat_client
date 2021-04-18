@@ -1,4 +1,4 @@
-import {HTTP} from "../axios";
+import {HTTP} from "../utils/axios";
 
 const url = "/chats/";
 
@@ -45,7 +45,7 @@ export default {
       chat_id, expiresAt
     })
   },
-  getInvite(chat_id:string | string[]){
-    return HTTP.get(`${url}invite/${chat_id}`)
+  getInvite(key:string | string[]){
+    return HTTP.get(`${url}invite/${key}`)
   }
 };

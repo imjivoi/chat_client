@@ -1,4 +1,4 @@
-import voiceAPI from "@/utils/api/voiceAPI";
+import voiceAPI from "@/api/voiceAPI";
 import {defineStore} from "pinia";
 import {state} from "./state";
 
