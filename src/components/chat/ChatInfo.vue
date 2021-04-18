@@ -13,7 +13,8 @@
     <div class="invite">
       <h4>Invite</h4>
       <div class="mt-1 mh-auto">
-        <el-button v-if="!chat.invite">Create invite</el-button>
+        <el-button v-if="!chat.invite" @click="createInvite">Create invite
+        </el-button>
         <template v-else>
 
         </template>
@@ -25,7 +26,7 @@
 <script lang="ts">
 import UserItem from "@/components/common/UserItem.vue";
 
-import {computed, defineComponent, onMounted} from "vue"
+import {computed, defineComponent} from "vue"
 import {useChatStore} from "../../store";
 import {useRoute} from "vue-router";
 
@@ -43,15 +44,13 @@ export default defineComponent({
 
     function createInvite() {
       //TODO:доделать создание и вывод инвайта
+      if (chat.value?._id) return chatStore.CREATE_INVITE(chat.value?._id)
 
-      // chatStore.CREATE_INVITE()
     }
 
-    onMounted(() => {
-      console.log(chat.value)
-    })
+
     return {
-      participants,chat
+      participants, chat, createInvite
     }
   }
 })

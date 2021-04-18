@@ -40,7 +40,7 @@ export default {
   getMessages(chat_id: string | string[]) {
     return HTTP.get(`${url}messages/?chat_id=${chat_id}`);
   },
-  createInvite(chat_id: string | string[], expiresAt: number) {
+  createInvite(chat_id: string | string[], expiresAt?: number) {
     return HTTP.post(url + 'invite', {
       chat_id, expiresAt
     })

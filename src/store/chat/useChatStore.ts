@@ -60,9 +60,10 @@ export const useChatStore = defineStore({
       }
       this.isLoading = false
     },
-    async CREATE_INVITE(id:string | string[],expiresAt:number
-    ){
-      const {data}=await chatAPI.createInvite(id,expiresAt)
+    async CREATE_INVITE(id: string | string[], expiresAt?: number
+    ) {
+      const {data} = await chatAPI.createInvite(id, expiresAt)
+      console.log(data)
     }
   },
 });
