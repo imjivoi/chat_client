@@ -37,6 +37,6 @@ export interface IParticipant {
 export interface IChatInvite {
   _id: string;
   createdAt: string;
-  expiresAt: string | number;
+  expiresAt: string;
   unique_key: string;
 }

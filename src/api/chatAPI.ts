@@ -45,7 +45,12 @@ export default {
       chat_id, expiresAt
     })
   },
-  getInvite(key:string | string[]){
+  getInvite(key: string | string[]) {
     return HTTP.get(`${url}invite/${key}`)
+  },
+  updateInvite(chat_id: string | string[], expiresAt?: number) {
+    return HTTP.put(url + 'invite', {
+      chat_id, expiresAt
+    })
   }
 };

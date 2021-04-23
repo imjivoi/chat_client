@@ -69,7 +69,16 @@ export const useChatStore = defineStore({
 
       }
     },
-    SEND_REQUEST(key: string) {
+
+    async UPDATE_INVITE(id: string | string[], expiresAt?: number) {
+      const {data} = await chatAPI.updateInvite(id, expiresAt)
+      let chat = this.list.find(chat => chat._id === id)
+      if (chat) {
+        chat.invite = data
+
+      }
+    },
+    SEND_REQUEST(key: string | string[]) {
 
       return new Promise((resolve) => {
         chatAPI.getInvite(key)

@@ -1,25 +1,38 @@
 <template>
-  <div class="info">
+  <div class="info" v-if="chat">
 
     <div class="participants">
       <h4>Participants</h4>
-      <ul class="participant-list" v-if="chat">
+      <ul class="participant-list" >
         <li v-for="participant in participants">
           <UserItem
             :username="participant.user.username"
             :avatar="participant.user.avatar"
             :is-admin="chat.admin._id===participant.user._id"
+            v-if="participant.accepted"
           />
         </li>
       </ul>
-      <el-skeleton :rows="0" animated v-else></el-skeleton>
+    </div>
+    <div class="requests">
+      <h4>Requests</h4>
+      <ul class="participant-list" >
+        <li v-for="participant in participants">
+          <UserItem
+            :username="participant.user.username"
+            :avatar="participant.user.avatar"
+            v-if="!participant.accepted"
+          />
+        </li>
+      </ul>
     </div>
 
     <div class="invite">
       <h4>Invite</h4>
 
-      <div class="mt-1 mh-auto" style="text-align: center" v-if="chat">
-        <el-button v-if="!chat.invite" @click="createInvite" style="width: 100%">Create invite
+      <div class="mt-1 mh-auto" style="text-align: center" >
+        <el-button v-if="!chat.invite" @click="createInvite"
+                   style="width: 100%">Create invite
         </el-button>
         <template v-else>
           <el-input
@@ -27,10 +40,14 @@
             v-model="inviteLink"
             :disabled="true">
           </el-input>
-          <el-button class="mt-1" style="width: 100%" @click="copyLink">Copy invite link</el-button>
+          <el-button class="mt-1" style="width: 100%" @click="copyLink"
+                     v-if="isValidInviteLink">Copy
+            invite link
+          </el-button>
+          <el-button class="mt-1" style="width: 100%" @click="updateInvite" v-else>Update link
+          </el-button>
         </template>
       </div>
-      <el-skeleton animated v-else></el-skeleton>
 
     </div>
 
@@ -41,6 +58,7 @@
 import UserItem from "@/components/common/UserItem.vue";
 import Spinner from "@/components/common/Spinner.vue";
 
+import expiresDate from "@/helpers/expiresDate";
 import notificationService from "@/services/notificationService";
 
 import {computed, defineComponent} from "vue"
@@ -61,11 +79,16 @@ export default defineComponent({
         chat.value?.admin._id ? 1 : 0))
     const inviteKey = computed(() => chat.value?.invite?.unique_key)
     const inviteLink = computed(() => `${window.location.origin}/app/invite/${inviteKey.value}`)
-
+    const isValidInviteLink = computed(() => expiresDate(chat.value?.invite?.expiresAt))
 
     function createInvite() {
       //TODO:доделать создание и вывод инвайта
       if (chat.value?._id) return chatStore.CREATE_INVITE(chat.value?._id)
+      console.error('Chat id is undefined')
+    }
+
+    function updateInvite() {
+      if (chat.value?._id) return chatStore.UPDATE_INVITE(chat.value?._id)
       console.error('Chat id is undefined')
     }
 
@@ -79,7 +102,7 @@ export default defineComponent({
 
 
     return {
-      participants, createInvite, chat, inviteLink, copyLink
+      participants, createInvite, chat, inviteLink, copyLink, isValidInviteLink,updateInvite
     }
   }
 })

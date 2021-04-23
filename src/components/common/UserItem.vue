@@ -21,7 +21,6 @@ export default defineComponent({
     },
     avatar:{
       type:String,
-      required: true,
     },
     isAdmin:{
       type:Boolean,

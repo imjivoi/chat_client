@@ -1,8 +1,7 @@
-export default function expiresDate(){
-return [
-  new Date(new Date()).getDate()+10*60000,
-  new Date(new Date()).getDate()+30*60000,
-  new Date(new Date()).getDate()+60*60000,
+export default function expiresDate(date: string | undefined) {
+  if(!date) return
+  const currentDate = new Date().getTime()
+  const comparedDate = new Date(date).getTime()
+  return currentDate < comparedDate
 
-]
 }

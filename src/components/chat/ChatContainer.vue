@@ -26,14 +26,14 @@
           v-for="message in currentChat.messages"
           :key="message.id"
           :messageData="message"
-          :isMe="message.sender._id===user.userData._id"
+          :isMe="message.sender.user._id===user.userData._id"
         />
       </div>
       <ChatInput/>
     </div>
   </div>
 
-<Spinner v-else/>
+  <Spinner v-else/>
 </template>
 
 <script lang="ts">
