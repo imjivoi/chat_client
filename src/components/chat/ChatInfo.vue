@@ -3,25 +3,29 @@
 
     <div class="participants">
       <h4>Participants</h4>
-      <ul class="participant-list" >
-        <li v-for="participant in participants">
+      <ul class="participant-list">
+        <li v-for="participant in acceptedParticipants">
           <UserItem
             :username="participant.user.username"
             :avatar="participant.user.avatar"
             :is-admin="chat.admin._id===participant.user._id"
-            v-if="participant.accepted"
+            :participant_id="participant._id"
+
           />
         </li>
       </ul>
     </div>
-    <div class="requests">
+    <div class="requests" v-if="requests.length">
       <h4>Requests</h4>
-      <ul class="participant-list" >
-        <li v-for="participant in participants">
+      <ul class="participant-list">
+        <li v-for="participant in requests">
           <UserItem
             :username="participant.user.username"
             :avatar="participant.user.avatar"
-            v-if="!participant.accepted"
+            :participant_id="participant._id"
+            :is-request="true"
+            @update="updateParticipant"
+
           />
         </li>
       </ul>
@@ -30,7 +34,7 @@
     <div class="invite">
       <h4>Invite</h4>
 
-      <div class="mt-1 mh-auto" style="text-align: center" >
+      <div class="mt-1 mh-auto" style="text-align: center">
         <el-button v-if="!chat.invite" @click="createInvite"
                    style="width: 100%">Create invite
         </el-button>
@@ -44,7 +48,8 @@
                      v-if="isValidInviteLink">Copy
             invite link
           </el-button>
-          <el-button class="mt-1" style="width: 100%" @click="updateInvite" v-else>Update link
+          <el-button class="mt-1" style="width: 100%" @click="updateInvite"
+                     v-else>Update link
           </el-button>
         </template>
       </div>
@@ -74,15 +79,15 @@ export default defineComponent({
 
     const chat = computed(() => chatStore.list.find(chat => chat._id === route.params.id))
     const
-      participants = computed(() =>
+      acceptedParticipants = computed(() =>
         chat.value?.participants.sort((a, b) => a.user._id ===
-        chat.value?.admin._id ? 1 : 0))
+        chat.value?.admin._id ? 1 : 0).filter(participant => participant.accepted))
+    const requests = computed(() => chat.value?.participants.filter(participant => !participant.accepted))
     const inviteKey = computed(() => chat.value?.invite?.unique_key)
     const inviteLink = computed(() => `${window.location.origin}/app/invite/${inviteKey.value}`)
     const isValidInviteLink = computed(() => expiresDate(chat.value?.invite?.expiresAt))
 
     function createInvite() {
-      //TODO:доделать создание и вывод инвайта
       if (chat.value?._id) return chatStore.CREATE_INVITE(chat.value?._id)
       console.error('Chat id is undefined')
     }
@@ -100,9 +105,21 @@ export default defineComponent({
         .catch(() => notificationService.error('Something went wrong'))
     }
 
+    async function updateParticipant(data: any) {
+      await chatStore.UPDATE_PARTICIPANT({chat_id: chat.value?._id, ...data})
+    }
+
 
     return {
-      participants, createInvite, chat, inviteLink, copyLink, isValidInviteLink,updateInvite
+      acceptedParticipants,
+      requests,
+      createInvite,
+      chat,
+      inviteLink,
+      copyLink,
+      isValidInviteLink,
+      updateInvite,
+      updateParticipant
     }
   }
 })

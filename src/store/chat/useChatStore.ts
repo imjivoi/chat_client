@@ -1,5 +1,5 @@
 import router from "@/router";
-import chatAPI, {ICreateChatData} from "@/api/chatAPI";
+import chatAPI, {ICreateChatData, IUpdateParticipant} from "@/api/chatAPI";
 import {defineStore} from "pinia";
 import {state} from "./state";
 
@@ -79,7 +79,6 @@ export const useChatStore = defineStore({
       }
     },
     SEND_REQUEST(key: string | string[]) {
-
       return new Promise((resolve) => {
         chatAPI.getInvite(key)
           .then(res => {
@@ -95,7 +94,6 @@ export const useChatStore = defineStore({
                   id: data.chat_id
                 }
               })
-              return
 
             } else {
               router.push({
@@ -110,6 +108,14 @@ export const useChatStore = defineStore({
 
       })
 
+    },
+    async UPDATE_PARTICIPANT(participant: IUpdateParticipant) {
+      try {
+        const {data} = await chatAPI.updateParticipant(participant)
+
+      } catch (e) {
+
+      }
     }
   },
 });

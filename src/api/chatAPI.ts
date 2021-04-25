@@ -2,10 +2,15 @@ import {HTTP} from "../utils/axios";
 
 const url = "/chats/";
 
-export type TypeOfChatType = "C" | "D";
-
 export interface ICreateChatData {
   title?: string;
+}
+
+export interface IUpdateParticipant {
+  accepted?: boolean,
+  blocked?: boolean,
+  chat_id: string,
+  participant_id: string
 }
 
 export default {
@@ -52,5 +57,8 @@ export default {
     return HTTP.put(url + 'invite', {
       chat_id, expiresAt
     })
+  },
+  updateParticipant(data: IUpdateParticipant) {
+    return HTTP.put(url + 'participant', data)
   }
 };

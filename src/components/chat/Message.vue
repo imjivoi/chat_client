@@ -33,20 +33,20 @@
           <li v-for="i in messageData.attachments" :key="i.id">
             <i class="bx bxs-file" v-if="i.type === 'File'"></i>
 
-            <img :src="baseUrl + i.file" alt="" v-if="i.type === 'Image'" />
+            <img :src="baseUrl + i.file" alt="" v-if="i.type === 'Image'"/>
             <audio controls="controls" v-if="i.type === 'Audio'">
-              <source :src="baseUrl + i.file" type="audio/webm" />
+              <source :src="baseUrl + i.file" type="audio/webm"/>
               Your browser doesn't support <code>audio</code>.
             </audio>
           </li>
         </ul>
       </div>
       <div class="message__time">
-         {{ createdAt }}
+        {{ createdAt }}
       </div>
     </div>
     <div class="message__user-avatar">
-      <el-avatar :src="messageData.sender.avatar"></el-avatar>
+      <el-avatar :src="messageData.sender.avatar ?? ''"></el-avatar>
     </div>
     <div class="message__readed">
       <i
@@ -63,14 +63,14 @@
 <script lang="ts">
 import Modal from "../common/Modal.vue";
 
-import { formatDistanceToNow } from "date-fns";
+import {formatDistanceToNow} from "date-fns";
 //@ts-ignore
 import ClickOutside from "vue-click-outside";
 
-import { computed, defineComponent, ref } from "vue";
+import {computed, defineComponent, ref} from "vue";
 
 export default defineComponent({
-  components: {  Modal },
+  components: {Modal},
   props: {
     messageData: {
       type: Object,
@@ -129,9 +129,11 @@ export default defineComponent({
       border-radius: 10px;
       border-bottom-right-radius: 0;
       box-shadow: 1px 1px 6px 0px #9e9e9e;
+
       .message__text {
         color: $color_gray3;
       }
+
       .message__time {
         position: absolute;
         text-align: left;
@@ -139,14 +141,17 @@ export default defineComponent({
         left: 0;
       }
     }
+
     .message__user-avatar {
       display: none;
     }
+
     .message__readed {
       left: 17px;
       right: auto;
     }
   }
+
   &__options {
     .options__list {
       li {
@@ -154,6 +159,7 @@ export default defineComponent({
       }
     }
   }
+
   &__content {
     background: $background_blue_gradient;
     margin-left: 40px;
@@ -162,14 +168,16 @@ export default defineComponent({
     border-bottom-left-radius: 0;
     color: #fff;
     box-shadow: 10px 10px 25px rgba(42, 139, 242, 0.1),
-      15px 15px 35px rgba(42, 139, 242, 0.05),
-      10px 10px 50px rgba(42, 139, 242, 0.1); // max-width: 90%;
+    15px 15px 35px rgba(42, 139, 242, 0.05),
+    10px 10px 50px rgba(42, 139, 242, 0.1); // max-width: 90%;
     position: relative;
   }
+
   &__attachments {
     width: fit-content;
     position: relative;
     overflow: hidden;
+
     ul {
       display: flex;
       flex-wrap: wrap;
@@ -187,6 +195,7 @@ export default defineComponent({
             outline: none;
           }
         }
+
         img {
           width: 100%;
           max-width: 250px;
@@ -202,6 +211,7 @@ export default defineComponent({
     overflow-wrap: break-word;
     width: fit-content;
   }
+
   &__time {
     font-size: 0.6em;
     font-weight: 500;
@@ -211,6 +221,7 @@ export default defineComponent({
     bottom: -20px;
     right: 0;
     position: absolute;
+    width: max-content;
   }
 
   &__user-avatar {
