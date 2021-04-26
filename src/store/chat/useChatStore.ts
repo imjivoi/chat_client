@@ -20,16 +20,7 @@ export const useChatStore = defineStore({
         this.isLoading = false;
       });
     },
-    async GET_MESSAGES(payload: string | string[]) {
-      // try {
-      //   const {data} = await chatAPI.getMessages(payload);
-      //   let chat = this.list.find((chat) => chat._id === payload);
-      //   if (chat) {
-      //     chat.all_messages.list.push(...data);
-      //   }
-      // } catch (error) {
-      // }
-    },
+
     CREATE_CHAT(payload: ICreateChatData) {
       return new Promise(async (resolve, reject) => {
         try {
@@ -46,11 +37,11 @@ export const useChatStore = defineStore({
         }
       });
     },
-    async GET_INVITE(id: string | string[]) {
+    async GET_INVITE(chat_id: string | string[]) {
       this.isLoading = true
       try {
-        const {data} = await chatAPI.getInvite(id);
-        const chat = this.list.find(chat => chat._id === id)
+        const {data} = await chatAPI.getInvite(chat_id);
+        const chat = this.list.find(chat => chat._id === chat_id)
 
         if (data && chat) {
           chat.invite = data
@@ -80,21 +71,18 @@ export const useChatStore = defineStore({
     },
     SEND_REQUEST(key: string | string[]) {
       return new Promise((resolve) => {
-        chatAPI.getInvite(key)
+        chatAPI.requestInvite(key)
           .then(res => {
-
             resolve(res)
           })
           .catch(e => {
             const {status, data} = e.response
-
             if (status === 302) {
               router.push({
                 name: 'Chat', params: {
                   id: data.chat_id
                 }
               })
-
             } else {
               router.push({
                 name: 'Error', query: {
@@ -103,16 +91,22 @@ export const useChatStore = defineStore({
                 }
               })
             }
-
           })
-
       })
-
     },
     async UPDATE_PARTICIPANT(participant: IUpdateParticipant) {
       try {
         const {data} = await chatAPI.updateParticipant(participant)
-
+      } catch (e) {
+      }
+    },
+    async GET_MESSAGES(chat_id: string | string[]) {
+      try {
+        const {data} = await chatAPI.getMessages(chat_id)
+        let currentChat = this.list.find(chat => chat._id === chat_id)
+        if (currentChat) {
+          currentChat.messages = data
+        }
       } catch (e) {
 
       }

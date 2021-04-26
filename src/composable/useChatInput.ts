@@ -6,7 +6,7 @@ import {computed, inject, ref} from "vue";
 import {useRoute} from "vue-router";
 import {Socket} from "socket.io"
 
-export default function useChat() {
+export default function useChatInput() {
   const socket = inject('socket') as Socket
   const message = ref<string | null>(null);
   const attachments = ref<Array<File>>([]);

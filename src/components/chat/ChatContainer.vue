@@ -1,11 +1,11 @@
 <template>
-  <div v-if="currentChat" class="chat">
+  <div v-if="chat" class="chat">
     <div class="chat__header">
       <div class="chat__header-left">
         <!--        <el-avatar size="medium" sr></el-avatar>-->
         <div class="chat__info p-ml-5">
           <div class="chat__name">
-            <h3>{{ currentChat.name }}</h3>
+            <h3>{{ chat.name }}</h3>
           </div>
           <div class="chat__status p-mt-1">{{ status }}</div>
         </div>
@@ -15,7 +15,7 @@
         <button>
           <AdjustmentIcon/>
         </button>
-        <button @click="dialogVisible=true">
+        <button>
           <OptionsIcon/>
         </button>
       </div>
@@ -23,17 +23,17 @@
     <div class="chat__messages">
       <div ref="content" class="chat__messages-content">
         <Message
-          v-for="message in currentChat.messages"
-          :key="message.id"
+          v-for="message in chat.messages"
+          :key="message._id"
           :messageData="message"
-          :isMe="message.sender.user._id===user.userData._id"
+          :isMe="message.sender.user._id===user._id"
         />
       </div>
       <ChatInput/>
     </div>
   </div>
 
-  <Spinner v-else/>
+    <Spinner v-else/>
 </template>
 
 <script lang="ts">
@@ -43,10 +43,18 @@ import Spinner from "../common/Spinner.vue";
 import Message from "../chat/Message.vue";
 import ChatInput from "../chat/ChatInput.vue";
 
-import {computed, defineComponent, nextTick, ref, watch} from "vue";
-import {useRoute} from "vue-router";
-import {useAuthStore, useChatStore} from "@/store";
-import chatAPI from "@/api/chatAPI";
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  PropType,
+  ref,
+  toRefs,
+  watch
+} from "vue";
+import {IChatItem} from "@/store/chat/types/chat";
+import {IUserData} from "@/store/auth/types/user";
+import {onMounted} from "@vue/runtime-core";
 
 export default defineComponent({
   name: "ChatContainer",
@@ -57,39 +65,31 @@ export default defineComponent({
     AdjustmentIcon,
     OptionsIcon,
   },
-  setup() {
-    const user = useAuthStore();
-    const chat = useChatStore()
-    const route = useRoute();
-    const content = ref();
+  props: {
+    chat: {
+      type: Object as PropType<IChatItem>,
+      required: true
+    },
+    user: {
+      type: Object as PropType<IUserData>,
+      required: true
 
-    const dialogVisible = ref(false)
-
-    const chatId = computed(() => route.params.id);
-    const currentChat = computed(() => chat.list.find(chat => chat._id === chatId.value));
-
-    const participants = computed(() =>
-      currentChat.value?.participants.filter((i) => i._id !== user.userData?._id)
-    );
+    }
+  },
+  setup(props) {
+    const {chat, user} = toRefs(props)
+    const content = ref()
     const status = computed(() => {
       if (
-        currentChat.value?.typing &&
-        currentChat.value.typing.status &&
-        currentChat.value.typing.nickname !== user.userData?.username
+        chat.value?.typing &&
+        chat.value.typing.status &&
+        chat.value.typing.nickname !== user.value.username
       ) {
-        return `${currentChat.value.typing.nickname} is typing ...`;
+        return `${chat.value?.typing.nickname} is typing ...`;
       } else {
         return "connecting";
       }
     });
-
-    async function createInvite() {
-      const today = new Date()
-      const tomorrow = new Date(today)
-      const expiresAt = tomorrow.setDate(tomorrow.getDate() + 1)
-      const res = await chatAPI.createInvite(chatId.value, expiresAt)
-      console.log(res)
-    }
 
 
     function toBottom() {
@@ -100,18 +100,16 @@ export default defineComponent({
     }
 
 
-    watch(() => currentChat, () => toBottom(), {deep: true});
+
+    watch(chat, () => {
+      toBottom();
+    }, {deep: true});
+
 
     return {
 
-      currentChat,
-      user,
-      chatId,
       status,
-      participants,
       content,
-      dialogVisible,
-      createInvite
     };
   },
 });

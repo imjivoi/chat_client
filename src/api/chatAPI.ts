@@ -43,15 +43,18 @@ export default {
     });
   },
   getMessages(chat_id: string | string[]) {
-    return HTTP.get(`${url}messages/?chat_id=${chat_id}`);
+    return HTTP.get(`${url}messages/${chat_id}`);
   },
   createInvite(chat_id: string | string[], expiresAt?: number) {
     return HTTP.post(url + 'invite', {
       chat_id, expiresAt
     })
   },
-  getInvite(key: string | string[]) {
+  requestInvite(key: string | string[]) {
     return HTTP.get(`${url}invite/${key}`)
+  },
+  getInvite(chat_id: string | string[]) {
+    return HTTP.get(`${url}get-invite/${chat_id}`)
   },
   updateInvite(chat_id: string | string[], expiresAt?: number) {
     return HTTP.put(url + 'invite', {

@@ -1,49 +1,54 @@
 <template>
   <li class="chat-item">
-    <template v-if="last_message">
-      <div class="chat-item__header">
-        <div class="chat-item__header-left">
-          <el-avatar size="medium" :src="last_message.sender.avatar" class="mr-1"></el-avatar>
-          <div class="chat-item__header-info">
-            <h3>{{ last_message.sender.username }}</h3>
-            <p>last online 5 hours ago</p>
-          </div>
-        </div>
-        <div class="chat-item__header-right">
-          <p>3 days ago</p>
+    <div class="chat-item__header">
+      <div class="chat-item__header-left">
+        <div class="chat-item__header-info">
+          <h3>{{ name }}</h3>
+          <!--            <p> </p>-->
         </div>
       </div>
-      <div class="chat-item__content">
-        <div class="chat-item__content-text">
-          <p>
-            {{ last_message.text }}
-          </p>
-        </div>
-        <div class="chat-item__content-unreaded">
-          <p>2</p>
-        </div>
+      <div class="chat-item__header-right">
+        <p>Created:{{ createdAt }}</p>
       </div>
-    </template>
-    <template v-else>Click to start</template>
+    </div>
+    <div class="chat-item__participants">
+      <p>Participants : {{ participants.length }}</p>
+      <!--      <template v-for="participant in participants" :key="participant._id">-->
+      <!--        <el-avatar :src="participant.user.avatar" ></el-avatar>-->
+
+      <!--      </template>-->
+    </div>
   </li>
 </template>
 
 <script lang="ts">
-import Avatar from "../common/Avatar.vue";
 
-import { defineComponent, PropType } from "vue";
-import { IMessage } from "@/store/chat/types/message";
+import {format} from "date-fns";
+import {defineComponent, PropType} from "vue";
+import {IParticipant} from "@/store/chat/types/chat";
+
 export default defineComponent({
   props: {
-    last_message: {
-      type: Object as PropType<IMessage>,
-    },
     id: {
       type: String,
       required: true,
     },
+    name: {
+      type: String,
+    },
+    created: {
+      type: String,
+      required: true
+    },
+    participants: {
+      type: Array as PropType<IParticipant[]>
+    }
   },
-  components: { Avatar },
+  computed: {
+    createdAt(): string {
+      return format(new Date(this.created), 'P')
+    }
+  }
 });
 </script>
 
@@ -98,6 +103,7 @@ export default defineComponent({
     &-left {
       display: flex;
       text-align: left;
+
       h3 {
         font-size: 14px;
         margin: 0 0 6px;
@@ -109,6 +115,7 @@ export default defineComponent({
         color: $color_blue;
       }
     }
+
     &-right {
       p {
         font-size: 10px;
@@ -119,39 +126,17 @@ export default defineComponent({
     }
   }
 
-  &__content {
+  &__participants {
+    position: relative;
     display: flex;
-    justify-content: space-between;
-    margin: 10px 0 0;
-    &-text {
-      text-align: left;
-      font-size: 12px;
-      color: $color_gray;
-      font-weight: 500;
-      width: 90%;
-      max-height: 46px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  }
+}
 
-    &-unreaded {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 18px;
-      width: 18px;
-      border-radius: 50%;
-      overflow: hidden;
-      background: #ff3366;
-      color: #ffffff;
-      box-shadow: 4px 4px 15px rgba(198, 27, 74, 0.05),
-        2px 2px 10px rgba(198, 27, 74, 0.1),
-        1px 1px 50px rgba(198, 27, 74, 0.15);
+.el-avatar {
+  position: relative;
 
-      p {
-        font-size: 12px;
-      }
-    }
+  &:not(:first-child) {
+    //right: ;
   }
 }
 </style>

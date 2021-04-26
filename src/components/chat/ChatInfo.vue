@@ -63,58 +63,31 @@
 import UserItem from "@/components/common/UserItem.vue";
 import Spinner from "@/components/common/Spinner.vue";
 
-import expiresDate from "@/helpers/expiresDate";
-import notificationService from "@/services/notificationService";
-
-import {computed, defineComponent} from "vue"
-import {useChatStore} from "../../store";
-import {useRoute} from "vue-router";
+import {defineComponent} from "vue"
+import {useChatData} from "@/composable";
 
 export default defineComponent({
   name: "ChatInfo",
   components: {UserItem, Spinner},
   setup() {
-    const route = useRoute()
-    const chatStore = useChatStore()
-
-    const chat = computed(() => chatStore.list.find(chat => chat._id === route.params.id))
     const
-      acceptedParticipants = computed(() =>
-        chat.value?.participants.sort((a, b) => a.user._id ===
-        chat.value?.admin._id ? 1 : 0).filter(participant => participant.accepted))
-    const requests = computed(() => chat.value?.participants.filter(participant => !participant.accepted))
-    const inviteKey = computed(() => chat.value?.invite?.unique_key)
-    const inviteLink = computed(() => `${window.location.origin}/app/invite/${inviteKey.value}`)
-    const isValidInviteLink = computed(() => expiresDate(chat.value?.invite?.expiresAt))
-
-    function createInvite() {
-      if (chat.value?._id) return chatStore.CREATE_INVITE(chat.value?._id)
-      console.error('Chat id is undefined')
-    }
-
-    function updateInvite() {
-      if (chat.value?._id) return chatStore.UPDATE_INVITE(chat.value?._id)
-      console.error('Chat id is undefined')
-    }
-
-    function copyLink() {
-      if (!navigator.clipboard) return notificationService.error("Link can't be copied, please use other navigator")
-
-      navigator.clipboard.writeText(inviteLink.value)
-        .then(() => notificationService.success('Link was copied'))
-        .catch(() => notificationService.error('Something went wrong'))
-    }
-
-    async function updateParticipant(data: any) {
-      await chatStore.UPDATE_PARTICIPANT({chat_id: chat.value?._id, ...data})
-    }
-
+      {
+        acceptedParticipants,
+        requests,
+        createInvite,
+        currentChat,
+        inviteLink,
+        copyLink,
+        isValidInviteLink,
+        updateInvite,
+        updateParticipant
+      } = useChatData()
 
     return {
       acceptedParticipants,
       requests,
       createInvite,
-      chat,
+      chat: currentChat,
       inviteLink,
       copyLink,
       isValidInviteLink,

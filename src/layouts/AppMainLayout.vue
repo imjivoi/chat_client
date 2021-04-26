@@ -23,7 +23,13 @@ import {Back} from "@/components/icons";
 import {useSocket} from "@/composable";
 import {useRoute, useRouter} from "vue-router";
 
-import {computed, defineComponent, onMounted, provide} from "vue";
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  provide
+} from "vue";
 import {useAuthStore, useChatStore} from "@/store";
 import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
 import {IMessage} from "@/store/chat/types/message";
@@ -47,7 +53,7 @@ export default defineComponent({
       router.back()
     }
 
-    onMounted(() => {
+    onBeforeMount(() => {
       socket.on(ChatSocketEvents.NEW_MESSAGE, (message: IMessage) => {
         console.log(message)
       });

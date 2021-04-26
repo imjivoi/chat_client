@@ -21,7 +21,7 @@ import {defineComponent} from "vue";
 export default defineComponent({
   props: {
     participant_id: {
-      type: Boolean,
+      type: String,
       require: true
     },
     username: {

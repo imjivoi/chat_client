@@ -13,14 +13,14 @@
 </template>
 <script lang="ts">
 import {defineComponent, inject, ref} from "vue"
-import {useChat} from "@/composable";
+import {useChatInput} from "@/composable";
 
 export default defineComponent({
   name: "CreateChat",
   setup() {
     const isLoading = ref(false)
     const chatName = ref('')
-    const {createChat} = useChat()
+    const {createChat} = useChatInput()
 
     function create() {
       createChat(chatName.value)

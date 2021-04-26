@@ -25,7 +25,9 @@
               v-for="chat in chatsList"
               :id="chat._id"
               :key="chat._id"
-              :last_message="chat.last_message"
+              :created="chat.createdAt"
+              :name="chat.name"
+              :participants="chat.participants"
               @click="toChat(chat._id)"
             />
           </ul>
@@ -42,7 +44,6 @@
 </template>
 
 <script lang="ts">
-import {Search} from "@/components/icons";
 import CustomInput from "@/components/common/Input.vue";
 import ChatItem from "@/components/chat/ChatItem.vue";
 import Spinner from "@/components/common/Spinner.vue";
@@ -52,7 +53,7 @@ import {useChatStore, useModal} from "@/store";
 import {useRouter} from "vue-router";
 
 export default defineComponent({
-  components: {Spinner, CustomInput, Search, ChatItem},
+  components: {Spinner, CustomInput, ChatItem},
   name: "ChatItems",
   setup() {
     const search = ref("");

@@ -1,7 +1,8 @@
 import { IUserData } from "../../auth/types/user";
+import {IParticipant} from "@/store/chat/types/chat";
 
 export interface IMessage {
-  sender?: IUserData;
+  sender?: IParticipant;
   chat: string;
   created?: string;
   text: string | null;
