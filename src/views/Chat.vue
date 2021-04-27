@@ -1,21 +1,33 @@
 <template>
-  <div class="flex justify-between">
+  <div class="not-accepted" v-if="!currentParticipant.accepted">
+    You are not accepted
+    yet
+  </div>
+  <div class="flex justify-between" v-else>
+
     <ChatContainer :chat="currentChat" :user="user"/>
     <ChatInfo/>
+
   </div>
 </template>
 <script>
 import ChatInfo from "@/components/chat/ChatInfo";
 import ChatContainer from "@/components/chat/ChatContainer";
 
-import {defineComponent, onBeforeUpdate, watchEffect} from "vue";
+import {defineComponent, watchEffect} from "vue";
 import {useChatData} from "@/composable";
 
 export default defineComponent({
   components: {ChatContainer, ChatInfo},
   setup() {
 
-    const {user, currentChat, updateMessages, getInvite,currentParticipant} = useChatData()
+    const {
+      user,
+      currentChat,
+      updateMessages,
+      getInvite,
+      currentParticipant
+    } = useChatData()
 
     watchEffect(() => {
       updateMessages()
@@ -25,10 +37,22 @@ export default defineComponent({
 
     //TODO:route protect
     return {
-      user, currentChat,currentParticipant
+      user, currentChat, currentParticipant
     }
   },
 
+
 })
 </script>
+<style>
+.not-accepted {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 42px;
+  font-weight: 600;
+}
+</style>
 

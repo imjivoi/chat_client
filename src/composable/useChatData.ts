@@ -3,7 +3,6 @@ import {useRoute} from "vue-router";
 import {computed} from "vue";
 import expiresDate from "@/helpers/expiresDate";
 import notificationService from "@/services/notificationService";
-import {onMounted} from "@vue/runtime-core";
 
 export default function useChatData() {
   const chatStore = useChatStore()
@@ -25,7 +24,7 @@ export default function useChatData() {
 
 
   function updateMessages() {
-    if (!currentChat.value) return
+    if (!currentChat.value || !currentParticipant.value?.accepted) return
     if (!currentChat.value?.messages) {
       chatStore.GET_MESSAGES(chatId.value)
     }
@@ -33,7 +32,7 @@ export default function useChatData() {
 
 
   function getInvite() {
-    if (!currentChat.value) return
+    if (!currentChat.value || !currentParticipant.value?.accepted) return
     if (!currentChat.value?.invite) {
       chatStore.GET_INVITE(chatId.value)
     }

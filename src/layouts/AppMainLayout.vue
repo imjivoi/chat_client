@@ -66,7 +66,10 @@ export default defineComponent({
           count: chats.count
         })
       })
-
+      socket.on(ChatSocketEvents.NEW_PARTICIPANT,(data:any)=>{
+        console.log(data)
+      })
+      //TODO:вынести слушатели в отдельный файл?? , добавить все слушатели
     })
 
     return {routeTitle, isLoading, goBack, isRouteBack};

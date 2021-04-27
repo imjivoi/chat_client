@@ -2,7 +2,6 @@ import {IAttachments} from "./chat";
 import {IMessage} from "./message";
 
 
-
 export enum ChatSocketEvents {
   NEW_MESSAGE = "NEW_MESSAGE",
   MESSAGE_STATUS = "MESSAGE_STATUS",
@@ -11,7 +10,8 @@ export enum ChatSocketEvents {
   TYPING_MESSAGE = "TYPING_MESSAGE",
   FETCH_CHATS = "FETCH_CHATS",
   CREATE_CHAT = "CREATE_CHAT",
-  INVITE_REQUEST='INVITE_REQUEST',
+  NEW_PARTICIPANT = 'NEW_PARTICIPANT',
+  UPDATE_PARTICIPANT = 'UPDATE_PARTICIPANT'
 
 }
 
