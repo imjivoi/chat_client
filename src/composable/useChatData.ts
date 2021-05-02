@@ -10,6 +10,8 @@ export default function useChatData() {
   const userStore = useAuthStore()
 
   const user = userStore.userData
+
+
   const chatId = computed(() => route.params.id)
   const currentChat = computed(() => chatStore.list.find(chat => chat._id === chatId.value))
   const currentParticipant = computed(() => currentChat.value?.participants.find(participant => participant.user._id === user?._id))
@@ -21,10 +23,11 @@ export default function useChatData() {
   const inviteKey = computed(() => currentChat.value?.invite?.unique_key)
   const inviteLink = computed(() => `${window.location.origin}/app/invite/${inviteKey.value}`)
   const isValidInviteLink = computed(() => expiresDate(currentChat.value?.invite?.expiresAt))
-
+  const imAdmin=computed(()=>currentChat.value?.admin._id===user?._id)
+  const imAccepted=computed(()=>currentParticipant.value?.accepted)
 
   function updateMessages() {
-    if (!currentChat.value || !currentParticipant.value?.accepted) return
+    if (!imAccepted) return
     if (!currentChat.value?.messages) {
       chatStore.GET_MESSAGES(chatId.value)
     }
@@ -32,7 +35,7 @@ export default function useChatData() {
 
 
   function getInvite() {
-    if (!currentChat.value || !currentParticipant.value?.accepted) return
+    if (!imAccepted) return
     if (!currentChat.value?.invite) {
       chatStore.GET_INVITE(chatId.value)
     }
@@ -75,7 +78,8 @@ export default function useChatData() {
     updateInvite,
     copyLink,
     updateParticipant,
-    currentParticipant
+    currentParticipant,
+    imAdmin
   }
 
 }

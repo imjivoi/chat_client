@@ -56,7 +56,11 @@ if (token) {
 router.beforeEach((to, from, next) => {
   if (to.path.includes('app') && !auth.isLogged) {
     next({name: "Welcome"})
-  } else next();
+  } else if(to.path==='/' && auth.isLogged) {
+    next('/app')
+  } else {
+    next()
+  };
 });
 
 app.mount("#app");

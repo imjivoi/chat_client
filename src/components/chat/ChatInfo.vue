@@ -9,7 +9,7 @@
             :username="participant.user.username"
             :avatar="participant.user.avatar"
             :is-admin="chat.admin._id===participant.user._id"
-            :participant_id="participant._id"
+            :participant-id="participant._id"
 
           />
         </li>
@@ -22,7 +22,7 @@
           <UserItem
             :username="participant.user.username"
             :avatar="participant.user.avatar"
-            :participant_id="participant._id"
+            :participant-id="participant._id"
             :is-request="true"
             @update="updateParticipant"
 
@@ -31,7 +31,7 @@
       </ul>
     </div>
 
-    <div class="invite">
+    <div class="invite" v-if="imAdmin">
       <h4>Invite</h4>
 
       <div class="mt-1 mh-auto" style="text-align: center">
@@ -80,7 +80,8 @@ export default defineComponent({
         copyLink,
         isValidInviteLink,
         updateInvite,
-        updateParticipant
+        updateParticipant,
+        imAdmin
       } = useChatData()
 
     return {
@@ -92,7 +93,7 @@ export default defineComponent({
       copyLink,
       isValidInviteLink,
       updateInvite,
-      updateParticipant
+      updateParticipant,imAdmin
     }
   }
 })

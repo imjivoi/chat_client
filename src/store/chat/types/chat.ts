@@ -32,6 +32,7 @@ export interface IParticipant {
   accepted: boolean;
   blocked: boolean;
   user: IUserData;
+  chat_id?:string;
 }
 
 export interface IChatInvite {

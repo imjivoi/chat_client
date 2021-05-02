@@ -1,7 +1,7 @@
 <template>
   <li class="flex align-center mb-1">
     <el-row class="flex align-center">
-      <el-avatar size="medium" :src="isAvatar" class="mr-1"></el-avatar>
+      <el-avatar size="medium" :src="hasAvatar" class="mr-1"></el-avatar>
       <div class="user__name">{{ username }}</div>
     </el-row>
     <span class="role" v-if="isAdmin">Admin</span>
@@ -20,7 +20,7 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   props: {
-    participant_id: {
+    participantId: {
       type: String,
       require: true
     },
@@ -38,7 +38,7 @@ export default defineComponent({
     isRequest: {type: Boolean, default: false}
   },
   computed: {
-    isAvatar(): string {
+    hasAvatar(): string {
       return this.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
     }
   },
@@ -47,7 +47,7 @@ export default defineComponent({
       this.$emit('update', {
         accepted,
         blocked,
-        participant_id: this.participant_id
+        participant_id: this.participantId
       })
     }
   }

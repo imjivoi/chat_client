@@ -5,6 +5,7 @@ import {toBase64} from "@/utils/base64encryption";
 import {computed, inject, ref} from "vue";
 import {useRoute} from "vue-router";
 import {Socket} from "socket.io"
+import notificationService from "@/services/notificationService";
 
 export default function useChatInput() {
   const socket = inject('socket') as Socket
@@ -14,67 +15,72 @@ export default function useChatInput() {
   const activeAudioRecord = ref<boolean>(false);
   const typing = ref<boolean>(false);
   const timeout = ref<any | null>(null);
+  const textarea = ref()
+
   const route = useRoute();
   const auth = useAuthStore();
 
   const attachmentsUrl = computed(() => {
     let newArr = [];
     for (let i = 0; i < attachments.value.length; i++) {
-      if (attachments.value[i].type.includes("file")) {
-        newArr.push({
-          name: attachments.value[i].name,
-          type: "file",
-        });
-      } else if (attachments.value[i].type.includes("image")) {
-        newArr.push({
-          link: URL.createObjectURL(attachments.value[i]),
-          type: "image",
-        });
-      }
+      newArr.push(
+        URL.createObjectURL(attachments.value[i])
+      );
+
     }
     return newArr;
   });
 
-  async function sendMessage(e: any) {
-    if (!e.shiftKey && e.which === 13) {
-      e.preventDefault();
-    }
-    if (
-      (message.value && message.value !== "\n") ||
-      !!attachments.value.length
-    ) {
-      typing.value = false;
+  function sendMessage(e: any) {
+    return new Promise((resolve, reject) => {
+      if (!e.shiftKey && e.which === 13) {
+        e.preventDefault();
+      }
+      if (
+        (message.value && message.value !== "\n") ||
+        !!attachments.value.length
+      ) {
+        typing.value = false;
 
-      activeEmojiPicker.value = false;
-      const attachArray = [] as IAttachments[];
+        activeEmojiPicker.value = false;
+        const attachArray = [] as IAttachments[];
 
-      if (attachments.value.length) {
-        for (let i = 0; i < attachments.value.length; i++) {
-          await toBase64(attachments.value[i]).then((res: any) => {
-            attachArray.push(res);
-          });
+        if (attachments.value.length) {
+          for (let i = 0; i < attachments.value.length; i++) {
+            toBase64(attachments.value[i]).then((res: any) => {
+              attachArray.push(res);
+            });
+          }
         }
+
+        socket.emit(
+          ChatSocketEvents.NEW_MESSAGE, {
+            text: message.value,
+            chat_id: route.params.id,
+            attachments: attachments.value,
+          }
+        );
+        resolve(true)
+        reject(false)
+        textarea.value.focus()
+        message.value = null;
+        attachments.value = [];
       }
 
-      socket.emit(ChatSocketEvents.NEW_MESSAGE, {
-        text: message.value,
-        chat_id: route.params.id,
-        attachments: attachments.value,
-      });
-
-      message.value = null;
-      attachments.value = [];
-    }
+    })
   }
 
-  function setAttachments(files: any) {
+  function setAttachments(event: any) {
+    const files = event.target.files
+    if(files.length>5) return notificationService.error('Can be uploaded more 5 images')
     if (files.type) {
       attachments.value.push(files);
     } else {
       attachments.value = [...files];
     }
   }
-
+  //todo: отправка и сохранение фото
+  //todo: аудиосообщения
   function deleteFile(index: number) {
     attachments.value?.splice(index, 1);
   }
@@ -108,6 +114,7 @@ export default function useChatInput() {
     setEmoji,
     typing,
     timeout,
-    createChat
+    createChat,
+    textarea
   };
 }

@@ -27,50 +27,29 @@ import {
   computed,
   defineComponent,
   onBeforeMount,
-  onMounted,
   provide
 } from "vue";
-import {useAuthStore, useChatStore} from "@/store";
-import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
-import {IMessage} from "@/store/chat/types/message";
-import {IChatItem, IChatState} from "@/store/chat/types/chat";
+import {useAuthStore} from "@/store";
 
 export default defineComponent({
   name: "AppLayoutDefault",
   components: {SideBar, Spinner, Modal, Back},
   setup() {
     const auth = useAuthStore();
-    const chat = useChatStore()
+    const {socket} = useSocket("127.0.0.1:80");
     const route = useRoute();
     const router = useRouter()
+
     const routeTitle = computed(() => route.meta.title);
     const isRouteBack = computed(() => route.meta.back)
-    const {socket} = useSocket("127.0.0.1:80");
     const isLoading = computed(() => auth.isLoading);
+
     provide("socket", socket);
 
     function goBack() {
       router.back()
     }
 
-    onBeforeMount(() => {
-      socket.on(ChatSocketEvents.NEW_MESSAGE, (message: IMessage) => {
-        console.log(message)
-      });
-      socket.on(ChatSocketEvents.CREATE_CHAT, (newChat: IChatItem) => {
-        chat.list.push(newChat)
-      })
-      socket.on(ChatSocketEvents.FETCH_CHATS, (chats: IChatState) => {
-        chat.$patch({
-          list: chats.list,
-          count: chats.count
-        })
-      })
-      socket.on(ChatSocketEvents.NEW_PARTICIPANT,(data:any)=>{
-        console.log(data)
-      })
-      //TODO:вынести слушатели в отдельный файл?? , добавить все слушатели
-    })
 
     return {routeTitle, isLoading, goBack, isRouteBack};
   }

@@ -29,11 +29,12 @@
           :isMe="message.sender.user._id===user._id"
         />
       </div>
-      <ChatInput/>
     </div>
+    <ChatInput/>
+
   </div>
 
-    <Spinner v-else/>
+  <Spinner v-else/>
 </template>
 
 <script lang="ts">
@@ -54,7 +55,6 @@ import {
 } from "vue";
 import {IChatItem} from "@/store/chat/types/chat";
 import {IUserData} from "@/store/auth/types/user";
-import {onMounted} from "@vue/runtime-core";
 
 export default defineComponent({
   name: "ChatContainer",
@@ -100,7 +100,6 @@ export default defineComponent({
     }
 
 
-
     watch(chat, () => {
       toBottom();
     }, {deep: true});
@@ -119,6 +118,10 @@ export default defineComponent({
 .chat {
   min-width: 500px;
   width: 70%;
+  position: relative;
+  background: #fff;
+  box-shadow: $box_shadow;
+  height: calc(100vh - 120px);
 }
 
 .chat__header {
@@ -181,11 +184,9 @@ export default defineComponent({
 }
 
 .chat__messages {
-  padding: 10px 20px 0;
-  background: #fff;
   position: relative;
-  height: calc(100vh - 200px);
-  box-shadow: $box_shadow;
+
+  padding: 10px 0 0 20px;
 
   &-content {
     overflow-y: scroll;

@@ -35,7 +35,6 @@ export default defineComponent({
 
     }, {flush: 'post'})
 
-    //TODO:route protect
     return {
       user, currentChat, currentParticipant
     }
