@@ -13,7 +13,6 @@ export default function (socket: any) {
 
   function initListeners() {
     socket.on(ChatSocketEvents.NEW_MESSAGE, ({chat, ...data}: IMessage) => {
-      console.log(data)
       const currentChat = getCurrentChat(chat?._id)
       currentChat?.messages?.push(data)
     });

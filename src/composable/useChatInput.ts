@@ -20,14 +20,14 @@ export default function useChatInput() {
   const auth = useAuthStore();
 
   const attachmentsUrl = computed(() => {
-    let newArr = [];
-    for (let i = 0; i < attachments.value.length; i++) {
-      newArr.push(
-        URL.createObjectURL(attachments.value[i])
-      );
 
-    }
-    return newArr;
+    const result = attachments.value.map(attachment => {
+      if (attachment.type.includes('image')) {
+        console.log(attachment)
+        return URL.createObjectURL(attachment)
+      }
+    })
+    return result.filter(Boolean);
   });
 
   async function getBase64ArrayAttachments() {
@@ -46,40 +46,44 @@ export default function useChatInput() {
 
   function sendMessage(e: any) {
     return new Promise(async (resolve, reject) => {
-      if (!e.shiftKey && e.which === 13) {
+      if (!e?.shiftKey && e?.which === 13) {
         e.preventDefault();
       }
       if (
-        (message.value && message.value !== "\n") ||
-        !!attachments.value.length
+        (message.value && message.value.trim() === "") ||
+        (!attachments.value.length && !message.value)
       ) {
-        typing.value = false;
-
-        activeEmojiPicker.value = false;
-
-        const attachmentsResult = await getBase64ArrayAttachments()
-
-        const data = {
-          text: message.value,
-          chat_id: route.params.id,
-          attachments:attachmentsResult,
-        }
-        console.log(data)
-        socket.emit(
-          ChatSocketEvents.NEW_MESSAGE, data
-        );
-        resolve(true)
-        reject(false)
-        textarea.value.focus()
-        message.value = null;
-        attachments.value = [];
+        return
       }
+
+
+      typing.value = false;
+
+      activeEmojiPicker.value = false;
+
+      const attachmentsResult = await getBase64ArrayAttachments()
+
+      const data = {
+        text: message.value,
+        chat_id: route.params.id,
+        attachments: attachmentsResult,
+      }
+      console.log(data)
+      socket.emit(
+        ChatSocketEvents.NEW_MESSAGE, data
+      );
+      resolve(true)
+      reject(false)
+      textarea.value.focus()
+      message.value = null;
+      attachments.value = [];
+
 
     })
   }
 
-  function setAttachments(event: any) {
-    const files = event.target.files
+  function setAttachments(files: any) {
+
     if (files.length > 5) return notificationService.error('Can be uploaded more 5 images')
     if (files.type) {
       attachments.value.push(files);
@@ -87,8 +91,7 @@ export default function useChatInput() {
       attachments.value = [...files];
     }
   }
-
-  //todo: аудиосообщения
+//todo:ограничить время записи аудиосообщения 30 сек
   function deleteFile(index: number | 'all') {
     typeof index === 'number'
       ? attachments.value?.splice(index, 1)

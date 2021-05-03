@@ -30,13 +30,14 @@
       </div>
       <div class="message__attachments" v-if="hasAttachment ">
         <ul>
-          <li v-for="i in messageData.attachment.content" :key="i">
+          <li v-for="i in attachments" :key="i">
 
-            <img :src="baseUrl + '/attachments/'+i" alt=""/>
-            <!--            <audio controls="controls" v-if="i.type === 'Audio'">-->
-            <!--              <source :src="baseUrl + i.file" type="audio/webm"/>-->
-            <!--              Your browser doesn't support <code>audio</code>.-->
-            <!--            </audio>-->
+            <img :src="baseUrl + '/attachments/'+i.file" alt=""
+                 v-if="i.type.includes('image')"/>
+            <audio controls="controls" v-if="i.type.includes('audio') ">
+              <source :src="audioSrc"/>
+              Your browser doesn't support <code>audio</code>.
+            </audio>
           </li>
         </ul>
       </div>
@@ -85,6 +86,11 @@ export default defineComponent({
     const activeMessageOptions = ref(false);
     const hasAttachment = computed(() => props.messageData.attachment &&
       props.messageData.attachment.content.length)
+    const attachments = computed(() => props.messageData.attachment.content)
+    const audioSrc = computed(() => {
+      const file = attachments.value.find((item: any) => item.type === 'audio')
+      return file.file.replace('audio', 'audio/webm')
+    })
 
     const baseUrl = process.env.VUE_APP_BASE_URL;
 
@@ -100,7 +106,7 @@ export default defineComponent({
       activeMessageOptions,
       baseUrl,
       createdAt,
-      hideMessageOptions,hasAttachment
+      hideMessageOptions, hasAttachment, audioSrc, attachments
     };
   },
 
@@ -191,7 +197,7 @@ export default defineComponent({
         max-width: 250px;
         margin: 0 10px 10px 0;
 
-        &:last-child{
+        &:last-child {
           margin: 0;
         }
 

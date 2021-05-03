@@ -17,18 +17,29 @@
   <div class="input-block" v-click-outside="hideEmojiPicker">
     <div class="upload">
       <input type="file" accept="image/*" multiple
-             @change="setAttachments" ref="upload">
+             @change="setImages" ref="upload">
       <el-button icon="el-icon-upload" circle @click="chooseFiles"></el-button>
     </div>
     <textarea placeholder="Type your message here" v-model="message"
+              @keypress.enter.exact="send"
               ref="textarea"/>
-    <button class="send" @click="send">
-      <SendIcon/>
-    </button>
+    <el-button icon="el-icon-position" circle type="primary" class="send"
+               @click="send"
+               v-if="message || attachments.length">
+    </el-button>
+    <el-button icon="el-icon-microphone" circle type="primary" class="send"
+               @mousedown="activeAudioRecord = true"
+               v-else>
+    </el-button>
+    <AudioRecord v-if="activeAudioRecord"
+                 @closeAudioRecord="activeAudioRecord=false"
+                 @setAttachments="setAudio"
+                 @sendMessage="send"/>
   </div>
 </template>
 
 <script lang="ts">
+import AudioRecord from "@/components/chat/AudioRecord.vue"
 import SendIcon from "../icons/SendIcon.vue";
 import EmojiPicker from "./EmojiPicker.vue";
 import Btn from "../common/Button.vue";
@@ -37,8 +48,8 @@ import {defineComponent, ref, watch} from "vue";
 import {useChatInput} from "@/composable";
 
 export default defineComponent({
-  name:'ChatInput',
-  components: {Btn, EmojiPicker, SendIcon},
+  name: 'ChatInput',
+  components: {Btn, EmojiPicker, SendIcon, AudioRecord},
   setup() {
     const {
       sendTyping,
@@ -52,7 +63,8 @@ export default defineComponent({
       sendMessage,
       textarea,
       attachments,
-      deleteFile
+      deleteFile,
+      activeAudioRecord
     } = useChatInput();
     const upload = ref<any>()
 
@@ -67,6 +79,16 @@ export default defineComponent({
     function send(e: any) {
       sendMessage(e).then(res => res)
     }
+
+    function setImages(e: any) {
+      setAttachments(e.target.files)
+    }
+
+    function setAudio(e: any) {
+      setAttachments(e)
+
+    }
+
 
     watch(message, () => {
       message.value === "" ? (message.value = null) : message.value;
@@ -83,7 +105,6 @@ export default defineComponent({
     });
 
     return {
-      setAttachments,
       message,
       activeEmojiPicker,
       hideEmojiPicker,
@@ -94,7 +115,8 @@ export default defineComponent({
       chooseFiles,
       attachmentsUrl,
       attachments,
-      deleteFile
+      deleteFile, activeAudioRecord,
+      setImages, setAudio
     };
   },
   watch: {
@@ -223,22 +245,6 @@ export default defineComponent({
   }
 
   .send {
-    background: linear-gradient(325.78deg, #2a8bf2 14.76%, #7cb8f7 87.3%);
-    /* Shadow Active Icon */
-
-    box-shadow: 4px 4px 25px rgba(42, 139, 242, 0.15), 2px 2px 25px rgba(42, 139, 242, 0.05),
-    4px 6px 10px rgba(42, 139, 242, 0.15);
-    width: 43px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-
-    svg {
-      width: 20px;
-      height: 20px;
-    }
   }
 }
 </style>
