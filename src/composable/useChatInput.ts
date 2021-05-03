@@ -1,39 +1,37 @@
-import {useAuthStore} from "@/store/auth/useAuthStore";
 import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
 import {toBase64} from "@/utils/base64encryption";
-import {computed, inject, ref} from "vue";
-import {useRoute} from "vue-router";
+import {computed, inject, ref, watch} from "vue";
 import {Socket} from "socket.io"
 import notificationService from "@/services/notificationService";
+import {useChatData} from "@/composable/index";
 
 export default function useChatInput() {
   const socket = inject('socket') as Socket
   const message = ref<string | null>(null);
-  const attachments = ref<Array<File>>([]);
+  const attachments = ref<Array<File> | null>([]);
   const activeEmojiPicker = ref<boolean>(false);
   const activeAudioRecord = ref<boolean>(false);
   const typing = ref<boolean>(false);
   const timeout = ref<any | null>(null);
   const textarea = ref()
 
-  const route = useRoute();
-  const auth = useAuthStore();
+  const {currentParticipant, currentChat} = useChatData()
 
   const attachmentsUrl = computed(() => {
 
-    const result = attachments.value.map(attachment => {
+    const result = attachments.value?.map(attachment => {
       if (attachment.type.includes('image')) {
-        console.log(attachment)
+
         return URL.createObjectURL(attachment)
       }
     })
-    return result.filter(Boolean);
+    return result?.filter(Boolean);
   });
 
   async function getBase64ArrayAttachments() {
     let attachArray = [] as string[];
 
-    if (attachments.value.length) {
+    if (attachments.value?.length) {
       for (let i = 0; i < attachments.value.length; i++) {
         await toBase64(attachments.value[i])
           .then((res: any) =>
@@ -51,11 +49,10 @@ export default function useChatInput() {
       }
       if (
         (message.value && message.value.trim() === "") ||
-        (!attachments.value.length && !message.value)
+        (!attachments.value && !message.value)
       ) {
         return
       }
-
 
       typing.value = false;
 
@@ -65,7 +62,7 @@ export default function useChatInput() {
 
       const data = {
         text: message.value,
-        chat_id: route.params.id,
+        chat_id: currentChat.value?._id,
         attachments: attachmentsResult,
       }
       console.log(data)
@@ -76,7 +73,7 @@ export default function useChatInput() {
       reject(false)
       textarea.value.focus()
       message.value = null;
-      attachments.value = [];
+      attachments.value = null;
 
 
     })
@@ -86,33 +83,58 @@ export default function useChatInput() {
 
     if (files.length > 5) return notificationService.error('Can be uploaded more 5 images')
     if (files.type) {
-      attachments.value.push(files);
+      attachments.value?.push(files);
     } else {
       attachments.value = [...files];
     }
   }
+
 //todo:ограничить время записи аудиосообщения 30 сек
   function deleteFile(index: number | 'all') {
     typeof index === 'number'
       ? attachments.value?.splice(index, 1)
-      : attachments.value.length = 0
+      : attachments.value = []
   }
 
   function setEmoji(emoji: any) {
     message.value ? (message.value += emoji) : (message.value = emoji);
   }
 
-  function sendTyping(status: boolean) {
+  function sendTyping(status: boolean, isAudio: boolean) {
     socket.emit(ChatSocketEvents.TYPING_MESSAGE, {
-      chat_id: route.params.id,
-      status: status,
-      nickname: auth.userData?.username,
+      chat_id: currentChat.value?._id,
+      status,
+      participant_id: currentParticipant.value?._id,
+      isAudio
     });
   }
 
   function createChat(name: string) {
     socket.emit(ChatSocketEvents.CREATE_CHAT, {name})
   }
+
+  watch(message, () => {
+    message.value === "" ? (message.value = null) : message.value;
+    clearInterval(timeout.value);
+    if (!typing.value) {
+      sendTyping(true, false);
+    }
+
+    typing.value = true;
+    timeout.value = setTimeout(() => {
+      typing.value = false;
+      sendTyping(false, false);
+    }, 3000);
+  });
+
+  watch(activeAudioRecord, () => {
+    if (activeAudioRecord.value) {
+      sendTyping(true, true)
+      return
+    }
+
+    sendTyping(false, true)
+  })
 
 
   return {

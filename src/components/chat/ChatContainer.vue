@@ -26,7 +26,12 @@
           v-for="message in chat.messages"
           :key="message._id"
           :messageData="message"
-          :isMe="message.sender.user._id===user._id"
+          :is-me="message.sender.user._id===currentParticipant.user._id"
+        />
+        <TypingMessage
+          v-if="chat.typing?.status && typingUser._id!==currentParticipant._id"
+          :username="typingUser.user.username"
+          :is-audio="chat.typing.isAudio"
         />
       </div>
     </div>
@@ -38,6 +43,7 @@
 </template>
 
 <script lang="ts">
+import TypingMessage from "./TypingMessage.vue"
 import OptionsIcon from "../icons/Options.vue";
 import AdjustmentIcon from "../icons/Adjustment.vue";
 import Spinner from "../common/Spinner.vue";
@@ -53,8 +59,7 @@ import {
   toRefs,
   watch
 } from "vue";
-import {IChatItem} from "@/store/chat/types/chat";
-import {IUserData} from "@/store/auth/types/user";
+import {IChatItem, IParticipant} from "@/store/chat/types/chat";
 
 export default defineComponent({
   name: "ChatContainer",
@@ -64,33 +69,26 @@ export default defineComponent({
     Spinner,
     AdjustmentIcon,
     OptionsIcon,
+    TypingMessage
   },
   props: {
     chat: {
       type: Object as PropType<IChatItem>,
       required: true
     },
-    user: {
-      type: Object as PropType<IUserData>,
+    currentParticipant: {
+      type: Object as PropType<IParticipant>,
       required: true
-
     }
   },
   setup(props) {
-    const {chat, user} = toRefs(props)
+    const {chat, currentParticipant} = toRefs(props)
     const content = ref()
-    const status = computed(() => {
-      if (
-        chat.value?.typing &&
-        chat.value.typing.status &&
-        chat.value.typing.nickname !== user.value.username
-      ) {
-        return `${chat.value?.typing.nickname} is typing ...`;
-      } else {
-        return "connecting";
-      }
-    });
 
+    const
+      typingUser = computed(() =>
+        chat.value.participants.find(participant =>
+          participant._id === chat.value.typing?.participant_id))
 
     function toBottom() {
       nextTick(() => {
@@ -107,8 +105,9 @@ export default defineComponent({
 
     return {
 
-      status,
       content,
+      typingUser
+
     };
   },
 });

@@ -1,12 +1,6 @@
 <template>
   <div class="message" :class="{ messageMe: isMe }">
     <div class="message__options" v-click-outside="hideMessageOptions">
-      <!-- <vs-button
-        icon
-        shadow
-        @click="activeMessageOptions = !activeMessageOptions"
-        ><i class="bx bx-dots-horizontal-rounded"></i
-      ></vs-button> -->
       <transition name="fade-bottom">
         <Modal
           v-if="activeMessageOptions"

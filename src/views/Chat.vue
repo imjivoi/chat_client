@@ -5,7 +5,7 @@
   </div>
   <div class="flex justify-between" v-else>
 
-    <ChatContainer :chat="currentChat" :user="user"/>
+    <ChatContainer :chat="currentChat" :current-participant="currentParticipant"/>
     <ChatInfo/>
 
   </div>

@@ -1,6 +1,6 @@
 import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
 import {IMessage} from "@/store/chat/types/message";
-import {IChatItem, IChatState, IParticipant} from "@/store/chat/types/chat";
+import {IChatItem, IChatState, IParticipant, ITypingData} from "@/store/chat/types/chat";
 import {useChatStore} from "@/store";
 
 
@@ -27,6 +27,10 @@ export default function (socket: any) {
     socket.on(ChatSocketEvents.NEW_PARTICIPANT, ({chat_id, ...data}: IParticipant) => {
       const currentChat = getCurrentChat(chat_id)
       currentChat?.participants.push(data)
+    })
+    socket.on(ChatSocketEvents.TYPING_MESSAGE, ({chat_id, ...data}: ITypingData) => {
+      const currentChat = getCurrentChat(chat_id)
+      currentChat!.typing = data
     })
 
   }

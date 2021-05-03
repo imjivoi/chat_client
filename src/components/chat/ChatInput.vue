@@ -1,5 +1,5 @@
 <template>
-  <div class="imgs-preview bg-blur" v-if="attachmentsUrl.length">
+  <div class="imgs-preview bg-blur" v-if="attachmentsUrl?.length">
     <div class="img-container" v-for="(imgUrl,idx) in attachmentsUrl"
          :key="imgUrl"
          @click="deleteFile(idx)">
@@ -25,14 +25,14 @@
               ref="textarea"/>
     <el-button icon="el-icon-position" circle type="primary" class="send"
                @click="send"
-               v-if="message || attachments.length">
+               v-if="message || attachments?.length">
     </el-button>
     <el-button icon="el-icon-microphone" circle type="primary" class="send"
                @mousedown="activeAudioRecord = true"
                v-else>
     </el-button>
     <AudioRecord v-if="activeAudioRecord"
-                 @closeAudioRecord="activeAudioRecord=false"
+                 @closeAudioRecord="canselAudiorecord"
                  @setAttachments="setAudio"
                  @sendMessage="send"/>
   </div>
@@ -44,7 +44,7 @@ import SendIcon from "../icons/SendIcon.vue";
 import EmojiPicker from "./EmojiPicker.vue";
 import Btn from "../common/Button.vue";
 
-import {defineComponent, ref, watch} from "vue";
+import {defineComponent, ref} from "vue";
 import {useChatInput} from "@/composable";
 
 export default defineComponent({
@@ -77,6 +77,7 @@ export default defineComponent({
     }
 
     function send(e: any) {
+      activeAudioRecord.value = false;
       sendMessage(e).then(res => res)
     }
 
@@ -86,23 +87,14 @@ export default defineComponent({
 
     function setAudio(e: any) {
       setAttachments(e)
-
     }
 
+    function canselAudiorecord() {
 
-    watch(message, () => {
-      message.value === "" ? (message.value = null) : message.value;
-      clearInterval(timeout.value);
-      if (!typing.value) {
-        sendTyping(true);
-      }
+      activeAudioRecord.value = false;
+      attachments.value = []
+    }
 
-      typing.value = true;
-      timeout.value = setTimeout(() => {
-        typing.value = false;
-        sendTyping(false);
-      }, 3000);
-    });
 
     return {
       message,
@@ -116,15 +108,10 @@ export default defineComponent({
       attachmentsUrl,
       attachments,
       deleteFile, activeAudioRecord,
-      setImages, setAudio
+      setImages, setAudio, canselAudiorecord
     };
   },
-  watch: {
-    chatId: function () {
-      this.message = null;
-      this.attachments = [];
-    }
-  }
+
 });
 </script>
 

@@ -1,4 +1,4 @@
-import {IMessage, IMessagesList} from "./message";
+import {IMessage} from "./message";
 import {IUserData} from "../../auth/types/user";
 
 export interface IChatItem {
@@ -8,10 +8,7 @@ export interface IChatItem {
   admin: IUserData;
   name: string | null;
   image?: string | null;
-  typing?: {
-    status: boolean;
-    nickname: string;
-  } | null;
+  typing?: ITypingData | null;
   invite?: IChatInvite | null;
   messages?: IMessage[];
 }
@@ -32,7 +29,7 @@ export interface IParticipant {
   accepted: boolean;
   blocked: boolean;
   user: IUserData;
-  chat_id?:string;
+  chat_id?: string;
 }
 
 export interface IChatInvite {
@@ -40,4 +37,10 @@ export interface IChatInvite {
   createdAt: string;
   expiresAt: string;
   unique_key: string;
+}
+export interface ITypingData{
+  status: boolean;
+  participant_id: string;
+  isAudio: boolean;
+  chat_id?:string;
 }
