@@ -1,5 +1,4 @@
 import {useAuthStore} from "@/store/auth/useAuthStore";
-import {IAttachments} from "@/store/chat/types/chat";
 import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
 import {toBase64} from "@/utils/base64encryption";
 import {computed, inject, ref} from "vue";
@@ -31,8 +30,22 @@ export default function useChatInput() {
     return newArr;
   });
 
+  async function getBase64ArrayAttachments() {
+    let attachArray = [] as string[];
+
+    if (attachments.value.length) {
+      for (let i = 0; i < attachments.value.length; i++) {
+        await toBase64(attachments.value[i])
+          .then((res: any) =>
+            attachArray.push(res)
+          );
+      }
+    }
+    return attachArray
+  }
+
   function sendMessage(e: any) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (!e.shiftKey && e.which === 13) {
         e.preventDefault();
       }
@@ -43,22 +56,17 @@ export default function useChatInput() {
         typing.value = false;
 
         activeEmojiPicker.value = false;
-        const attachArray = [] as IAttachments[];
 
-        if (attachments.value.length) {
-          for (let i = 0; i < attachments.value.length; i++) {
-            toBase64(attachments.value[i]).then((res: any) => {
-              attachArray.push(res);
-            });
-          }
+        const attachmentsResult = await getBase64ArrayAttachments()
+
+        const data = {
+          text: message.value,
+          chat_id: route.params.id,
+          attachments:attachmentsResult,
         }
-
+        console.log(data)
         socket.emit(
-          ChatSocketEvents.NEW_MESSAGE, {
-            text: message.value,
-            chat_id: route.params.id,
-            attachments: attachments.value,
-          }
+          ChatSocketEvents.NEW_MESSAGE, data
         );
         resolve(true)
         reject(false)
@@ -72,17 +80,19 @@ export default function useChatInput() {
 
   function setAttachments(event: any) {
     const files = event.target.files
-    if(files.length>5) return notificationService.error('Can be uploaded more 5 images')
+    if (files.length > 5) return notificationService.error('Can be uploaded more 5 images')
     if (files.type) {
       attachments.value.push(files);
     } else {
       attachments.value = [...files];
     }
   }
-  //todo: отправка и сохранение фото
+
   //todo: аудиосообщения
-  function deleteFile(index: number) {
-    attachments.value?.splice(index, 1);
+  function deleteFile(index: number | 'all') {
+    typeof index === 'number'
+      ? attachments.value?.splice(index, 1)
+      : attachments.value.length = 0
   }
 
   function setEmoji(emoji: any) {
@@ -100,6 +110,7 @@ export default function useChatInput() {
   function createChat(name: string) {
     socket.emit(ChatSocketEvents.CREATE_CHAT, {name})
   }
+
 
   return {
     message,

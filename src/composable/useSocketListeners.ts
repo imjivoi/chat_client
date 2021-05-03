@@ -7,11 +7,13 @@ import {useChatStore} from "@/store";
 export default function (socket: any) {
   const chatStore = useChatStore()
 
-  function getCurrentChat(id:string | undefined){
+  function getCurrentChat(id: string | undefined) {
     return chatStore.list.find(chat => chat._id === id)
   }
+
   function initListeners() {
     socket.on(ChatSocketEvents.NEW_MESSAGE, ({chat, ...data}: IMessage) => {
+      console.log(data)
       const currentChat = getCurrentChat(chat?._id)
       currentChat?.messages?.push(data)
     });
@@ -23,7 +25,7 @@ export default function (socket: any) {
         list, count
       })
     })
-    socket.on(ChatSocketEvents.NEW_PARTICIPANT, ({chat_id,...data}: IParticipant) => {
+    socket.on(ChatSocketEvents.NEW_PARTICIPANT, ({chat_id, ...data}: IParticipant) => {
       const currentChat = getCurrentChat(chat_id)
       currentChat?.participants.push(data)
     })

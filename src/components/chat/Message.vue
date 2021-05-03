@@ -22,22 +22,21 @@
     <div class="message__content">
       <div
         class="message__text"
-        :style="messageData.attachments && messageData.attachments.length ? `margin-bottom:10px` :
+        :style="hasAttachment ? `margin-bottom:10px` :
          ''"
         v-if="messageData.text"
       >
         <p>{{ messageData.text }}</p>
       </div>
-      <div class="message__attachments" v-if="messageData.attachments ">
+      <div class="message__attachments" v-if="hasAttachment ">
         <ul>
-          <li v-for="i in messageData.attachments" :key="i.id">
-            <i class="bx bxs-file" v-if="i.type === 'File'"></i>
+          <li v-for="i in messageData.attachment.content" :key="i">
 
-            <img :src="baseUrl + i.file" alt="" v-if="i.type === 'Image'"/>
-            <audio controls="controls" v-if="i.type === 'Audio'">
-              <source :src="baseUrl + i.file" type="audio/webm"/>
-              Your browser doesn't support <code>audio</code>.
-            </audio>
+            <img :src="baseUrl + '/attachments/'+i" alt=""/>
+            <!--            <audio controls="controls" v-if="i.type === 'Audio'">-->
+            <!--              <source :src="baseUrl + i.file" type="audio/webm"/>-->
+            <!--              Your browser doesn't support <code>audio</code>.-->
+            <!--            </audio>-->
           </li>
         </ul>
       </div>
@@ -84,6 +83,8 @@ export default defineComponent({
   },
   setup(props, ctx) {
     const activeMessageOptions = ref(false);
+    const hasAttachment = computed(() => props.messageData.attachment &&
+      props.messageData.attachment.content.length)
 
     const baseUrl = process.env.VUE_APP_BASE_URL;
 
@@ -99,9 +100,10 @@ export default defineComponent({
       activeMessageOptions,
       baseUrl,
       createdAt,
-      hideMessageOptions,
+      hideMessageOptions,hasAttachment
     };
   },
+
 
   directives: {
     ClickOutside,
@@ -186,7 +188,12 @@ export default defineComponent({
 
       li {
         width: 100%;
-        max-width: 300px;
+        max-width: 250px;
+        margin: 0 10px 10px 0;
+
+        &:last-child{
+          margin: 0;
+        }
 
         audio {
           max-width: 300px;
@@ -199,6 +206,7 @@ export default defineComponent({
         img {
           width: 100%;
           max-width: 250px;
+          display: flex;
         }
       }
     }

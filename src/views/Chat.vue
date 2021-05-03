@@ -18,6 +18,7 @@ import {defineComponent, watchEffect} from "vue";
 import {useChatData} from "@/composable";
 
 export default defineComponent({
+  name:'Chat',
   components: {ChatContainer, ChatInfo},
   setup() {
 

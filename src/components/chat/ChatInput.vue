@@ -1,11 +1,18 @@
 <template>
-  <div class="imgs-preview bg-blur" v-if="attachmentsUrl.length" >
+  <div class="imgs-preview bg-blur" v-if="attachmentsUrl.length">
     <div class="img-container" v-for="(imgUrl,idx) in attachmentsUrl"
          :key="imgUrl"
          @click="deleteFile(idx)">
       <img :src="imgUrl" alt="">
       <span>Remove</span>
     </div>
+    <div class="img-container" :class="{'remove-all':attachmentsUrl.length>1}"
+         v-if="attachmentsUrl.length>1"
+         @click="deleteFile('all')"
+    >
+      <span>Remove all</span>
+    </div>
+
   </div>
   <div class="input-block" v-click-outside="hideEmojiPicker">
     <div class="upload">
@@ -30,6 +37,7 @@ import {defineComponent, ref, watch} from "vue";
 import {useChatInput} from "@/composable";
 
 export default defineComponent({
+  name:'ChatInput',
   components: {Btn, EmojiPicker, SendIcon},
   setup() {
     const {
@@ -102,9 +110,11 @@ export default defineComponent({
 .imgs-preview {
   display: flex;
   position: absolute;
-  bottom: 75px;
+  bottom: 70px;
   width: fit-content;
   padding: 10px;
+  box-shadow: 0 2px 14px #00000014;
+  border-radius: 10px;
 
   .img-container {
     max-width: 100px;
@@ -114,6 +124,16 @@ export default defineComponent({
 
     &:last-child {
       margin: 0;
+
+
+    }
+
+    &.remove-all {
+      span {
+        opacity: 1;
+        position: relative;
+
+      }
     }
 
     img {

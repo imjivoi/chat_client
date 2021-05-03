@@ -193,6 +193,7 @@ export default defineComponent({
     height: calc(100vh - 290px);
     overflow-x: hidden;
     position: relative;
+    padding: 5px 0 0;
   }
 }
 </style>
