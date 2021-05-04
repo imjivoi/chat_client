@@ -28,10 +28,11 @@
 
             <img :src="baseUrl + '/attachments/'+i.file" alt=""
                  v-if="i.type.includes('image')"/>
-            <audio controls="controls" v-if="i.type.includes('audio') ">
-              <source :src="audioSrc"/>
-              Your browser doesn't support <code>audio</code>.
-            </audio>
+<AudioPlayer v-if="i.type.includes('audio') " :src="audioSrc"/>
+<!--            <audio controls="controls" >-->
+<!--              <source :src="audioSrc"/>-->
+<!--              Your browser doesn't support <code>audio</code>.-->
+<!--            </audio>-->
           </li>
         </ul>
       </div>
@@ -55,6 +56,7 @@
 </template>
 
 <script lang="ts">
+import AudioPlayer from "./AudioPlayer.vue"
 import Modal from "../common/Modal.vue";
 
 import {formatDistanceToNow} from "date-fns";
@@ -64,7 +66,7 @@ import ClickOutside from "vue-click-outside";
 import {computed, defineComponent, ref} from "vue";
 
 export default defineComponent({
-  components: {Modal},
+  components: {Modal,AudioPlayer},
   props: {
     messageData: {
       type: Object,

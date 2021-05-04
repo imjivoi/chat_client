@@ -1,7 +1,7 @@
 <template>
   <div class="audio-record">
     <div class="audio-record__content" v-if="mediaRecorder">
-      <div class="audio-record__overlay bg-blur" ref="overlay"
+      <div class="audio-record__overlay " ref="overlay"
            @mouseup="send"></div>
 
       <div class="timer">{{ minutes + ' : ' + seconds }}</div>
