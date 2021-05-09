@@ -16,8 +16,8 @@
 import ChatInfo from "@/components/chat/ChatInfo";
 import ChatContainer from "@/components/chat/ChatContainer";
 
-import {defineComponent, watchEffect} from "vue";
-import {useChatData} from "@/composable";
+import {defineComponent, watch, watchEffect} from "vue";
+import {useChatData, useChatInput} from "@/composable";
 
 export default defineComponent({
   name: 'Chat',
@@ -29,14 +29,24 @@ export default defineComponent({
       currentChat,
       updateMessages,
       getInvite,
-      currentParticipant
+      currentParticipant,
+      unreadedMessages
     } = useChatData()
+    const {readMessages} = useChatInput()
 
-    watchEffect(() => {
-      updateMessages()
-      getInvite()
+    watchEffect(async () => {
 
     }, {flush: 'post'})
+
+    watch(currentChat, async () => {
+      await updateMessages()
+      await getInvite()
+      if (unreadedMessages.value.length) {
+        readMessages()
+      }
+
+
+    }, {deep: true})
 
     return {
       user, currentChat, currentParticipant

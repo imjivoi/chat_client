@@ -116,6 +116,11 @@ export default function useChatInput() {
     socket.emit(ChatSocketEvents.READ_MESSAGE, {chat_id: currentChat.value?._id, message_id})
   }
 
+  function readMessages() {
+    socket.emit(ChatSocketEvents.READ_MESSAGES, {chat_id: currentChat.value?._id})
+
+  }
+
   watch(message, () => {
     message.value === "" ? (message.value = null) : message.value;
     clearInterval(timeout.value);
@@ -155,6 +160,7 @@ export default function useChatInput() {
     timeout,
     createChat,
     textarea,
-    readMessage
+    readMessage,
+    readMessages
   };
 }

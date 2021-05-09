@@ -20,14 +20,13 @@
       </div>
     </div>
     <div class="chat__messages">
-      <div ref="content" class="chat__messages-content">
+      <div ref="content" class="chat__messages-content" @scroll="scrollHandler">
         <transition-group name="fade-to-top">
           <Message
             v-for="message in chat.messages"
             :key="message._id"
             :messageData="message"
             :is-me="message.sender._id===currentParticipant._id"
-            @setReaded="readMessage"
           />
 
         </transition-group>
@@ -64,7 +63,6 @@ import {
 } from "vue";
 import {IChatItem, IParticipant} from "@/store/chat/types/chat";
 import {onMounted} from "@vue/runtime-core";
-import {useChatInput} from "@/composable";
 
 export default defineComponent({
   name: "ChatContainer",
@@ -87,9 +85,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const {chat, currentParticipant} = toRefs(props)
+    const {chat} = toRefs(props)
     const content = ref()
-    const {readMessage} = useChatInput()
+    const scrollPosition = ref(0)
+
 
     const
       typingUser = computed(() =>
@@ -103,6 +102,10 @@ export default defineComponent({
       });
     }
 
+    function scrollHandler(e: any) {
+      scrollPosition.value = e.target?.scrollTop
+    }
+
     onMounted(() => toBottom())
 
     watch(chat, () => {
@@ -114,7 +117,8 @@ export default defineComponent({
 
       content,
       typingUser,
-      readMessage
+      scrollHandler,
+      scrollPosition
 
     };
   },

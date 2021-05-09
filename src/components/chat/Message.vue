@@ -1,6 +1,6 @@
 <template>
   <div class="message" :class="{ messageMe: isMe }"
-       v-observe-visibility="setReaded" ref="message">
+       ref="message">
     <div class="message__options" v-click-outside="hideMessageOptions">
       <transition name="fade-bottom">
         <Modal
@@ -43,7 +43,7 @@
     <div class="message__readed">
       <i
         class="el-icon-check check double-check"
-        style="font-size: 20px"
+
         v-if="messageData.isReaded"
       ></i>
 
@@ -55,13 +55,11 @@
 <script lang="ts">
 import AudioPlayer from "./AudioPlayer.vue"
 import Modal from "../common/Modal.vue";
-
-import {isElementVisible} from "@/helpers/isElementVisible"
 import {formatDistanceToNow} from "date-fns";
 //@ts-ignore
 import ClickOutside from "vue-click-outside";
 
-import {computed, defineComponent, PropType, ref, watch} from "vue";
+import {computed, defineComponent, PropType, ref, toRefs} from "vue";
 import {IMessage} from "@/store/chat/types/message";
 
 export default defineComponent({
@@ -79,41 +77,29 @@ export default defineComponent({
     },
   },
   setup(props, {emit}) {
+
+    const {messageData} = toRefs(props)
     const message = ref<HTMLElement | null>()
     const activeMessageOptions = ref(false);
 
-    const hasAttachment = computed(() => props.messageData.attachment &&
-      props.messageData.attachment.content.length)
-    const attachments = computed(() => props.messageData.attachment.content)
+    const hasAttachment = computed(() => messageData.value.attachment &&
+      messageData.value.attachment.content.length)
+    const attachments = computed(() => messageData.value?.attachment?.content)
     const audioSrc = computed(() => {
       const file = attachments.value.find((item: any) => item.type === 'audio')
       return file.file.replace('audio', 'audio/webm')
     })
-    const messagePos = message.value?.offsetTop
+
 
     const baseUrl = process.env.VUE_APP_BASE_URL;
 
     const createdAt = computed(() =>
-      formatDistanceToNow(new Date(props.messageData.createdAt))
+      formatDistanceToNow(new Date(messageData.value.createdAt))
     );
 
     function hideMessageOptions() {
       activeMessageOptions.value = false;
     }
-
-    function setReaded() {
-
-      if (message.value && isElementVisible(message.value) && !props.messageData.isReaded &&
-        !props.isMe) {
-        emit('setReaded', props.messageData._id)
-
-      }
-    }
-
-    //todo:получить позицию элемента реактивно
-
-
-    watch(() => messagePos, () => setReaded())
 
     return {
       activeMessageOptions,
@@ -124,7 +110,7 @@ export default defineComponent({
       audioSrc,
       attachments,
       message,
-      setReaded
+
     };
   },
 
@@ -174,7 +160,7 @@ export default defineComponent({
     }
 
     .message__readed {
-      left: -25px;
+      left: -37px;
       right: auto;
     }
   }
@@ -274,7 +260,8 @@ export default defineComponent({
     }
 
     .double-check {
-
+      right: -12px;
+      position: relative;
     }
   }
 }
