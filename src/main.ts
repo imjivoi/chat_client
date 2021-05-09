@@ -3,9 +3,9 @@ import {createApp} from "vue";
 import {VueCookieNext} from "vue-cookie-next";
 import Toast from "vue-toastification";
 import ElementPlus from "element-plus";
-import {createPinia} from "pinia"; //@ts-ignore
-import {i18n} from "@/resource/i18n";
-
+import {createPinia} from "pinia";
+import {i18n} from "@/resource/i18n";//@ts-ignore
+import { ObserveVisibility } from 'vue-observe-visibility'
 //styles
 import "element-plus/lib/theme-chalk/index.css";
 import "vue-toastification/dist/index.css";
@@ -20,6 +20,8 @@ import {setAuthHeader} from "./utils/axios"
 
 const app = createApp(App);
 
+
+app.directive('observe-visibility', ObserveVisibility)
 app.directive("click-outside", {
   beforeMount(el, binding, vnode) {
     el.clickOutsideEvent = function (event: any) {

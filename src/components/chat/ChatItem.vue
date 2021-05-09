@@ -12,11 +12,11 @@
       </div>
     </div>
     <div class="chat-item__participants">
-      <p>Participants : {{ participants.length }}</p>
-      <!--      <template v-for="participant in participants" :key="participant._id">-->
-      <!--        <el-avatar :src="participant.user.avatar" ></el-avatar>-->
-
-      <!--      </template>-->
+      <div class="chat-item__participant" v-for="participant in firstParticipants"
+           :key="participant._id">
+        <el-avatar :src="participant.user.avatar"></el-avatar>
+        <p>{{ participant.user.username }}</p>
+      </div>
     </div>
   </li>
 </template>
@@ -41,12 +41,16 @@ export default defineComponent({
       required: true
     },
     participants: {
-      type: Array as PropType<IParticipant[]>
+      type: Array as PropType<IParticipant[]>,
+      default:[]
     }
   },
   computed: {
     createdAt(): string {
       return format(new Date(this.created), 'P')
+    },
+    firstParticipants():IParticipant[] | [] {
+      return this.participants?.filter((participant, idx) => idx !== 4)
     }
   }
 });
@@ -129,6 +133,14 @@ export default defineComponent({
   &__participants {
     position: relative;
     display: flex;
+  }
+
+  &__participant {
+    margin: 0 10px 0 0;
+
+    &:last-child {
+      margin: 0;
+    }
   }
 }
 

@@ -1,11 +1,13 @@
 <template>
-  <div class="not-accepted" v-if="!currentParticipant.accepted">
+  <div class="not-accepted"
+       v-if="currentParticipant && !currentParticipant.accepted">
     You are not accepted
     yet
   </div>
-  <div class="flex justify-between" v-else>
+  <div class="flex justify-between" v-if="currentChat">
 
-    <ChatContainer :chat="currentChat" :current-participant="currentParticipant"/>
+    <ChatContainer :chat="currentChat"
+                   :current-participant="currentParticipant"/>
     <ChatInfo/>
 
   </div>
@@ -18,7 +20,7 @@ import {defineComponent, watchEffect} from "vue";
 import {useChatData} from "@/composable";
 
 export default defineComponent({
-  name:'Chat',
+  name: 'Chat',
   components: {ChatContainer, ChatInfo},
   setup() {
 

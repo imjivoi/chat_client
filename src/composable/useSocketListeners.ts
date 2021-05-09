@@ -33,6 +33,15 @@ export default function (socket: any) {
       currentChat!.typing = data
     })
 
+    socket.on(ChatSocketEvents.READ_MESSAGE, ({
+                                                chat_id,
+                                                message_id
+                                              }: { chat_id: string, message_id: string }) => {
+      const currentChat = getCurrentChat(chat_id)
+      const message = currentChat?.messages?.find(message => message._id === message_id)
+      if (message)
+        message.isReaded = true
+    })
   }
 
   return {

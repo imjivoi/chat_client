@@ -15,24 +15,18 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/app/chats/",
+    name:'Chats',
     meta: {title: "Chats", layout: "Main"},
     component: () => import("../views/Chats.vue"),
-    children: [
-      {
-        path: "/app/chats/",
-        name: "Chats",
-        meta: {title: "Chats", layout: "Main"},
-
-        component: () => import("@/components/chat/ChatItems.vue")
-      },
-      {
-        path: "/app/chats/:id",
-        name: "Chat",
-        component: () => import("../views/Chat.vue"),
-        meta: {back: true, title: ''}
-      },
-    ],
+    children: [],
   },
+  {
+    path: "/app/chats/:id",
+    name: "Chat",
+    component: () => import("../views/Chat.vue"),
+    meta: {back: true, title: '', layout: 'Main'}
+  },
+
   {
     path: "/app/voices",
     name: "Voices",

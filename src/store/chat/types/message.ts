@@ -4,11 +4,12 @@ import {IChatItem, IParticipant} from "@/store/chat/types/chat";
 export interface IMessage {
   sender?: IParticipant;
   chat?: IChatItem;
-  created?: string;
+  createdAt: string;
+  updatedAt?: string;
   text: string | null;
-  attachments?: any | null;
+  attachment?: any | null;
   _id?: string;
-  is_readed?: boolean;
+  isReaded?: boolean;
 }
 
 export interface IMessagesList {

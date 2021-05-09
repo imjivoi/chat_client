@@ -4,7 +4,8 @@
       <div class="audio-record__overlay " ref="overlay"
            @mouseup="send"></div>
 
-      <div class="timer">{{ minutes + ' : ' + seconds }}</div>
+      <div class="timer" v-if="!isSending">{{ minutes + ' : ' + seconds }}</div>
+      <div class="timer" v-else>Sending ...</div>
       <el-button type="danger" icon="el-icon-turn-off-microphone" circle
                  ref="stopBtn"
                  @mouseup="close"
@@ -24,7 +25,8 @@ export default {
     seconds: '00',
     interval: null,
     mediaRecorder: null,
-    status: ''
+    status: '',
+    isSending:false
   }),
   methods: {
 
@@ -55,6 +57,7 @@ export default {
       this.$emit("closeAudioRecord");
     },
     send() {
+      this.isSending=true
       this.stopRecord();
       this.status = 'send'
       setTimeout(() => this.$emit("sendMessage"), 300
@@ -86,6 +89,13 @@ export default {
   },
   beforeMount() {
     this.mediaRecorder = null;
+  },
+  watch:{
+    seconds:function () {
+      if (parseInt(this.seconds)===30){
+        this.send()
+      }
+    }
   }
 }
 </script>

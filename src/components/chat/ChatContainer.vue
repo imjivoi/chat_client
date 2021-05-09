@@ -7,7 +7,6 @@
           <div class="chat__name">
             <h3>{{ chat.name }}</h3>
           </div>
-          <div class="chat__status p-mt-1">{{ status }}</div>
         </div>
       </div>
 
@@ -22,12 +21,16 @@
     </div>
     <div class="chat__messages">
       <div ref="content" class="chat__messages-content">
-        <Message
-          v-for="message in chat.messages"
-          :key="message._id"
-          :messageData="message"
-          :is-me="message.sender.user._id===currentParticipant.user._id"
-        />
+        <transition-group name="fade-to-top">
+          <Message
+            v-for="message in chat.messages"
+            :key="message._id"
+            :messageData="message"
+            :is-me="message.sender._id===currentParticipant._id"
+            @setReaded="readMessage"
+          />
+
+        </transition-group>
         <TypingMessage
           v-if="chat.typing?.status && typingUser._id!==currentParticipant._id"
           :username="typingUser.user.username"
@@ -60,6 +63,8 @@ import {
   watch
 } from "vue";
 import {IChatItem, IParticipant} from "@/store/chat/types/chat";
+import {onMounted} from "@vue/runtime-core";
+import {useChatInput} from "@/composable";
 
 export default defineComponent({
   name: "ChatContainer",
@@ -84,6 +89,7 @@ export default defineComponent({
   setup(props) {
     const {chat, currentParticipant} = toRefs(props)
     const content = ref()
+    const {readMessage} = useChatInput()
 
     const
       typingUser = computed(() =>
@@ -97,6 +103,7 @@ export default defineComponent({
       });
     }
 
+    onMounted(() => toBottom())
 
     watch(chat, () => {
       toBottom();
@@ -106,7 +113,8 @@ export default defineComponent({
     return {
 
       content,
-      typingUser
+      typingUser,
+      readMessage
 
     };
   },

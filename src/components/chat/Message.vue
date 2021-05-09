@@ -1,5 +1,6 @@
 <template>
-  <div class="message" :class="{ messageMe: isMe }">
+  <div class="message" :class="{ messageMe: isMe }"
+       v-observe-visibility="setReaded" ref="message">
     <div class="message__options" v-click-outside="hideMessageOptions">
       <transition name="fade-bottom">
         <Modal
@@ -28,11 +29,7 @@
 
             <img :src="baseUrl + '/attachments/'+i.file" alt=""
                  v-if="i.type.includes('image')"/>
-<AudioPlayer v-if="i.type.includes('audio') " :src="audioSrc"/>
-<!--            <audio controls="controls" >-->
-<!--              <source :src="audioSrc"/>-->
-<!--              Your browser doesn't support <code>audio</code>.-->
-<!--            </audio>-->
+            <AudioPlayer v-if="i.type.includes('audio') " :src="audioSrc"/>
           </li>
         </ul>
       </div>
@@ -45,12 +42,12 @@
     </div>
     <div class="message__readed">
       <i
-        class="bx bx-check-double"
+        class="el-icon-check check double-check"
         style="font-size: 20px"
         v-if="messageData.isReaded"
       ></i>
 
-      <i class="bx bx-check" style="font-size: 20px" v-else></i>
+      <i class="el-icon-check check"></i>
     </div>
   </div>
 </template>
@@ -59,17 +56,20 @@
 import AudioPlayer from "./AudioPlayer.vue"
 import Modal from "../common/Modal.vue";
 
+import {isElementVisible} from "@/helpers/isElementVisible"
 import {formatDistanceToNow} from "date-fns";
 //@ts-ignore
 import ClickOutside from "vue-click-outside";
 
-import {computed, defineComponent, ref} from "vue";
+import {computed, defineComponent, PropType, ref, watch} from "vue";
+import {IMessage} from "@/store/chat/types/message";
 
 export default defineComponent({
-  components: {Modal,AudioPlayer},
+  name: 'Message',
+  components: {Modal, AudioPlayer},
   props: {
     messageData: {
-      type: Object,
+      type: Object as PropType<IMessage>,
       required: true,
     },
     isMe: {
@@ -78,8 +78,10 @@ export default defineComponent({
       default: false,
     },
   },
-  setup(props, ctx) {
+  setup(props, {emit}) {
+    const message = ref<HTMLElement | null>()
     const activeMessageOptions = ref(false);
+
     const hasAttachment = computed(() => props.messageData.attachment &&
       props.messageData.attachment.content.length)
     const attachments = computed(() => props.messageData.attachment.content)
@@ -87,6 +89,7 @@ export default defineComponent({
       const file = attachments.value.find((item: any) => item.type === 'audio')
       return file.file.replace('audio', 'audio/webm')
     })
+    const messagePos = message.value?.offsetTop
 
     const baseUrl = process.env.VUE_APP_BASE_URL;
 
@@ -98,11 +101,30 @@ export default defineComponent({
       activeMessageOptions.value = false;
     }
 
+    function setReaded() {
+
+      if (message.value && isElementVisible(message.value) && !props.messageData.isReaded &&
+        !props.isMe) {
+        emit('setReaded', props.messageData._id)
+
+      }
+    }
+
+    //todo:получить позицию элемента реактивно
+
+
+    watch(() => messagePos, () => setReaded())
+
     return {
       activeMessageOptions,
       baseUrl,
       createdAt,
-      hideMessageOptions, hasAttachment, audioSrc, attachments
+      hideMessageOptions,
+      hasAttachment,
+      audioSrc,
+      attachments,
+      message,
+      setReaded
     };
   },
 
@@ -142,7 +164,8 @@ export default defineComponent({
         position: absolute;
         text-align: left;
         bottom: -20px;
-        left: 0;
+        right: 0;
+        left: auto;
       }
     }
 
@@ -151,7 +174,7 @@ export default defineComponent({
     }
 
     .message__readed {
-      left: 17px;
+      left: -25px;
       right: auto;
     }
   }
@@ -229,7 +252,8 @@ export default defineComponent({
     margin: 5px 0 0;
     text-align: right;
     bottom: -20px;
-    right: 0;
+    left: 5px;
+
     position: absolute;
     width: max-content;
   }
@@ -242,8 +266,16 @@ export default defineComponent({
 
   &__readed {
     position: absolute;
-    right: 17px;
-    bottom: -10px;
+    right: -25px;
+    bottom: 0;
+
+    .check {
+      color: $color_blue;
+    }
+
+    .double-check {
+
+    }
   }
 }
 </style>

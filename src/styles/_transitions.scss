@@ -9,3 +9,17 @@
     opacity: 0;
   }
 }
+
+.fade-to-top{
+  &-enter-active,
+  &-leave-active {
+    transition: 0.4s;
+  }
+
+  &-leave-to,
+  &-enter-from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+}

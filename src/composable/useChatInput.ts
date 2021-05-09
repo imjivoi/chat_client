@@ -89,7 +89,6 @@ export default function useChatInput() {
     }
   }
 
-//todo:ограничить время записи аудиосообщения 30 сек
   function deleteFile(index: number | 'all') {
     typeof index === 'number'
       ? attachments.value?.splice(index, 1)
@@ -111,6 +110,10 @@ export default function useChatInput() {
 
   function createChat(name: string) {
     socket.emit(ChatSocketEvents.CREATE_CHAT, {name})
+  }
+
+  function readMessage(message_id: string) {
+    socket.emit(ChatSocketEvents.READ_MESSAGE, {chat_id: currentChat.value?._id, message_id})
   }
 
   watch(message, () => {
@@ -151,6 +154,7 @@ export default function useChatInput() {
     typing,
     timeout,
     createChat,
-    textarea
+    textarea,
+    readMessage
   };
 }
