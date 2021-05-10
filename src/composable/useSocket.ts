@@ -1,5 +1,5 @@
-import { onMounted, onUnmounted } from "@vue/runtime-core";
-import { VueCookieNext } from "vue-cookie-next";
+import {onMounted, onUnmounted} from "@vue/runtime-core";
+import {VueCookieNext} from "vue-cookie-next";
 import io from "socket.io-client";
 import {useSocketListeners} from "@/composable/index";
 
@@ -11,12 +11,12 @@ export default function useSocket(url: string) {
       token: token,
     },
   });
-  const {initListeners}=useSocketListeners(socket)
+  const {initListeners} = useSocketListeners(socket)
 
 
   onMounted(() => {
     socket.connect()
-    socket.on('connect',()=>initListeners())
+    socket.on('connect', () => initListeners())
   });
   onUnmounted(() => socket.disconnect());
 

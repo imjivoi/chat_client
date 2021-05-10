@@ -1,7 +1,8 @@
 import axios from "axios";
+import appConfig from '@/app.config'
 
 export const HTTP = axios.create({
-  baseURL: process.env.VUE_APP_BASE_URL || "http://127.0.0.1:4000"
+  baseURL: appConfig.apiUrl
 });
 
 export const setAuthHeader = (token: string) => {

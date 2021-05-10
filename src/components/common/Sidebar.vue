@@ -2,58 +2,62 @@
   <aside class="sidebar">
     <div class="sidebar__profile" v-if="userData">
       <div class="sidebar__profile-avatar">
-        <el-avatar :src="userData.avatar" v-if="userData.avatar" />
+        <el-avatar :src="userData.avatar" v-if="userData.avatar"/>
         <el-avatar icon="el-icon-user-solid" v-else></el-avatar>
       </div>
       <div class="sidebar__profile-name">{{ userData.username }}</div>
     </div>
     <ul>
       <li v-for="item in sidebarItems" :key="item.title">
-        <router-link :to="{name:item.linkName}"
-          ><component
-            :is="capitalizeFirstLetter(item.title)"
+        <router-link :to="{name:item.linkName}  "
+                     :class="{active:$route.name===item.title ||
+                      $route.meta.parent===item.title}"
+        >
+          <component
+            :is="item.title"
             class="icon"
           ></component
-          ><span>{{ item.title }}</span></router-link
+          >
+          <span>{{ item.title }}</span></router-link
         >
       </li>
     </ul>
-    <div class="sidebar__bottom"><Logout /><button>logout</button></div>
+    <div class="sidebar__bottom">
+      <Logout/>
+      <button>logout</button>
+    </div>
   </aside>
 </template>
 
 <script lang="ts">
 import {
+  Chats,
   Home,
-  Voices,
+  Logout,
   Notifications,
   Settings,
-  Logout,
   User,
-  Chats,
+  Voices,
 } from "@/components/icons";
-import { useAuthStore } from "@/store/auth/useAuthStore";
-import { computed, defineComponent } from "vue";
+import {useAuthStore} from "@/store/auth/useAuthStore";
+import {computed, defineComponent} from "vue";
+
 export default defineComponent({
   name: "Sidebar",
-  components: { Home, Voices, Notifications, Settings, Logout, User, Chats },
+  components: {Home, Voices, Notifications, Settings, Logout, User, Chats},
   setup() {
     const auth = useAuthStore();
     const userData = computed(() => auth.userData);
     const sidebarItems = [
-      { title: "home", linkName: "Home" },
-      { title: "chats", linkName: "Chats" },
-      { title: "voices", linkName: "Voices" },
-      { title: "settings", linkName: "Settings" },
+      {title: "Home", linkName: "Home"},
+      {title: "Chats", linkName: "Chats"},
+      {title: "Voices", linkName: "Voices"},
+      {title: "Settings", linkName: "Settings"},
     ];
 
-    function capitalizeFirstLetter(string: string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    }
     return {
       userData,
       sidebarItems,
-      capitalizeFirstLetter,
     };
   },
 });
@@ -68,6 +72,7 @@ export default defineComponent({
   width: 230px;
   box-shadow: $box_shadow;
   background: #fff;
+
   &__profile {
     margin: 81px auto 0;
 
@@ -113,13 +118,14 @@ export default defineComponent({
           top: -8px;
           left: 0;
           box-shadow: 1px 0px 10px rgba(42, 139, 242, 0.45),
-            0px 0px 10px rgba(42, 139, 242, 0.55),
-            4px 0px 25px rgba(42, 139, 242, 0.75);
+          0px 0px 10px rgba(42, 139, 242, 0.55),
+          4px 0px 25px rgba(42, 139, 242, 0.75);
           border-radius: 3px;
           background: $color_blue;
           width: 3px;
           height: 40px;
         }
+
         span {
           color: $color_blue;
           transition: $transition;
@@ -140,6 +146,7 @@ export default defineComponent({
           fill: $color_blue;
         }
       }
+
       a {
         display: flex;
         align-items: center;
@@ -149,6 +156,7 @@ export default defineComponent({
         margin: 0 17px 0 0;
         max-width: 24px;
       }
+
       span {
         font-size: 16px;
         line-height: 19px;
@@ -159,6 +167,7 @@ export default defineComponent({
       }
     }
   }
+
   &__bottom {
     padding: 0 0 0 38px;
     width: fit-content;
@@ -177,10 +186,13 @@ export default defineComponent({
         transition: $transition;
       }
     }
+
     cursor: pointer;
+
     svg {
       margin: 0 17px 0 0;
     }
+
     button {
       font-size: 16px;
       line-height: 19px;
@@ -196,20 +208,21 @@ export default defineComponent({
   }
 }
 
-.router-link-exact-active {
+.active {
   &::after {
     content: "";
     position: absolute;
     top: -8px;
     left: 0;
     box-shadow: 1px 0px 10px rgba(42, 139, 242, 0.45),
-      0px 0px 10px rgba(42, 139, 242, 0.55),
-      4px 0px 25px rgba(42, 139, 242, 0.75);
+    0px 0px 10px rgba(42, 139, 242, 0.55),
+    4px 0px 25px rgba(42, 139, 242, 0.75);
     border-radius: 3px;
     background: $color_blue;
     width: 3px;
     height: 40px;
   }
+
   span {
     color: $color_blue !important;
     transition: $transition;

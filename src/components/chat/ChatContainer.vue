@@ -9,24 +9,30 @@
           </div>
         </div>
       </div>
-
-      <div class="chat__options">
-        <button>
-          <AdjustmentIcon/>
-        </button>
-        <button>
-          <OptionsIcon/>
-        </button>
+      <div class="chat__options" v-if="pickedMsg">
+        <el-button icon="el-icon-edit" circle
+                   @click="openEditMessage"></el-button>
+        <el-popconfirm
+          title="Are you sure to delete this message?"
+          @confirm="deleteMsg"
+        >
+          <template #reference>
+            <el-button icon="el-icon-delete-solid" circle></el-button>
+          </template>
+        </el-popconfirm>
       </div>
+
     </div>
     <div class="chat__messages">
-      <div ref="content" class="chat__messages-content" @scroll="scrollHandler">
+      <div ref="content" class="chat__messages-content">
         <transition-group name="fade-to-top">
           <Message
             v-for="message in chat.messages"
             :key="message._id"
             :messageData="message"
             :is-me="message.sender._id===currentParticipant._id"
+            :is-picked="pickedMsg?._id===message._id"
+            @pickMsg="pickMsg"
           />
 
         </transition-group>
@@ -63,6 +69,8 @@ import {
 } from "vue";
 import {IChatItem, IParticipant} from "@/store/chat/types/chat";
 import {onMounted} from "@vue/runtime-core";
+import {useChatInput} from "@/composable";
+import {IMessage} from "@/store/chat/types/message";
 
 export default defineComponent({
   name: "ChatContainer",
@@ -87,7 +95,7 @@ export default defineComponent({
   setup(props) {
     const {chat} = toRefs(props)
     const content = ref()
-    const scrollPosition = ref(0)
+    const {pickedMsg, deleteMessage, openEditMessage} = useChatInput()
 
 
     const
@@ -102,9 +110,21 @@ export default defineComponent({
       });
     }
 
-    function scrollHandler(e: any) {
-      scrollPosition.value = e.target?.scrollTop
+    function pickMsg(message: IMessage) {
+      if (pickedMsg.value?._id === message._id) {
+        pickedMsg.value = null
+        return
+      }
+      pickedMsg.value = message
     }
+
+    function deleteMsg() {
+      if (pickedMsg.value?._id) {
+        deleteMessage(pickedMsg.value._id)
+        pickedMsg.value = null
+      }
+    }
+
 
     onMounted(() => toBottom())
 
@@ -117,8 +137,11 @@ export default defineComponent({
 
       content,
       typingUser,
-      scrollHandler,
-      scrollPosition
+      pickedMsg,
+      pickMsg,
+      deleteMsg,
+      openEditMessage,
+
 
     };
   },
@@ -190,6 +213,10 @@ export default defineComponent({
       &:first-child {
         margin: 0 20px 0 0;
       }
+    }
+
+    .el-button {
+      font-size: 18px;
     }
   }
 }

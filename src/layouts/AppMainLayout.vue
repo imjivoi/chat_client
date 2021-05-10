@@ -5,7 +5,8 @@
     <SideBar/>
     <div class="wrapper">
       <div class="flex align-center mb-2 transition">
-        <Back v-if="isRouteBack" @click.native="goBack" class="arrow-back mr-1 transition"/>
+        <Back v-if="isRouteBack" @click.native="goBack"
+              class="arrow-back mr-1 transition"/>
         <h2 class="transition">{{ routeTitle }}</h2></div>
       <router-view/>
     </div>
@@ -20,15 +21,12 @@ import SideBar from "@/components/common/Sidebar.vue";
 import Spinner from "@/components/common/Spinner.vue";
 import {Back} from "@/components/icons";
 
+import appConfig from "@/app.config"
+
 import {useSocket} from "@/composable";
 import {useRoute, useRouter} from "vue-router";
 
-import {
-  computed,
-  defineComponent,
-  onBeforeMount,
-  provide
-} from "vue";
+import {computed, defineComponent, provide} from "vue";
 import {useAuthStore} from "@/store";
 
 export default defineComponent({
@@ -36,7 +34,7 @@ export default defineComponent({
   components: {SideBar, Spinner, Modal, Back},
   setup() {
     const auth = useAuthStore();
-    const {socket} = useSocket("127.0.0.1:80");
+    const {socket} = useSocket(appConfig.socketUrl);
     const route = useRoute();
     const router = useRouter()
 

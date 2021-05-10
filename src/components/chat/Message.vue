@@ -1,53 +1,61 @@
 <template>
-  <div class="message" :class="{ messageMe: isMe }"
+  <div class="message" :class="{ messageMe: isMe }" @dblclick="handleDbClick"
        ref="message">
-    <div class="message__options" v-click-outside="hideMessageOptions">
-      <transition name="fade-bottom">
-        <Modal
-          v-if="activeMessageOptions"
-          :style="[isMe ? { left: '-200px' } : { right: '-200px' }]"
-        >
-          <ul class="options__list">
-            <li @click="deleteMessage">delete</li>
-          </ul>
-        </Modal>
-      </transition>
-    </div>
+    <div class="message__container">
+      <div class="message__options" v-click-outside="hideMessageOptions">
+        <transition name="fade-bottom">
+          <Modal
+            v-if="activeMessageOptions"
+            :style="[isMe ? { left: '-200px' } : { right: '-200px' }]"
+          >
+            <ul class="options__list">
+              <li @click="deleteMessage">delete</li>
+            </ul>
+          </Modal>
+        </transition>
+      </div>
 
-    <div class="message__content">
-      <div
-        class="message__text"
-        :style="hasAttachment ? `margin-bottom:10px` :
+      <div class="message__content"
+           :style="{background: isPicked ? '#707c979e' : ''}">
+        <div
+          class="message__text"
+          :style="hasAttachment ? `margin-bottom:10px` :
          ''"
-        v-if="messageData.text"
-      >
-        <p>{{ messageData.text }}</p>
-      </div>
-      <div class="message__attachments" v-if="hasAttachment ">
-        <ul>
-          <li v-for="i in attachments" :key="i">
+          v-if="messageData.text"
+        >
+          <p>{{ messageData.text }}</p>
+        </div>
+        <div class="message__attachments" v-if="hasAttachment ">
+          <ul>
+            <li v-for="i in attachments" :key="i">
 
-            <img :src="baseUrl + '/attachments/'+i.file" alt=""
-                 v-if="i.type.includes('image')"/>
-            <AudioPlayer v-if="i.type.includes('audio') " :src="audioSrc"/>
-          </li>
-        </ul>
+              <img :src="baseUrl + '/attachments/'+i.file" alt=""
+                   v-if="i.type.includes('image')"/>
+              <AudioPlayer v-if="i.type.includes('audio') " :src="audioSrc"
+                           :color="isMe ? '' :
+            '#fff'"/>
+            </li>
+          </ul>
+        </div>
+        <div class="message__time">
+          {{ updatedAt ? 'Updated  ' + updatedAt : createdAt }}
+        </div>
       </div>
-      <div class="message__time">
-        {{ createdAt }}
+      <div class="message__user-avatar">
+        <el-avatar :src="messageData.sender.avatar ?? ''"></el-avatar>
       </div>
-    </div>
-    <div class="message__user-avatar">
-      <el-avatar :src="messageData.sender.avatar ?? ''"></el-avatar>
-    </div>
-    <div class="message__readed">
-      <i
-        class="el-icon-check check double-check"
+      <div class="message__readed">
+        <transition name="fade">
+          <i
+            class="el-icon-check check"
 
-        v-if="messageData.isReaded"
-      ></i>
+            v-if="messageData.isReaded"
+          ></i>
+        </transition>
 
-      <i class="el-icon-check check"></i>
+
+      </div>
+
     </div>
   </div>
 </template>
@@ -75,10 +83,14 @@ export default defineComponent({
       required: true,
       default: false,
     },
+    isPicked: {
+      type: Boolean,
+      required: true
+    }
   },
   setup(props, {emit}) {
 
-    const {messageData} = toRefs(props)
+    const {messageData, isMe} = toRefs(props)
     const message = ref<HTMLElement | null>()
     const activeMessageOptions = ref(false);
 
@@ -86,19 +98,25 @@ export default defineComponent({
       messageData.value.attachment.content.length)
     const attachments = computed(() => messageData.value?.attachment?.content)
     const audioSrc = computed(() => {
-      const file = attachments.value.find((item: any) => item.type === 'audio')
-      return file.file.replace('audio', 'audio/webm')
+      const file = attachments.value?.find((item: any) => item.type === 'audio')
+      return file?.file?.replace('audio', 'audio/webm')
     })
 
 
     const baseUrl = process.env.VUE_APP_BASE_URL;
 
-    const createdAt = computed(() =>
-      formatDistanceToNow(new Date(messageData.value.createdAt))
-    );
+    const createdAt = formatDistanceToNow(new Date(messageData.value.createdAt));
+    const updatedAt = computed(() => messageData.value.updatedAt &&
+      formatDistanceToNow(new Date(messageData.value!.updatedAt!)))
 
     function hideMessageOptions() {
       activeMessageOptions.value = false;
+    }
+
+    function handleDbClick() {
+      if (isMe.value) {
+        emit('pickMsg', messageData.value)
+      }
     }
 
     return {
@@ -110,7 +128,8 @@ export default defineComponent({
       audioSrc,
       attachments,
       message,
-
+      handleDbClick,
+      updatedAt
     };
   },
 
@@ -123,46 +142,63 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .message {
-  margin: 0 auto 50px 0;
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  width: fit-content;
-  max-width: 80%;
-  position: relative;
+
+  &__container {
+    margin: 0 auto 50px 0;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    width: fit-content;
+    max-width: 80%;
+    position: relative;
+
+  }
 
   &.messageMe {
-    margin: 0 30px 35px auto;
-    flex-direction: row;
 
-    .message__content {
-      background: #fff;
-      margin-left: 0;
-      border-radius: 10px;
-      border-bottom-right-radius: 0;
-      box-shadow: 1px 1px 6px 0px #9e9e9e;
+    .message__container {
+      margin: 0 30px 35px auto;
+      flex-direction: row;
 
-      .message__text {
-        color: $color_gray3;
+      .message__content {
+        background: #fff;
+        margin-left: 0;
+        border-radius: 10px;
+        border-bottom-right-radius: 0;
+        box-shadow: 1px 1px 6px 0px #9e9e9e;
+
+        .message__text {
+          color: $color_gray3;
+        }
+
+        .message__time {
+          position: absolute;
+          text-align: left;
+          bottom: -20px;
+          right: 0;
+          left: auto;
+        }
       }
 
-      .message__time {
-        position: absolute;
-        text-align: left;
-        bottom: -20px;
-        right: 0;
-        left: auto;
+      .message__user-avatar {
+        display: none;
       }
+
+      .message__readed {
+        left: -25px;
+        right: auto;
+
+        .double-check {
+          right: 0;
+        }
+
+        .check {
+          right: 0;
+        }
+      }
+
     }
 
-    .message__user-avatar {
-      display: none;
-    }
-
-    .message__readed {
-      left: -37px;
-      right: auto;
-    }
   }
 
   &__options {
@@ -255,13 +291,14 @@ export default defineComponent({
     right: -25px;
     bottom: 0;
 
-    .check {
+    .check, .double-check {
       color: $color_blue;
+      position: relative;
+
     }
 
     .double-check {
       right: -12px;
-      position: relative;
     }
   }
 }

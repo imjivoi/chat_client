@@ -2,15 +2,18 @@
   <div class="audio-player" v-if="audio">
     <div class="btn">
       <el-button icon="el-icon-video-play" type="text" circle
-                 v-if="isPaused" @click="play"></el-button>
+                 v-if="isPaused" @click="play" :style="{color}"></el-button>
       <el-button icon="el-icon-video-pause" type="text" circle @click="pause"
-                 v-else></el-button>
+                 v-else :style="{color}"></el-button>
     </div>
     <input @change="setCurrentTime" type="range" ref="input"
            v-model="currentTime"
            :max="audio.duration ?? 0">
-    <div class="current-time">{{ formatTime(currentTime) }}</div>
-    <div class="duration-time" v-if="isShowDuration">
+    <div class="current-time" :style="{color}">{{
+        formatTime(currentTime)
+      }}
+    </div>
+    <div class="duration-time" v-if="isShowDuration" :style="{color}">
       {{ formatTime(audio.duration) }}
     </div>
   </div>
@@ -25,6 +28,10 @@ export default {
     src: {
       type: String,
       required: true
+    },
+    color: {
+      type: String,
+      default: '#2a8bf2'
     }
   },
   data: () => ({
@@ -36,7 +43,7 @@ export default {
 
   methods: {
     formatTime(time) {
-      if (time ===Infinity) return ''
+      if (time === Infinity) return ''
       let seconds = parseInt(time);
       let minutes = parseInt(seconds / 60);
       seconds -= minutes * 60;
@@ -77,12 +84,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.btn{
+.btn {
   margin: 0 12px 0 0;
 }
-.el-button{
+
+.el-button {
   font-size: 18px;
 }
+
 .audio-player {
   width: 250px;
   height: 50px;

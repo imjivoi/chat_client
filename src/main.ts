@@ -4,8 +4,8 @@ import {VueCookieNext} from "vue-cookie-next";
 import Toast from "vue-toastification";
 import ElementPlus from "element-plus";
 import {createPinia} from "pinia";
-import {i18n} from "@/resource/i18n";//@ts-ignore
-import { ObserveVisibility } from 'vue-observe-visibility'
+import {i18n} from "@/resource/i18n"; //@ts-ignore
+import {ObserveVisibility} from 'vue-observe-visibility'
 //styles
 import "element-plus/lib/theme-chalk/index.css";
 import "vue-toastification/dist/index.css";
@@ -58,11 +58,12 @@ if (token) {
 router.beforeEach((to, from, next) => {
   if (to.path.includes('app') && !auth.isLogged) {
     next({name: "Welcome"})
-  } else if(to.path==='/' && auth.isLogged) {
+  } else if (to.path === '/' && auth.isLogged) {
     next('/app')
   } else {
     next()
-  };
+  }
+  ;
 });
 
 app.mount("#app");

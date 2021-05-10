@@ -4,10 +4,14 @@ import {computed, inject, ref, watch} from "vue";
 import {Socket} from "socket.io"
 import notificationService from "@/services/notificationService";
 import {useChatData} from "@/composable/index";
+import {IMessage} from "@/store/chat/types/message";
+
+const isEditMsgOpen = ref(false)
+const pickedMsg = ref<IMessage | null>(null)
+const message = ref<string | null>(null);
 
 export default function useChatInput() {
   const socket = inject('socket') as Socket
-  const message = ref<string | null>(null);
   const attachments = ref<Array<File> | null>([]);
   const activeEmojiPicker = ref<boolean>(false);
   const activeAudioRecord = ref<boolean>(false);
@@ -74,8 +78,6 @@ export default function useChatInput() {
       textarea.value.focus()
       message.value = null;
       attachments.value = null;
-
-
     })
   }
 
@@ -118,6 +120,34 @@ export default function useChatInput() {
 
   function readMessages() {
     socket.emit(ChatSocketEvents.READ_MESSAGES, {chat_id: currentChat.value?._id})
+  }
+
+  function deleteMessage(message_id: string) {
+    socket.emit(ChatSocketEvents.DELETE_MESSAGE, {message_id, chat_id: currentChat.value?._id})
+  }
+
+  function closeEditMsg() {
+    pickedMsg.value = null
+    isEditMsgOpen.value = false
+    message.value = null
+
+  }
+
+  function updateMessage() {
+    socket.emit(ChatSocketEvents.UPDATE_MESSAGE, {
+      message_id: pickedMsg.value?._id,
+      text: message.value,
+      chat_id: currentChat.value?._id
+    })
+    closeEditMsg()
+  }
+
+  function openEditMessage() {
+    if (pickedMsg.value?.text) {
+      isEditMsgOpen.value = true
+      message.value = pickedMsg.value?.text
+
+    }
 
   }
 
@@ -161,6 +191,12 @@ export default function useChatInput() {
     createChat,
     textarea,
     readMessage,
-    readMessages
+    readMessages,
+    pickedMsg,
+    deleteMessage,
+    updateMessage,
+    isEditMsgOpen,
+    openEditMessage,
+    closeEditMsg
   };
 }

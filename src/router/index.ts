@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/app/chats/:id",
     name: "Chat",
     component: () => import("../views/Chat.vue"),
-    meta: {back: true, title: '', layout: 'Main'}
+    meta: {back: true, title: '', layout: 'Main',parent:'Chats'}
   },
 
   {

@@ -7,12 +7,7 @@
 
     <div v-if="chatCount" style="height:88%">
       <div class="chats__header flex justify-between align-center mb-1">
-        <el-input
-          v-model="search"
-          placeholder="Find chat"
-          prefix-icon="el-icon-search" style="width: 80%">
 
-        </el-input>
         <el-button icon="el-icon-plus" type="primary"
                    @click="showModal">Create chat
         </el-button>

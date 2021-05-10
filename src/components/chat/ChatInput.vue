@@ -15,27 +15,38 @@
 
   </div>
   <div class="input-block" v-click-outside="hideEmojiPicker">
-    <div class="upload">
+    <div class="upload" v-if="!isEditMsgOpen">
       <input type="file" accept="image/*" multiple
              @change="setImages" ref="upload">
       <el-button icon="el-icon-upload" circle @click="chooseFiles"></el-button>
     </div>
-    <textarea placeholder="Type your message here" v-model="message"
+    <textarea placeholder="Type your message here"
+              v-model="message"
               @keypress.enter.exact="send"
               ref="textarea"/>
-    <el-button icon="el-icon-position" circle type="primary" class="send"
-               @click="send"
-               v-if="message || attachments?.length">
-    </el-button>
-    <el-button icon="el-icon-microphone" circle type="primary" class="send"
-               @mousedown="activeAudioRecord = true"
-               v-else>
-    </el-button>
-    <AudioRecord v-if="activeAudioRecord"
-                 @closeAudioRecord="canselAudiorecord"
-                 @setAttachments="setAudio"
-                 @sendMessage="send"/>
+    <template v-if="isEditMsgOpen">
+      <el-button icon="el-icon-circle-check" circle type="primary"
+                 @click="updateMessage"></el-button>
+      <el-button icon="el-icon-circle-close" circle
+                 @click="closeEditMsg"></el-button>
+    </template>
+    <template v-else>
+      <el-button icon="el-icon-position" circle type="primary" class="send"
+                 @click="send"
+                 v-if="message || attachments?.length">
+      </el-button>
+      <el-button icon="el-icon-microphone" circle type="primary" class="send"
+                 @mousedown="activeAudioRecord = true"
+                 v-else>
+      </el-button>
+      <AudioRecord v-if="activeAudioRecord"
+                   @closeAudioRecord="canselAudiorecord"
+                   @setAttachments="setAudio"
+                   @sendMessage="send"/>
+    </template>
+
   </div>
+
 </template>
 
 <script lang="ts">
@@ -52,19 +63,20 @@ export default defineComponent({
   components: {Btn, EmojiPicker, SendIcon, AudioRecord},
   setup() {
     const {
-      sendTyping,
       setAttachments,
       message,
       attachmentsUrl,
-      timeout,
-      typing,
       activeEmojiPicker,
       setEmoji,
       sendMessage,
       textarea,
       attachments,
       deleteFile,
-      activeAudioRecord
+      activeAudioRecord,
+      isEditMsgOpen,
+      updateMessage,
+      closeEditMsg
+
     } = useChatInput();
     const upload = ref<any>()
 
@@ -90,7 +102,6 @@ export default defineComponent({
     }
 
     function canselAudiorecord() {
-
       activeAudioRecord.value = false;
       attachments.value = []
     }
@@ -108,7 +119,10 @@ export default defineComponent({
       attachmentsUrl,
       attachments,
       deleteFile, activeAudioRecord,
-      setImages, setAudio, canselAudiorecord
+      setImages, setAudio, canselAudiorecord,
+      isEditMsgOpen,
+      updateMessage,
+      closeEditMsg
     };
   },
 
