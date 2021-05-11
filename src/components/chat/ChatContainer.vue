@@ -126,11 +126,11 @@ export default defineComponent({
     }
 
 
-    onMounted(() => toBottom())
+    onMounted(() =>nextTick(()=>toBottom()) )
 
     watch(chat, () => {
       toBottom();
-    }, {deep: true});
+    }, {deep: true,immediate:true});
 
 
     return {
@@ -162,14 +162,27 @@ export default defineComponent({
   width: 100%;
   height: 80px;
   padding: 10px 20px;
-  position: relative;
+  position: absolute;
   top: 0;
   left: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 0 0 1px;
-  background: #fff;
+  z-index: 1;
+
+  &:after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    filter: blur(5px);
+    left: 0;
+    top: 0;
+    z-index: -1;
+    opacity: 0.9;
+  }
 
   &-left {
     display: flex;
@@ -228,10 +241,16 @@ export default defineComponent({
 
   &-content {
     overflow-y: scroll;
-    height: calc(100vh - 290px);
+    height: calc(100vh - 130px);
     overflow-x: hidden;
     position: relative;
-    padding: 5px 0 0;
+    padding: 80px 0 70px;
+
+    &::-webkit-scrollbar-track-piece{
+      background-color: #fff;
+      margin-top: 70px;
+      margin-bottom: 70px;
+    }
   }
 }
 </style>

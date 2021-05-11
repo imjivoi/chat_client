@@ -1,0 +1,11 @@
+image: docker
+services:
+  - docker:dind
+stages:
+  - build
+  - deploy
+step-deploy-prod:
+  stage: deploy
+  script:
+    - docker build -t app/chat-client.
+    - docker run -d -p 80:80 --rm --name chat-client app/chat-client

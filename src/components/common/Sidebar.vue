@@ -24,7 +24,7 @@
     </ul>
     <div class="sidebar__bottom">
       <Logout/>
-      <button>logout</button>
+      <button @click="logout">logout</button>
     </div>
   </aside>
 </template>
@@ -48,6 +48,9 @@ export default defineComponent({
   setup() {
     const auth = useAuthStore();
     const userData = computed(() => auth.userData);
+    function logout() {
+      auth.LOGOUT()
+    }
     const sidebarItems = [
       {title: "Home", linkName: "Home"},
       {title: "Chats", linkName: "Chats"},
@@ -58,6 +61,7 @@ export default defineComponent({
     return {
       userData,
       sidebarItems,
+      logout
     };
   },
 });

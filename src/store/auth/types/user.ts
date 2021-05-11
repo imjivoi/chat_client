@@ -9,6 +9,6 @@ export interface IUserData {
 
 export interface IAuth {
   username?: string | null;
-  email: string | null;
+  email?: string | null;
   password: string | null;
 }

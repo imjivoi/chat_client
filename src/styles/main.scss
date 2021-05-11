@@ -6,6 +6,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 a {
@@ -25,11 +26,13 @@ li {
   list-style: none;
 }
 
+
 body {
   font-family: "Montserrat", sans-serif;
   color: #0d1c2e;
+
   ::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
   }
 
   /* Track */
@@ -44,6 +47,11 @@ body {
     border-radius: 10px;
     width: 6px;
   }
+}
+
+input {
+  font-family: "Montserrat", sans-serif;
+
 }
 
 h2 {
@@ -68,6 +76,7 @@ button {
   &:active {
     outline: none;
   }
+
   border: none;
   padding: 0;
 }

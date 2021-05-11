@@ -1,6 +1,6 @@
 import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
 import {toBase64} from "@/utils/base64encryption";
-import {computed, inject, ref, watch} from "vue";
+import {computed, inject, ref, Ref, watch} from "vue";
 import {Socket} from "socket.io"
 import notificationService from "@/services/notificationService";
 import {useChatData} from "@/composable/index";
@@ -9,15 +9,16 @@ import {IMessage} from "@/store/chat/types/message";
 const isEditMsgOpen = ref(false)
 const pickedMsg = ref<IMessage | null>(null)
 const message = ref<string | null>(null);
+const typing = ref<boolean>(false);
 
 export default function useChatInput() {
-  const socket = inject('socket') as Socket
   const attachments = ref<Array<File> | null>([]);
   const activeEmojiPicker = ref<boolean>(false);
   const activeAudioRecord = ref<boolean>(false);
-  const typing = ref<boolean>(false);
   const timeout = ref<any | null>(null);
   const textarea = ref()
+  const socket = inject('socket') as Ref<Socket>
+
 
   const {currentParticipant, currentChat} = useChatData()
 
@@ -70,7 +71,7 @@ export default function useChatInput() {
         attachments: attachmentsResult,
       }
       console.log(data)
-      socket.emit(
+      socket.value.emit(
         ChatSocketEvents.NEW_MESSAGE, data
       );
       resolve(true)
@@ -102,7 +103,7 @@ export default function useChatInput() {
   }
 
   function sendTyping(status: boolean, isAudio: boolean) {
-    socket.emit(ChatSocketEvents.TYPING_MESSAGE, {
+    socket.value.emit(ChatSocketEvents.TYPING_MESSAGE, {
       chat_id: currentChat.value?._id,
       status,
       participant_id: currentParticipant.value?._id,
@@ -111,19 +112,22 @@ export default function useChatInput() {
   }
 
   function createChat(name: string) {
-    socket.emit(ChatSocketEvents.CREATE_CHAT, {name})
+    socket.value.emit(ChatSocketEvents.CREATE_CHAT, {name})
   }
 
   function readMessage(message_id: string) {
-    socket.emit(ChatSocketEvents.READ_MESSAGE, {chat_id: currentChat.value?._id, message_id})
+    socket.value.emit(ChatSocketEvents.READ_MESSAGE, {chat_id: currentChat.value?._id, message_id})
   }
 
   function readMessages() {
-    socket.emit(ChatSocketEvents.READ_MESSAGES, {chat_id: currentChat.value?._id})
+    socket.value.emit(ChatSocketEvents.READ_MESSAGES, {chat_id: currentChat.value?._id})
   }
 
   function deleteMessage(message_id: string) {
-    socket.emit(ChatSocketEvents.DELETE_MESSAGE, {message_id, chat_id: currentChat.value?._id})
+    socket.value.emit(ChatSocketEvents.DELETE_MESSAGE, {
+      message_id,
+      chat_id: currentChat.value?._id
+    })
   }
 
   function closeEditMsg() {
@@ -134,7 +138,7 @@ export default function useChatInput() {
   }
 
   function updateMessage() {
-    socket.emit(ChatSocketEvents.UPDATE_MESSAGE, {
+    socket.value.emit(ChatSocketEvents.UPDATE_MESSAGE, {
       message_id: pickedMsg.value?._id,
       text: message.value,
       chat_id: currentChat.value?._id
@@ -151,19 +155,6 @@ export default function useChatInput() {
 
   }
 
-  watch(message, () => {
-    message.value === "" ? (message.value = null) : message.value;
-    clearInterval(timeout.value);
-    if (!typing.value) {
-      sendTyping(true, false);
-    }
-
-    typing.value = true;
-    timeout.value = setTimeout(() => {
-      typing.value = false;
-      sendTyping(false, false);
-    }, 3000);
-  });
 
   watch(activeAudioRecord, () => {
     if (activeAudioRecord.value) {

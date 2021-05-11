@@ -52,8 +52,9 @@ export const useAuthStore = defineStore({
       });
     },
     LOGOUT() {
-      this.$state = getDefaultState();
       router.push({name: "Welcome"});
+      VueCookieNext.removeCookie('accessToken')
+      this.$state = getDefaultState();
     },
     REGISTER(payload: IAuth) {
       return new Promise((resolve, reject) => {
@@ -61,9 +62,11 @@ export const useAuthStore = defineStore({
         authAPI
           .register(payload)
           .then(({data}) => {
-            this.userData = data;
-            this.GET_AUTH(payload);
-            router.push({name: "Home"});
+            this.userData = data.user;
+            this.isLogged = true;
+            VueCookieNext.setCookie("accessToken", data.accessToken);
+            router.push({name: "Home"})
+
             resolve(data);
           })
           .catch(error => reject(error));

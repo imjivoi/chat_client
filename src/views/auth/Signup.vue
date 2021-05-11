@@ -9,7 +9,7 @@
         <el-input placeholder="Email" v-model="form.email"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input placeholder="Password" v-model="form.password"></el-input>
+        <el-input placeholder="Password" type="password" v-model="form.password"></el-input>
       </el-form-item>
       <el-button type="primary" @click="register" style="width:100%">Register</el-button>
     </el-form>

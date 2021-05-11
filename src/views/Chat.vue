@@ -13,11 +13,15 @@
   </div>
 </template>
 <script>
+//todo:emoji
+//todo:connect to chat when create,delete chat
+
 import ChatInfo from "@/components/chat/ChatInfo";
 import ChatContainer from "@/components/chat/ChatContainer";
 
 import {defineComponent, watchEffect} from "vue";
 import {useChatData, useChatInput} from "@/composable";
+import {onUnmounted} from "@vue/runtime-core";
 
 export default defineComponent({
   name: 'Chat',
@@ -32,9 +36,10 @@ export default defineComponent({
       currentParticipant,
       unreadedMessages
     } = useChatData()
-    const {readMessages} = useChatInput()
+    const {readMessages, message} = useChatInput()
 
 
+    onUnmounted(() => message.value = '')
     watchEffect(async () => {
       await updateMessages()
       await getInvite()

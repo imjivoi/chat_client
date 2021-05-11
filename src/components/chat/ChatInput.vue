@@ -18,7 +18,8 @@
     <div class="upload" v-if="!isEditMsgOpen">
       <input type="file" accept="image/*" multiple
              @change="setImages" ref="upload">
-      <el-button icon="el-icon-upload" circle @click="chooseFiles"></el-button>
+      <el-button icon="el-icon-upload" type="text" circle
+                 @click="chooseFiles"></el-button>
     </div>
     <textarea placeholder="Type your message here"
               v-model="message"
@@ -55,7 +56,7 @@ import SendIcon from "../icons/SendIcon.vue";
 import EmojiPicker from "./EmojiPicker.vue";
 import Btn from "../common/Button.vue";
 
-import {defineComponent, ref} from "vue";
+import {defineComponent, ref, watch} from "vue";
 import {useChatInput} from "@/composable";
 
 export default defineComponent({
@@ -75,8 +76,9 @@ export default defineComponent({
       activeAudioRecord,
       isEditMsgOpen,
       updateMessage,
-      closeEditMsg
-
+      closeEditMsg,
+      timeout,
+      sendTyping, typing
     } = useChatInput();
     const upload = ref<any>()
 
@@ -105,6 +107,20 @@ export default defineComponent({
       activeAudioRecord.value = false;
       attachments.value = []
     }
+
+    watch(message, () => {
+      message.value === "" ? (message.value = null) : message.value;
+      clearInterval(timeout.value);
+      if (!typing.value) {
+        sendTyping(true, false);
+      }
+
+      typing.value = true;
+      timeout.value = setTimeout(() => {
+        typing.value = false;
+        sendTyping(false, false);
+      }, 3000);
+    });
 
 
     return {
@@ -211,12 +227,25 @@ export default defineComponent({
 
 .input-block {
   position: absolute;
-  bottom: 0;
+  bottom: -5px;
   width: 100%;
   height: 70px;
   display: flex;
   align-items: center;
-  border-top: 1px rgba(112, 124, 151, 0.15) solid;
+  z-index: 1;
+
+  &:after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    filter: blur(5px);
+    left: 0;
+    top: 0;
+    z-index: -1;
+    opacity: 0.9;
+  }
 
   textarea {
     text-align: left;
@@ -229,11 +258,12 @@ export default defineComponent({
     font-weight: 500;
     font-size: 14px;
     transition: 0.2s;
-    color: rgba(112, 124, 151, 0.7);
+    color: #303133;
     -ms-overflow-style: none;
     scrollbar-width: none;
     overflow: hidden;
     font-family: unset;
+    background: transparent;
 
     ::-webkit-scrollbar {
       display: none !important;
