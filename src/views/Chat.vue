@@ -19,9 +19,9 @@
 import ChatInfo from "@/components/chat/ChatInfo";
 import ChatContainer from "@/components/chat/ChatContainer";
 
-import {defineComponent, watchEffect} from "vue";
 import {useChatData, useChatInput} from "@/composable";
-import {onUnmounted} from "@vue/runtime-core";
+
+import {defineComponent, watchEffect,onUnmounted} from "vue";
 
 export default defineComponent({
   name: 'Chat',
@@ -46,8 +46,6 @@ export default defineComponent({
       if (unreadedMessages.value?.length) {
         readMessages()
       }
-
-
     }, {flush: 'post'})
 
     return {

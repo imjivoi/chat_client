@@ -1,10 +1,9 @@
 <template>
-  <li class="chat-item">
+  <li class="chat-item" >
     <div class="chat-item__header">
       <div class="chat-item__header-left">
         <div class="chat-item__header-info">
           <h3>{{ name }}</h3>
-          <!--            <p> </p>-->
         </div>
       </div>
       <div class="chat-item__header-right">
@@ -12,7 +11,8 @@
       </div>
     </div>
     <div class="chat-item__participants">
-      <div class="chat-item__participant" v-for="participant in firstParticipants"
+      <div class="chat-item__participant"
+           v-for="participant in firstParticipants"
            :key="participant._id">
         <el-avatar :src="participant.user.avatar"></el-avatar>
         <p>{{ participant.user.username }}</p>
@@ -23,8 +23,9 @@
 
 <script lang="ts">
 
+
 import {format} from "date-fns";
-import {defineComponent, PropType} from "vue";
+import {defineComponent, inject, PropType, ref} from "vue";
 import {IParticipant} from "@/store/chat/types/chat";
 
 export default defineComponent({
@@ -42,14 +43,15 @@ export default defineComponent({
     },
     participants: {
       type: Array as PropType<IParticipant[]>,
-      default:[]
+      default: []
     }
   },
+
   computed: {
     createdAt(): string {
       return format(new Date(this.created), 'P')
     },
-    firstParticipants():IParticipant[] | [] {
+    firstParticipants(): IParticipant[] | [] {
       return this.participants?.filter((participant, idx) => idx !== 4)
     }
   }
@@ -65,6 +67,8 @@ export default defineComponent({
   cursor: pointer;
   transition: $transition;
   overflow: hidden;
+  max-width: 300px;
+  margin: 0 10px 10px 0;
 
   &:hover {
     background: $background_blue_gradient;

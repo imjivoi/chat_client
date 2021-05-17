@@ -1,19 +1,9 @@
 <template>
-  <div class="message" :class="{ messageMe: isMe }" @dblclick="handleDbClick"
+  <div class="message" :class="{ messageMe: isMe }"
+       @contextmenu.prevent="handleRightClick"
        ref="message">
     <div class="message__container">
-      <div class="message__options" v-click-outside="hideMessageOptions">
-        <transition name="fade-bottom">
-          <Modal
-            v-if="activeMessageOptions"
-            :style="[isMe ? { left: '-200px' } : { right: '-200px' }]"
-          >
-            <ul class="options__list">
-              <li @click="deleteMessage">delete</li>
-            </ul>
-          </Modal>
-        </transition>
-      </div>
+
 
       <div class="message__content"
            :style="{background: isPicked ? '#707c979e' : ''}">
@@ -42,7 +32,10 @@
         </div>
       </div>
       <div class="message__user-avatar">
-        <el-avatar :src="messageData.sender.avatar ?? ''"></el-avatar>
+        <el-avatar :src="messageData.sender.user.avatar "
+                   v-if="messageData.sender.user.avatar"></el-avatar>
+        <el-avatar icon="el-icon-user-solid" v-else></el-avatar>
+
       </div>
       <div class="message__readed">
         <transition name="fade">
@@ -113,11 +106,12 @@ export default defineComponent({
       activeMessageOptions.value = false;
     }
 
-    function handleDbClick() {
+    function handleRightClick() {
       if (isMe.value) {
         emit('pickMsg', messageData.value)
       }
     }
+
 
     return {
       activeMessageOptions,
@@ -128,8 +122,8 @@ export default defineComponent({
       audioSrc,
       attachments,
       message,
-      handleDbClick,
-      updatedAt
+      handleRightClick,
+      updatedAt,
     };
   },
 

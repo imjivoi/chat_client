@@ -12,18 +12,21 @@
 
 </template>
 <script lang="ts">
-import {defineComponent, inject, ref} from "vue"
+import {defineComponent, ref} from "vue"
 import {useChatInput} from "@/composable";
+import {useModal} from "@/store";
 
 export default defineComponent({
   name: "CreateChat",
-  setup() {
+  setup(_) {
     const isLoading = ref(false)
     const chatName = ref('')
     const {createChat} = useChatInput()
+    const modal = useModal()
 
     function create() {
       createChat(chatName.value)
+      modal.HIDE()
     }
 
     return {chatName, create, isLoading}

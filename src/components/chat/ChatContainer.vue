@@ -126,7 +126,7 @@ export default defineComponent({
     }
 
 
-    onMounted(() =>nextTick(()=>toBottom()) )
+    onMounted(()=>toBottom())
 
     watch(chat, () => {
       toBottom();

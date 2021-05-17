@@ -5,19 +5,21 @@ import {useChatStore} from "@/store";
 import {reactive} from "vue";
 import {onUnmounted} from "@vue/runtime-core";
 import {useChatData} from "@/composable/index";
+import {useRouter} from "vue-router";
 
 
 export default function () {
 
   const state = reactive({initiated: false})
   const chatStore = useChatStore()
+  const router = useRouter()
   const {currentChat: openedChat, currentParticipant} = useChatData()
 
   function getCurrentChat(id: string | undefined) {
     return chatStore.list.find(chat => chat._id === id)
   }
 
-
+//todo:листенер для удаления чата
   function initListeners(socket: any) {
     if (state.initiated) return
     state.initiated = true
@@ -30,6 +32,7 @@ export default function () {
     });
     socket.value.on(ChatSocketEvents.CREATE_CHAT, (newChat: IChatItem) => {
       chatStore.list.push(newChat)
+      router.push({name: 'Chat', params: {id: newChat._id}})
     })
     socket.value.on(ChatSocketEvents.FETCH_CHATS, ({list, count}: IChatState) => {
       chatStore.$patch({
