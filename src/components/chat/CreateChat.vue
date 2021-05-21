@@ -5,6 +5,7 @@
     :loading="isLoading"
     style="width:100%"
     type="primary"
+    :disabled="!chatName.length"
     @click="create"
   >Create
   </el-button
@@ -25,6 +26,7 @@ export default defineComponent({
     const modal = useModal()
 
     function create() {
+      if (!chatName.value) return
       createChat(chatName.value)
       modal.HIDE()
     }

@@ -1,5 +1,5 @@
 <template>
-  <li class="chat-item" >
+  <li class="chat-item">
     <div class="chat-item__header">
       <div class="chat-item__header-left">
         <div class="chat-item__header-info">
@@ -25,7 +25,7 @@
 
 
 import {format} from "date-fns";
-import {defineComponent, inject, PropType, ref} from "vue";
+import {defineComponent, PropType} from "vue";
 import {IParticipant} from "@/store/chat/types/chat";
 
 export default defineComponent({
@@ -71,14 +71,15 @@ export default defineComponent({
   margin: 0 10px 10px 0;
 
   &:hover {
-    background: $background_blue_gradient;
+    //background: $color_blue;
     transition: $transition;
+    box-shadow: $box_shadow;
 
-    .chat-item__header {
-      p {
-        color: #fff !important;
-      }
-    }
+    //.chat-item__header {
+    //  p {
+    //    color: #fff !important;
+    //  }
+    //}
 
     .chat-item__content {
       &-text {

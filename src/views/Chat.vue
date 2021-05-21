@@ -4,13 +4,16 @@
     You are not accepted
     yet
   </div>
-  <div class="flex justify-between" v-if="currentChat">
+  <template v-else>
+    <div class="flex justify-between" v-if="currentChat">
 
-    <ChatContainer :chat="currentChat"
-                   :current-participant="currentParticipant"/>
-    <ChatInfo/>
+      <ChatContainer :chat="currentChat"
+                     :current-participant="currentParticipant"/>
+      <ChatInfo/>
 
-  </div>
+    </div>
+  </template>
+
 </template>
 <script>
 //todo:emoji
@@ -21,7 +24,7 @@ import ChatContainer from "@/components/chat/ChatContainer";
 
 import {useChatData, useChatInput} from "@/composable";
 
-import {defineComponent, watchEffect,onUnmounted} from "vue";
+import {defineComponent, onUnmounted, watchEffect} from "vue";
 
 export default defineComponent({
   name: 'Chat',

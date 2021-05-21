@@ -17,7 +17,7 @@
           <ContextMenu ref="contextMenu">
             <el-button type="text" @click="deleteChat">Delete</el-button>
           </ContextMenu>
-          <ul class="chats__items">
+          <transition-group name="fade" tag="ul" class="chats__items">
             <ChatItem
               v-for="chat in chatsList"
               :id="chat._id"
@@ -28,7 +28,8 @@
               @click="toChat(chat._id)"
               @contextmenu="openContextMenu($event,chat._id)"
             />
-          </ul>
+          </transition-group>
+
         </div>
       </div>
     </div>
@@ -84,6 +85,7 @@ export default defineComponent({
     function deleteChat() {
       socket.value.emit(ChatSocketEvents.DELETE_CHAT, {chat_id: contextChatId.value}
       )
+      contextMenu.value.close()
     }
 
     return {

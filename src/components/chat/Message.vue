@@ -19,7 +19,7 @@
           <ul>
             <li v-for="i in attachments" :key="i">
 
-              <img :src="baseUrl + '/attachments/'+i.file" alt=""
+              <img :src="baseUrl + '/'+i.file" alt=""
                    v-if="i.type.includes('image')"/>
               <AudioPlayer v-if="i.type.includes('audio') " :src="audioSrc"
                            :color="isMe ? '' :
@@ -62,7 +62,6 @@ import ClickOutside from "vue-click-outside";
 
 import {computed, defineComponent, PropType, ref, toRefs} from "vue";
 import {IMessage} from "@/store/chat/types/message";
-
 export default defineComponent({
   name: 'Message',
   components: {Modal, AudioPlayer},
@@ -80,6 +79,9 @@ export default defineComponent({
       type: Boolean,
       required: true
     }
+  },
+  emits:{
+    pickMsg:null
   },
   setup(props, {emit}) {
 

@@ -77,6 +77,10 @@ export default function () {
 
 
     })
+    socket.value.on(ChatSocketEvents.DELETE_CHAT, (data: any) => {
+      chatStore.list = chatStore.list.filter(chat => chat._id !== data.chat_id)
+
+    })
   }
 
 
