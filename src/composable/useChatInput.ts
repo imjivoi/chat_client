@@ -47,39 +47,41 @@ export default function useChatInput() {
     return attachArray
   }
 
-  function sendMessage(e: any) {
-    return new Promise(async (resolve, reject) => {
-      if (!e?.shiftKey && e?.which === 13) {
-        e.preventDefault();
-      }
-      if (
-        (message.value && message.value.trim() === "") ||
-        (!attachments.value && !message.value)
-      ) {
-        return
-      }
+  async function sendMessage(e: any): Promise<any> {
 
-      typing.value = false;
+    if (!e?.shiftKey && e?.which === 13) {
+      e.preventDefault();
+    }
+    if (
+      (message.value && message.value.trim() === "") ||
+      (!attachments.value && !message.value)
+    ) {
+      return new Promise(resolve => {
+      })
+    }
 
-      activeEmojiPicker.value = false;
+    typing.value = false;
 
-      const attachmentsResult = await getBase64ArrayAttachments()
+    activeEmojiPicker.value = false;
 
-      const data = {
-        text: message.value,
-        chat_id: currentChat.value?._id,
-        attachments: attachmentsResult,
-      }
-      console.log(data)
+    const attachmentsResult = await getBase64ArrayAttachments()
+
+    const data = {
+      text: message.value,
+      chat_id: currentChat.value?._id,
+      attachments: attachmentsResult,
+    }
+    // console.log(data)
+    const promise = new Promise((resolve) => {
       socket.value.emit(
-        ChatSocketEvents.NEW_MESSAGE, data
+        ChatSocketEvents.NEW_MESSAGE, data, (response: { status: string }) => resolve(response)
       );
-      resolve(true)
-      reject(false)
-      textarea.value.focus()
-      message.value = null;
-      attachments.value = null;
     })
+
+    textarea.value.focus()
+    message.value = null;
+    attachments.value = null;
+    return await promise
   }
 
   function setAttachments(files: any) {

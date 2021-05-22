@@ -32,7 +32,8 @@
                  @click="closeEditMsg"></el-button>
     </template>
     <template v-else>
-      <el-button icon="el-icon-position" circle type="primary" class="send"
+      <el-button icon="el-icon-position" circle
+                 type="primary" class="send"
                  @click="send"
                  v-if="message || attachments?.length">
       </el-button>
@@ -58,6 +59,7 @@ import Btn from "../common/Button.vue";
 
 import {defineComponent, ref, watch} from "vue";
 import {useChatInput} from "@/composable";
+import notificationService from "@/services/notificationService";
 
 export default defineComponent({
   name: 'ChatInput',
@@ -81,6 +83,7 @@ export default defineComponent({
       sendTyping, typing
     } = useChatInput();
     const upload = ref<any>()
+    const isSending = ref(false)
 
     function chooseFiles() {
       upload.value.click()
@@ -90,9 +93,14 @@ export default defineComponent({
       activeEmojiPicker.value = false;
     }
 
-    function send(e: any) {
+    async function send(e: any) {
+      isSending.value = true
       activeAudioRecord.value = false;
-      sendMessage(e).then(res => res)
+      sendMessage(e).then(res => {
+        if (!res.status) notificationService.error("Can't send message")
+        isSending.value = false
+      })
+
     }
 
     function setImages(e: any) {
@@ -138,7 +146,8 @@ export default defineComponent({
       setImages, setAudio, canselAudiorecord,
       isEditMsgOpen,
       updateMessage,
-      closeEditMsg
+      closeEditMsg,
+      isSending
     };
   },
 
