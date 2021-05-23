@@ -4,7 +4,10 @@
       <div class="icon">
         <slot name="icon"></slot>
       </div>
-      <input type="text" :placeholder="placeholder" :value="text"
+      <input type="text"
+             :placeholder="placeholder"
+             :value="text"
+             :disabled="disabled"
              @input="onInput"
              ref="input"/>
     </div>
@@ -30,6 +33,11 @@ export default {
     },
     error: {
       type: String, required: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+      required: false
     }
   },
   emits: {

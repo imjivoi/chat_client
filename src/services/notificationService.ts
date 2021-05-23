@@ -1,21 +1,22 @@
+import {createToastInterface} from "vue-toastification";
 
-import { ElMessage } from 'element-plus';
 const options = {
-  showClose:true
+  timeout: 2000
 };
 
+const toast = createToastInterface(options)
 
 export default {
   error(message: string) {
-    return ElMessage.error(message);
+    return toast.error(message);
   },
   success(message: string) {
-    return ElMessage.success(message);
+    return toast.success(message);
   },
   default(message: string) {
-    return ElMessage.info(message);
+    return toast.info(message);
   },
   warning(message: string) {
-    return ElMessage.warning(message);
+    return toast.warning(message);
   },
 };

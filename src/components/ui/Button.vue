@@ -14,12 +14,17 @@
 <script lang="ts">
 import {
   CheckmarkCircle,
+  Close,
   Cloud,
   CrossCircle,
+  Edit,
   Microphone as micro,
   MicrophoneOff as MicroOff,
+  Pause,
+  Play,
   Plus,
-  SendIcon as send
+  SendIcon as send,
+  Trash
 } from "@/components/icons"
 
 import {defineComponent, PropType} from "vue"
@@ -43,12 +48,17 @@ export default defineComponent({
     Cloud,
     CheckmarkCircle,
     CrossCircle,
-    MicroOff
+    MicroOff,
+    Edit,
+    Trash,
+    Play,
+    Pause,
+    Close
   },
   props: {
     label: {
       type: String,
-      required: true
+      required: false
     },
     disabled: {
       type: Boolean,
@@ -144,7 +154,7 @@ export default defineComponent({
     background: none;
 
     svg {
-      width: 30px;
+      width: 25px;
       fill: $color_blue;
 
       /deep/ path {

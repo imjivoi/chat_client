@@ -1,24 +1,26 @@
 <template>
   <li class="flex align-center mb-1">
-    <el-row class="flex align-center">
-      <el-avatar size="medium" :src="hasAvatar" class="mr-1"></el-avatar>
+    <div class="flex align-center">
+      <Avatar :image="hasAvatar" class="mr-1"/>
       <div class="user__name">{{ username }}</div>
-    </el-row>
-    <span class="role" v-if="isAdmin">Admin</span>
-    <div class="options bg-blur transition" v-if="isRequest">
-      <el-button size="small" type="primary" plain
-                 @click="updateParticipant( true )">Accept
-      </el-button>
-      <el-button size="small">Block</el-button>
     </div>
+    <span class="role" v-if="isAdmin">Admin</span>
+<!--    <div class="options bg-blur transition" v-if="isRequest">-->
+<!--      <el-button size="small" type="primary" plain-->
+<!--                 @click="updateParticipant( true )">Accept-->
+<!--      </el-button>-->
+<!--      <el-button size="small">Block</el-button>-->
+<!--    </div>-->
   </li>
 </template>
 
 <script lang="ts">
+import Avatar from "@/components/ui/Avatar.vue"
 
 import {defineComponent} from "vue";
 
 export default defineComponent({
+  components:{Avatar},
   props: {
     participantId: {
       type: String,

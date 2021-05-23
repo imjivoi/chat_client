@@ -2,11 +2,9 @@
 import {createApp} from "vue";
 import {VueCookieNext} from "vue-cookie-next";
 import Toast from "vue-toastification";
-import ElementPlus from "element-plus";
 import {createPinia} from "pinia";
 import {i18n} from "@/resource/i18n";
 //styles
-import "element-plus/lib/theme-chalk/index.css";
 import "vue-toastification/dist/index.css";
 import "@/styles/main.scss";
 
@@ -40,7 +38,6 @@ app
     newestOnTop: true
   })
   .use(i18n)
-  .use(ElementPlus)
   .use(createPinia())
   .use(router);
 

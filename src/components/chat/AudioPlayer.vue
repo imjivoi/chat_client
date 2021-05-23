@@ -1,10 +1,8 @@
 <template>
   <div class="audio-player" v-if="audio">
     <div class="btn">
-      <el-button icon="el-icon-video-play" type="text" circle
-                 v-if="isPaused" @click="play" :style="{color}"></el-button>
-      <el-button icon="el-icon-video-pause" type="text" circle @click="pause"
-                 v-else :style="{color}"></el-button>
+      <Button is-icon :icon="isPaused ? 'play':'pause'" @click="()=>isPaused ?
+      play() : pause()"/>
     </div>
     <input @change="setCurrentTime" type="range" ref="input"
            v-model="currentTime"
@@ -21,9 +19,12 @@
 
 <script>
 
+import Button from "@/components/ui/Button";
+
 export default {
 
   name: "AudioPlayer",
+  components: {Button},
   props: {
     src: {
       type: String,
@@ -88,9 +89,6 @@ export default {
   margin: 0 12px 0 0;
 }
 
-.el-button {
-  font-size: 18px;
-}
 
 .audio-player {
   width: 250px;

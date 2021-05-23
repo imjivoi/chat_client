@@ -1,14 +1,9 @@
 <template>
   <transition name="fade">
     <div v-if="isActiveModal" class="modal">
-      <div id="modal-content" >
+      <div id="modal-content">
         <div class="header">
-          <el-button
-            circle
-            icon="el-icon-close"
-            type="text"
-            @click="hideModal"
-          ></el-button>
+          <Button is-icon icon="close" @click="hideModal"/>
         </div>
         <component :is="acitveComponent"/>
       </div>
@@ -22,10 +17,11 @@ import Voice from "@/components/voice/CreateVoice.vue";
 import {useModal} from "@/store";
 
 import {computed, defineComponent} from "vue";
+import Button from "@/components/ui/Button.vue";
 
 export default defineComponent({
   name: "Modal",
-  components: {Voice, Chat},
+  components: {Button, Voice, Chat},
   setup() {
     const modal = useModal();
     const acitveComponent = computed(() => modal.type);
@@ -60,7 +56,9 @@ export default defineComponent({
     @include block_mixin;
 
     .header {
-      text-align: right;
+      button {
+        margin: 0 0 0 auto;
+      }
     }
   }
 }

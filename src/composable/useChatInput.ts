@@ -54,7 +54,6 @@ export default function useChatInput() {
   }
 
   async function sendMessage(e: any): Promise<IEmittedEventStatus | any> {
-    console.log('blabla')
     if (!e?.shiftKey && e?.which === 13) {
       e.preventDefault();
     }
@@ -64,13 +63,11 @@ export default function useChatInput() {
     ) {
       return
     }
-    console.log(22)
     typing.value = false;
 
     activeEmojiPicker.value = false;
 
     const attachmentsResult = await getBase64ArrayAttachments()
-    console.log(attachmentsResult)
     const data = {
       text: message.value,
       chat_id: currentChat.value?._id,

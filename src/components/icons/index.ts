@@ -16,8 +16,18 @@ import Cloud from "./Cloud.vue"
 import CheckmarkCircle from './CheckmarkCircle.vue'
 import CrossCircle from "./CrossCircle.vue"
 import MicrophoneOff from "./MicrophoneOff.vue"
+import Edit from "./Edit.vue"
+import Trash from "./Trash.vue"
+import Play from "./Play.vue"
+import Pause from "./Pause.vue"
+import Close from "./Close.vue"
 
 export {
+  Close,
+  Pause,
+  Play,
+  Edit,
+  Trash,
   MicrophoneOff,
   CrossCircle,
   CheckmarkCircle,

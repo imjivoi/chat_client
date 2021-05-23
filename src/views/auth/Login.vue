@@ -16,7 +16,6 @@
 </template>
 
 <script lang="ts">
-import {useFormRules} from "@/composable";
 import {computed, defineComponent, reactive, watch} from "vue";
 import notificationService from "@/services/notificationService";
 import {useRouter} from "vue-router";

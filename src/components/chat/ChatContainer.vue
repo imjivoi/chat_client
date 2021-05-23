@@ -10,16 +10,18 @@
         </div>
       </div>
       <div class="chat__options" v-if="pickedMsg">
-        <el-button icon="el-icon-edit" circle
-                   @click="openEditMessage"></el-button>
-        <el-popconfirm
-          title="Are you sure to delete this message?"
-          @confirm="deleteMsg"
-        >
-          <template #reference>
-            <el-button icon="el-icon-delete-solid" circle></el-button>
-          </template>
-        </el-popconfirm>
+        <Button is-icon icon="edit" @click="openEditMessage"/>
+        <Button is-icon icon="trash"
+                @click="deleteMsg"/>
+
+        <!--        <el-popconfirm-->
+        <!--          title="Are you sure to delete this message?"-->
+        <!--          @confirm="deleteMsg"-->
+        <!--        >-->
+        <!--          <template #reference>-->
+        <!--            <el-button icon="el-icon-delete-solid" circle></el-button>-->
+        <!--          </template>-->
+        <!--        </el-popconfirm>-->
       </div>
 
     </div>
@@ -71,10 +73,12 @@ import {IChatItem, IParticipant} from "@/store/chat/types/chat";
 import {onMounted} from "@vue/runtime-core";
 import {useChatInput} from "@/composable";
 import {IMessage} from "@/store/chat/types/message";
+import Button from "@/components/ui/Button.vue";
 
 export default defineComponent({
   name: "ChatContainer",
   components: {
+    Button,
     ChatInput,
     Message,
     Spinner,
@@ -119,18 +123,18 @@ export default defineComponent({
     }
 
     function deleteMsg() {
-      if (pickedMsg.value?._id) {
+      if (pickedMsg.value?._id && confirm('Do you really want to delete message?')) {
         deleteMessage(pickedMsg.value._id)
         pickedMsg.value = null
       }
     }
 
 
-    onMounted(()=>toBottom())
+    onMounted(() => toBottom())
 
     watch(chat, () => {
       toBottom();
-    }, {deep: true,immediate:true});
+    }, {deep: true, immediate: true});
 
 
     return {
@@ -205,8 +209,8 @@ export default defineComponent({
     display: flex;
 
     button {
-      width: 52px;
-      height: 52px;
+      height: 60px;
+      width: 60px;
       background: #fff;
       border: none;
       box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.03),
@@ -246,7 +250,7 @@ export default defineComponent({
     position: relative;
     padding: 80px 0 70px;
 
-    &::-webkit-scrollbar-track-piece{
+    &::-webkit-scrollbar-track-piece {
       background-color: #fff;
       margin-top: 70px;
       margin-bottom: 70px;

@@ -32,9 +32,8 @@
         </div>
       </div>
       <div class="message__user-avatar">
-        <el-avatar :src="messageData.sender.user.avatar "
-                   v-if="messageData.sender.user.avatar"></el-avatar>
-        <el-avatar icon="el-icon-user-solid" v-else></el-avatar>
+        <Avatar :image="messageData.sender.user.avatar "
+                :nickname="messageData.sender.user.username"/>
 
       </div>
       <div class="message__readed">
@@ -62,9 +61,11 @@ import ClickOutside from "vue-click-outside";
 
 import {computed, defineComponent, PropType, ref, toRefs} from "vue";
 import {IMessage} from "@/store/chat/types/message";
+import Avatar from "@/components/ui/Avatar.vue";
+
 export default defineComponent({
   name: 'Message',
-  components: {Modal, AudioPlayer},
+  components: {Avatar, Modal, AudioPlayer},
   props: {
     messageData: {
       type: Object as PropType<IMessage>,
@@ -80,8 +81,8 @@ export default defineComponent({
       required: true
     }
   },
-  emits:{
-    pickMsg:null
+  emits: {
+    pickMsg: null
   },
   setup(props, {emit}) {
 

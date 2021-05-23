@@ -14,7 +14,8 @@
       <div class="chat-item__participant"
            v-for="participant in firstParticipants"
            :key="participant._id">
-        <el-avatar :src="participant.user.avatar"></el-avatar>
+        <Avatar :image="participant.user.avatar"
+                :nickname="participant.user.username"/>
         <p>{{ participant.user.username }}</p>
       </div>
     </div>
@@ -27,8 +28,10 @@
 import {format} from "date-fns";
 import {defineComponent, PropType} from "vue";
 import {IParticipant} from "@/store/chat/types/chat";
+import Avatar from "@/components/ui/Avatar.vue";
 
 export default defineComponent({
+  components: {Avatar},
   props: {
     id: {
       type: String,

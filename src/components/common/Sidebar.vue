@@ -2,8 +2,7 @@
   <aside class="sidebar">
     <div class="sidebar__profile" v-if="userData">
       <div class="sidebar__profile-avatar">
-        <el-avatar :src="userData.avatar" v-if="userData.avatar"/>
-        <el-avatar icon="el-icon-user-solid" v-else></el-avatar>
+        <Avatar :image="userData.avatar" :nickname="userData.username"/>
       </div>
       <div class="sidebar__profile-name">{{ userData.username }}</div>
     </div>
@@ -41,10 +40,14 @@ import {
 } from "@/components/icons";
 import {useAuthStore} from "@/store/auth/useAuthStore";
 import {computed, defineComponent} from "vue";
+import Avatar from "@/components/ui/Avatar.vue";
 
 export default defineComponent({
   name: "Sidebar",
-  components: {Home, Voices, Notifications, Settings, Logout, User, Chats},
+  components: {
+    Avatar,
+    Home, Voices, Notifications, Settings, Logout, User, Chats
+  },
   setup() {
     const auth = useAuthStore();
     const userData = computed(() => auth.userData);

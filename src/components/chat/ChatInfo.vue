@@ -35,22 +35,17 @@
       <h4>Invite</h4>
 
       <div class="mt-1 mh-auto" style="text-align: center">
-        <el-button v-if="!chat.invite" @click="createInvite"
-                   style="width: 100%">Create invite
-        </el-button>
+        <Button type="outline" label="Create invite" @click="createInvite"
+                style="width: 100%" v-if="!chat.invite"/>
         <template v-else>
-          <el-input
-            placeholder="Please input"
-            v-model="inviteLink"
-            :disabled="true">
-          </el-input>
-          <el-button class="mt-1" style="width: 100%" @click="copyLink"
-                     v-if="isValidInviteLink">Copy
-            invite link
-          </el-button>
-          <el-button class="mt-1" style="width: 100%" @click="updateInvite"
-                     v-else>Update link
-          </el-button>
+          <Input v-model:text="inviteLink" placeholder="Please input" disabled/>
+          <Button type="outline" label="Copy
+            invite link" @click="copyLink" class="mt-1"
+                  style="width: 100%" v-if="isValidInviteLink"/>
+          <Button type="outline" label="Update link" @click="updateInvite"
+                  class="mt-1"
+                  style="width: 100%" v-else/>
+
         </template>
       </div>
 
@@ -60,6 +55,8 @@
 </template>
 
 <script lang="ts">
+import Input from "@/components/ui/Input.vue";
+import Button from "@/components/ui/Button.vue";
 import UserItem from "@/components/common/UserItem.vue";
 import Spinner from "@/components/common/Spinner.vue";
 
@@ -68,7 +65,7 @@ import {useChatData} from "@/composable";
 
 export default defineComponent({
   name: "ChatInfo",
-  components: {UserItem, Spinner},
+  components: {UserItem, Spinner, Button, Input},
   setup() {
     const
       {
@@ -93,7 +90,7 @@ export default defineComponent({
       copyLink,
       isValidInviteLink,
       updateInvite,
-      updateParticipant,imAdmin
+      updateParticipant, imAdmin
     }
   }
 })
