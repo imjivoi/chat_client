@@ -1,7 +1,8 @@
 import router from "@/router";
-import chatAPI, {ICreateChatData, IUpdateParticipant} from "@/api/chatAPI";
+import chatAPI, {ICreateChatData, IUpdateParticipant} from "@/services/api/chatAPI";
 import {defineStore} from "pinia";
 import {state} from "./state";
+import {IChatItem} from "@/store/chat/types/chat";
 
 export const useChatStore = defineStore({
   id: "chat",
@@ -41,7 +42,7 @@ export const useChatStore = defineStore({
       this.isLoading = true
       try {
         const {data} = await chatAPI.getInvite(chat_id);
-        const chat = this.list.find(chat => chat._id === chat_id)
+        const chat = this.list.find((chat:IChatItem) => chat._id === chat_id)
 
         if (data && chat) {
           chat.invite = data
@@ -54,7 +55,7 @@ export const useChatStore = defineStore({
     async CREATE_INVITE(id: string | string[], expiresAt?: number
     ) {
       const {data} = await chatAPI.createInvite(id, expiresAt)
-      let chat = this.list.find(chat => chat._id === id)
+      let chat = this.list.find((chat:IChatItem) => chat._id === id)
       if (chat) {
         chat.invite = data
 
@@ -63,7 +64,7 @@ export const useChatStore = defineStore({
 
     async UPDATE_INVITE(id: string | string[], expiresAt?: number) {
       const {data} = await chatAPI.updateInvite(id, expiresAt)
-      let chat = this.list.find(chat => chat._id === id)
+      let chat = this.list.find((chat:IChatItem) => chat._id === id)
       if (chat) {
         chat.invite = data
 
@@ -103,7 +104,7 @@ export const useChatStore = defineStore({
     async GET_MESSAGES(chat_id: string | string[]) {
       try {
         const {data} = await chatAPI.getMessages(chat_id)
-        let currentChat = this.list.find(chat => chat._id === chat_id)
+        let currentChat = this.list.find((chat:IChatItem) => chat._id === chat_id)
         if (currentChat) {
           currentChat.messages = data
         }

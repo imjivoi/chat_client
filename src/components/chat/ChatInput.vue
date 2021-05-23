@@ -18,29 +18,22 @@
     <div class="upload" v-if="!isEditMsgOpen">
       <input type="file" accept="image/*" multiple
              @change="setImages" ref="upload">
-      <el-button icon="el-icon-upload" type="text" circle
-                 @click="chooseFiles"></el-button>
+      <Button is-icon icon="cloud" @click="chooseFiles"/>
     </div>
     <textarea placeholder="Type your message here"
               v-model="message"
               @keypress.enter.exact="send"
               ref="textarea"/>
     <template v-if="isEditMsgOpen">
-      <el-button icon="el-icon-circle-check" circle type="primary"
-                 @click="updateMessage"></el-button>
-      <el-button icon="el-icon-circle-close" circle
-                 @click="closeEditMsg"></el-button>
+      <Button is-icon icon="checkmark-circle" @click="updateMessage"/>
+      <Button is-icon icon="cross-circle" @click="closeEditMsg"/>
     </template>
     <template v-else>
-      <el-button icon="el-icon-position" circle
-                 type="primary" class="send"
-                 @click="send"
-                 v-if="message || attachments?.length">
-      </el-button>
-      <el-button icon="el-icon-microphone" circle type="primary" class="send"
-                 @mousedown="activeAudioRecord = true"
-                 v-else>
-      </el-button>
+      <Button is-icon icon="send" class="send"
+              @click="send"
+              v-if="message || attachments?.length"/>
+      <Button is-icon icon="micro" class="send"
+              @mousedown="activeAudioRecord = true" v-else/>
       <AudioRecord v-if="activeAudioRecord"
                    @closeAudioRecord="canselAudiorecord"
                    @setAttachments="setAudio"
@@ -52,10 +45,9 @@
 </template>
 
 <script lang="ts">
+import Button from "@/components/ui/Button.vue";
 import AudioRecord from "@/components/chat/AudioRecord.vue"
-import SendIcon from "../icons/SendIcon.vue";
 import EmojiPicker from "./EmojiPicker.vue";
-import Btn from "../common/Button.vue";
 
 import {defineComponent, ref, watch} from "vue";
 import {useChatInput} from "@/composable";
@@ -63,7 +55,7 @@ import notificationService from "@/services/notificationService";
 
 export default defineComponent({
   name: 'ChatInput',
-  components: {Btn, EmojiPicker, SendIcon, AudioRecord},
+  components: {EmojiPicker, Button, AudioRecord},
   setup() {
     const {
       setAttachments,
@@ -96,10 +88,15 @@ export default defineComponent({
     async function send(e: any) {
       isSending.value = true
       activeAudioRecord.value = false;
-      sendMessage(e).then(res => {
-        if (!res.status) notificationService.error("Can't send message")
-        isSending.value = false
-      })
+      try {
+        const {status, message} = await sendMessage(e)
+        if (!status) notificationService.error(message)
+
+      } catch (e) {
+        console.log(e)
+        notificationService.error('Something went wrong')
+      }
+      isSending.value = false
 
     }
 

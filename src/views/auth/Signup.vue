@@ -1,31 +1,36 @@
 <template>
   <div class="signup">
     <h1 class="mb-2">Registration</h1>
-    <el-form :model="form" ref="formBlock" class="mb-1" :rules="rules">
-      <el-form-item prop="username">
-        <el-input placeholder="Username" v-model="form.username"></el-input>
-      </el-form-item>
-      <el-form-item prop="email">
-        <el-input placeholder="Email" v-model="form.email"></el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input placeholder="Password" type="password" v-model="form.password"></el-input>
-      </el-form-item>
-      <el-button type="primary" @click="register" style="width:100%">Register</el-button>
-    </el-form>
+    <form @submit.prevent class="mb-1">
+      <Input placeholder="Username" class="mb-1" v-model:text="form.username"
+             :error="errors.username"/>
+      <Input v-model:text="form.email" placeholder="Email" class="mb-1"
+             :error="errors.email"/>
+      <Input v-model:text="form.password" placeholder="Password" class="mb-1"
+             :error="errors.password"/>
+      <Button label="Register" style="width:100%" :disabled="!isValid"
+              @click="register"/>
+    </form>
 
-    <p>Already registered? <router-link to="/auth/login/">Login</router-link></p>
+
+    <p>Already registered?
+      <router-link to="/auth/login/">Login</router-link>
+    </p>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive,  } from "vue";
+import Input from "@/components/ui/Input.vue";
+import Button from "@/components/ui/Button.vue";
+
+import {computed, defineComponent, reactive, watch,} from "vue";
 import notificationService from "@/services/notificationService";
-import { useFormRules } from "@/composable";
-import { useAuthStore } from "@/store/auth/useAuthStore";
+import {useAuthStore} from "@/store/auth/useAuthStore";
+import useFormValidation from "@/composable/useFormValidation";
 
 export default defineComponent({
   name: "Signup",
+  components: {Input, Button},
   setup() {
     const form = reactive({
       username: "",
@@ -33,27 +38,42 @@ export default defineComponent({
       password: ""
     });
     const auth = useAuthStore();
-    const { rules, formBlock, validation } = useFormRules();
+    const {
+      validateEmailField,
+      validatePasswordField,
+      validateNameField,
+      errors
+    } = useFormValidation()
+    const isValid = computed(() =>
+      Object.entries(errors).every(([_, val]) => !val) &&
+      Object.entries(form).every(([_, val]) => val.length)
+    )
 
     async function register() {
-      if (await validation()) {
+      if (isValid) {
         auth
           .REGISTER({
             username: form.username,
             email: form.email,
             password: form.password
           })
-          .then(res => {
+          .then(() => {
             notificationService.success("Succed!");
           });
       }
     }
 
+    watch(form, () => {
+      validateNameField('username', form.username)
+      validateEmailField('email', form.email)
+      validatePasswordField('password', form.password)
+    })
+
     return {
       form,
       register,
-      formBlock,
-      rules
+      isValid,
+      errors
     };
   }
 });

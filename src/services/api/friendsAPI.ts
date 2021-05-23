@@ -1,4 +1,4 @@
-import { HTTP } from "../utils/axios";
+import { HTTP } from "../../utils/axios";
 
 const url = "/friendship";
 

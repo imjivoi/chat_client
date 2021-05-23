@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
-    <div v-show="isActiveModal" class="modal">
-      <div id="modal-content">
+    <div v-if="isActiveModal" class="modal">
+      <div id="modal-content" >
         <div class="header">
           <el-button
             circle
@@ -21,7 +21,7 @@ import Chat from "@/components/chat/CreateChat.vue"
 import Voice from "@/components/voice/CreateVoice.vue";
 import {useModal} from "@/store";
 
-import {computed, defineComponent, inject} from "vue";
+import {computed, defineComponent} from "vue";
 
 export default defineComponent({
   name: "Modal",

@@ -4,8 +4,7 @@ import {VueCookieNext} from "vue-cookie-next";
 import Toast from "vue-toastification";
 import ElementPlus from "element-plus";
 import {createPinia} from "pinia";
-import {i18n} from "@/resource/i18n"; //@ts-ignore
-import {ObserveVisibility} from 'vue-observe-visibility'
+import {i18n} from "@/resource/i18n";
 //styles
 import "element-plus/lib/theme-chalk/index.css";
 import "vue-toastification/dist/index.css";
@@ -14,14 +13,12 @@ import "@/styles/main.scss";
 //modules
 import App from "./App.vue";
 import router from "./router";
-import ErrorService from "./services/errorService";
 import {useAuthStore} from "./store/";
 import {setAuthHeader} from "./utils/axios"
 
 const app = createApp(App);
 
 
-app.directive('observe-visibility', ObserveVisibility)
 app.directive("click-outside", {
   beforeMount(el, binding, vnode) {
     el.clickOutsideEvent = function (event: any) {
@@ -65,7 +62,7 @@ router.beforeEach((to, from, next) => {
   }
   ;
 });
+// app.config.errorHandler = error => ErrorService.onError(error);
 
 app.mount("#app");
 
-app.config.errorHandler = error => ErrorService.onError(error);

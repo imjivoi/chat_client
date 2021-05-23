@@ -1,5 +1,5 @@
 <template>
-  <li class="chat-item">
+  <div class="chat-item">
     <div class="chat-item__header">
       <div class="chat-item__header-left">
         <div class="chat-item__header-info">
@@ -18,7 +18,7 @@
         <p>{{ participant.user.username }}</p>
       </div>
     </div>
-  </li>
+  </div>
 </template>
 
 <script lang="ts">

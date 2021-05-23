@@ -1,39 +1,54 @@
 <template>
   <div class="login">
     <h1 class="mb-2">Login</h1>
-    <el-form :model="form" ref="formBlock" class="mb-1" :rules="rules">
-      <el-form-item prop="email">
-        <el-input placeholder="Email" v-model="form.email"></el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input placeholder="Password" v-model="form.password" show-password></el-input>
-      </el-form-item>
-      <el-button type="primary" @click="login" style="width:100%">Login</el-button>
-    </el-form>
-    <p>Don't registered yet? <router-link to="/auth/signup/">Signup</router-link></p>
+    <form @submit.prevent class="mb-1">
+      <Input v-model:text="form.email" placeholder="Email" class="mb-1"
+             :error="errors.email"/>
+      <Input v-model:text="form.password" placeholder="Password" class="mb-1"
+             :error="errors.password"/>
+      <Button label="Login" style="width:100%" :disabled="!isValid"
+              @click="login"/>
+    </form>
+    <p>Don't registered yet?
+      <router-link to="/auth/signup/">Signup</router-link>
+    </p>
   </div>
 </template>
 
 <script lang="ts">
-import { useFormRules } from "@/composable";
-import { defineComponent,  reactive } from "vue";
+import {useFormRules} from "@/composable";
+import {computed, defineComponent, reactive, watch} from "vue";
 import notificationService from "@/services/notificationService";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/store";
+import {useRouter} from "vue-router";
+import {useAuthStore} from "@/store";
+import Input from "@/components/ui/Input.vue";
+import Button from "@/components/ui/Button.vue";
+import useFormValidation from "@/composable/useFormValidation";
+
 export default defineComponent({
   name: "Login",
+  components: {Button, Input},
   setup() {
     const form = reactive({
       email: "",
       password: ""
     });
-    const { rules, formBlock, validation } = useFormRules();
 
     const auth = useAuthStore();
     const router = useRouter();
 
+    const {
+      validateEmailField,
+      validatePasswordField,
+      errors
+    } = useFormValidation()
+    const isValid = computed(() =>
+      Object.entries(errors).every(([_, val]) => !val) &&
+      Object.entries(form).every(([_, val]) => val.length)
+    )
+
     async function login() {
-      if (await validation()) {
+      if (isValid) {
         auth
           .GET_AUTH({
             email: form.email,
@@ -41,16 +56,21 @@ export default defineComponent({
           })
           .then(() => {
             notificationService.success("Authorized");
-            router.push({name:'Home'});
+            router.push({name: 'Home'});
           });
       }
     }
 
+    watch(form, () => {
+      validateEmailField('email', form.email)
+      validatePasswordField('password', form.password)
+    })
+
     return {
       form,
       login,
-      formBlock,
-      rules
+      errors,
+      isValid
     };
   }
 });

@@ -7,27 +7,37 @@
 
     <div v-if="chatCount" style="height:88%">
       <div class="chats__header flex justify-between align-center mb-1">
-
-        <el-button icon="el-icon-plus" type="primary"
-                   @click="showModal">Create chat
-        </el-button>
+        <Button icon="plus" label="Create chat" @click="showModal"/>
       </div>
       <div style="width:100%">
         <div class="mb-2">
-          <ContextMenu ref="contextMenu">
-            <el-button type="text" @click="deleteChat">Delete</el-button>
-          </ContextMenu>
-          <transition-group name="fade" tag="ul" class="chats__items">
-            <ChatItem
-              v-for="chat in chatsList"
-              :id="chat._id"
-              :key="chat._id"
-              :created="chat.createdAt"
-              :name="chat.name"
-              :participants="chat.participants"
-              @click="toChat(chat._id)"
-              @contextmenu="openContextMenu($event,chat._id)"
-            />
+          <transition-group name="fade" tag="div" class="chats__items">
+            <div class="chat-item-block" v-for="chat in chatsList"
+            >
+              <ChatItem
+                :id="chat._id"
+                :key="chat._id"
+                :created="chat.createdAt"
+                :name="chat.name"
+                :participants="chat.participants"
+                @click="toChat(chat._id)"
+                @contextmenu="openContextMenu($event,chat._id)"
+              />
+              <ContextMenu ref="contextMenu">
+                <template v-if="getImAdmin(contextChatId)">
+                  <div class="danger" @click="deleteChat"
+                  >Delete
+                  </div>
+                  <div>Change name</div>
+                </template>
+
+                <div class="danger"
+                     v-else>Quit
+                </div>
+
+              </ContextMenu>
+
+            </div>
           </transition-group>
 
         </div>
@@ -43,8 +53,8 @@
 </template>
 
 <script lang="ts">
+import Button from "@/components/ui/Button.vue";
 import ContextMenu from "@/components/common/ContextMenu.vue";
-import CustomInput from "@/components/common/Input.vue";
 import ChatItem from "@/components/chat/ChatItem.vue";
 import Spinner from "@/components/common/Spinner.vue";
 
@@ -53,9 +63,12 @@ import {useChatStore, useModal} from "@/store";
 import {useRouter} from "vue-router";
 import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
 import {Socket} from "socket.io";
+import {useChatData} from "@/composable";
+import {IEmittedEventStatus} from "@/composable/useChatInput";
+import notificationService from "@/services/notificationService";
 //todo:переименование чата, выход из чата
 export default defineComponent({
-  components: {Spinner, CustomInput, ChatItem, ContextMenu},
+  components: {Spinner, ChatItem, ContextMenu, Button},
   name: "ChatItems",
   setup() {
     const socket = inject('socket') as Ref<Socket>
@@ -64,6 +77,7 @@ export default defineComponent({
     const router = useRouter()
     const modal = useModal()
     const chat = useChatStore()
+    const {getImAdmin} = useChatData()
     const chatsList = computed(() => chat.list)
     const chatCount = computed(() => chat.count)
     const contextChatId = ref<string>('')
@@ -83,7 +97,10 @@ export default defineComponent({
     }
 
     function deleteChat() {
-      socket.value.emit(ChatSocketEvents.DELETE_CHAT, {chat_id: contextChatId.value}
+      socket.value.emit(ChatSocketEvents.DELETE_CHAT, {chat_id: contextChatId.value},
+        (response: IEmittedEventStatus) => {
+          if (!response.status) notificationService.error(response.message)
+        }
       )
       contextMenu.value.close()
     }
@@ -96,7 +113,9 @@ export default defineComponent({
       toChat,
       contextMenu,
       openContextMenu,
-      deleteChat
+      deleteChat,
+      getImAdmin,
+      contextChatId
     };
   },
 });
@@ -122,10 +141,12 @@ export default defineComponent({
     display: flex;
     flex-wrap: wrap;
 
-    li {
+    .chat-item-block {
       margin: 5px;
       max-width: 300px;
+      width: 100%;
     }
+
   }
 }
 

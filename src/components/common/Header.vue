@@ -1,19 +1,22 @@
 <template>
   <header>
-    <div class="header__right flex" >
-        <el-button @click="routeTo('Login')">Login</el-button>
-        <el-button type="primary" @click="routeTo('Signup')">Sign up</el-button>
+    <div class="header__right flex">
+      <Button type="outline" label="Login" @click="routeTo('Login')"
+              class="mr-1"/>
+      <Button @click="routeTo('Signup')" label="Sign up"/>
     </div>
   </header>
 </template>
 
 <script lang="ts">
 
-import {  defineComponent } from "vue";
-export default defineComponent({
+import {defineComponent} from "vue";
+import Button from "@/components/ui/Button.vue";
 
-  methods:{
-    routeTo(name:string){
+export default defineComponent({
+  components: {Button},
+  methods: {
+    routeTo(name: string) {
       this.$router.push({name})
     }
   }
@@ -30,6 +33,7 @@ header {
   padding: 0 15px;
   z-index: 10;
 }
+
 .header__right {
   float: right;
 }

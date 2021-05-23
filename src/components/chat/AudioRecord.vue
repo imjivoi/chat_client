@@ -6,27 +6,28 @@
 
       <div class="timer" v-if="!isSending">{{ minutes + ' : ' + seconds }}</div>
       <div class="timer" v-else>Sending ...</div>
-      <el-button type="danger" icon="el-icon-turn-off-microphone" circle
-                 ref="stopBtn"
-                 @mouseup="close"
-      ></el-button>
+      <Button is-icon icon="micro-off" ref="stopBtn"
+              @mouseup="close"/>
     </div>
   </div>
 </template>
 
 <script>
-
+//todo:дорабоать отправку аудио
+//Доработать ui
 import notificationService from "@/services/notificationService";
+import Button from "@/components/ui/Button";
 
 export default {
   name: "AudioRecord",
+  components: {Button},
   data: () => ({
     minutes: '00',
     seconds: '00',
     interval: null,
     mediaRecorder: null,
     status: '',
-    isSending:false
+    isSending: false
   }),
   methods: {
 
@@ -57,10 +58,10 @@ export default {
       this.$emit("closeAudioRecord");
     },
     send() {
-      this.isSending=true
+      this.isSending = true
       this.stopRecord();
       this.status = 'send'
-      setTimeout(() => this.$emit("sendMessage"), 300
+      setTimeout(() => this.$emit("sendMessage"), 500
       )
 
     }
@@ -90,9 +91,9 @@ export default {
   beforeMount() {
     this.mediaRecorder = null;
   },
-  watch:{
-    seconds:function () {
-      if (parseInt(this.seconds)===30){
+  watch: {
+    seconds: function () {
+      if (parseInt(this.seconds) === 30) {
         this.send()
       }
     }

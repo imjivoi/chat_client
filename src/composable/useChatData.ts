@@ -3,6 +3,8 @@ import {useRoute} from "vue-router";
 import {computed} from "vue";
 import expiresDate from "@/helpers/expiresDate";
 import notificationService from "@/services/notificationService";
+import {IChatItem, IParticipant} from "@/store/chat/types/chat";
+import {IMessage} from "@/store/chat/types/message";
 
 export default function useChatData() {
   const chatStore = useChatStore()
@@ -13,19 +15,19 @@ export default function useChatData() {
 
 
   const chatId = computed(() => route.params.id)
-  const currentChat = computed(() => chatStore.list.find(chat => chat._id === chatId.value))
-  const currentParticipant = computed(() => currentChat.value?.participants.find(participant => participant.user._id === user?._id))
+  const currentChat = computed(() => chatStore.list.find((chat: IChatItem) => chat._id === chatId.value))
+  const currentParticipant = computed(() => currentChat.value?.participants.find((participant: IParticipant) => participant.user._id === user?._id))
   const
     acceptedParticipants = computed(() =>
-      currentChat.value?.participants.sort((a, b) => a.user._id ===
-      currentChat.value?.admin._id ? 1 : 0).filter(participant => participant.accepted))
-  const requests = computed(() => currentChat.value?.participants.filter(participant => !participant.accepted))
+      currentChat.value?.participants.sort((a: any, b: any) => a.user._id ===
+      currentChat.value?.admin._id ? 1 : 0).filter((participant: IParticipant) => participant.accepted))
+  const requests = computed(() => currentChat.value?.participants.filter((participant: IParticipant) => !participant.accepted))
   const inviteKey = computed(() => currentChat.value?.invite?.unique_key)
   const inviteLink = computed(() => `${window.location.origin}/app/invite/${inviteKey.value}`)
   const isValidInviteLink = computed(() => expiresDate(currentChat.value?.invite?.expiresAt))
   const imAdmin = computed(() => currentChat.value?.admin._id === user?._id)
   const imAccepted = computed(() => currentParticipant.value?.accepted)
-  const unreadedMessages = computed(() => currentChat.value?.messages?.filter(message =>
+  const unreadedMessages = computed(() => currentChat.value?.messages?.filter((message: IMessage) =>
     !message.isReaded && message.sender?._id !== currentParticipant.value?._id))
 
   async function updateMessages() {
@@ -39,7 +41,7 @@ export default function useChatData() {
   async function getInvite() {
     if (!imAccepted) return
     if (!currentChat.value?.invite) {
-     await chatStore.GET_INVITE(chatId.value)
+      await chatStore.GET_INVITE(chatId.value)
     }
   }
 
@@ -66,6 +68,11 @@ export default function useChatData() {
     await chatStore.UPDATE_PARTICIPANT({chat_id: chatId.value, ...data})
   }
 
+  function getImAdmin(chatId: string) {
+    const chat = chatStore.list.find((chat: IChatItem) => chat._id === chatId)
+    return chat?.admin?._id === user?._id
+  }
+
 
   return {
     currentChat,
@@ -82,7 +89,8 @@ export default function useChatData() {
     updateParticipant,
     currentParticipant,
     imAdmin,
-    unreadedMessages
+    unreadedMessages,
+    getImAdmin
   }
 
 }

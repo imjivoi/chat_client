@@ -11,8 +11,19 @@ import Settings from "./Settings.vue";
 import Voices from "./Voices.vue";
 import User from "./User.vue";
 import Back from "./Back.vue"
+import Microphone from "./Microphone.vue"
+import Cloud from "./Cloud.vue"
+import CheckmarkCircle from './CheckmarkCircle.vue'
+import CrossCircle from "./CrossCircle.vue"
+import MicrophoneOff from "./MicrophoneOff.vue"
 
-export {Back,
+export {
+  MicrophoneOff,
+  CrossCircle,
+  CheckmarkCircle,
+  Cloud,
+  Microphone,
+  Back,
   Adjustment,
   Chats,
   Home,

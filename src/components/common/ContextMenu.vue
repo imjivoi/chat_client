@@ -46,7 +46,23 @@ export default {
   outline: none;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   cursor: pointer;
-  padding: 10px 20px;
   border-radius: 10px;
+
+  div {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: $color_blue;
+    font-weight: 600;
+    padding: 10px 30px;
+    transition: all .4s;
+    border-radius: 10px;
+
+
+
+    &:hover {
+      background: #66b1ff5c;
+    }
+  }
 }
 </style>

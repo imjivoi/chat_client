@@ -16,7 +16,7 @@ export default function () {
   const {currentChat: openedChat, currentParticipant} = useChatData()
 
   function getCurrentChat(id: string | undefined) {
-    return chatStore.list.find(chat => chat._id === id)
+    return chatStore.list.find((chat:IChatItem) => chat._id === id)
   }
 
 //todo:листенер для удаления чата
@@ -52,7 +52,7 @@ export default function () {
                                                        chat_id, participant_id
                                                      }: { chat_id: string, participant_id: string }) => {
       const currentChat = getCurrentChat(chat_id)
-      currentChat?.messages?.forEach(message => {
+      currentChat?.messages?.forEach((message:IMessage) => {
         if (!message.isReaded && message.sender?._id !== participant_id) {
           message.isReaded = true
         }
@@ -65,11 +65,11 @@ export default function () {
                                                       }: { chat_id: string, message_id: string }) => {
       const currentChat = getCurrentChat(chat_id)
       if (currentChat)
-        currentChat.messages = currentChat.messages?.filter(message => message._id !== message_id)
+        currentChat.messages = currentChat.messages?.filter((message:IMessage)  => message._id !== message_id)
     })
     socket.value.on(ChatSocketEvents.UPDATE_MESSAGE, (message: IMessage) => {
       const currentChat = getCurrentChat(message.chat?._id)
-      const currentMessage = currentChat?.messages?.find(mes => message._id === mes._id)
+      const currentMessage = currentChat?.messages?.find((mes:IMessage) => message._id === mes._id)
       if (currentMessage) {
         currentMessage.text = message.text
         currentMessage.updatedAt = message.updatedAt
@@ -78,7 +78,7 @@ export default function () {
 
     })
     socket.value.on(ChatSocketEvents.DELETE_CHAT, (data: any) => {
-      chatStore.list = chatStore.list.filter(chat => chat._id !== data.chat_id)
+      chatStore.list = chatStore.list.filter((chat:IChatItem) => chat._id !== data.chat_id)
 
     })
   }

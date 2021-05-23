@@ -11,8 +11,14 @@ const pickedMsg = ref<IMessage | null>(null)
 const message = ref<string | null>(null);
 const typing = ref<boolean>(false);
 
+
+export interface IEmittedEventStatus {
+  status: Boolean,
+  message: string
+}
+
 export default function useChatInput() {
-  const attachments = ref<Array<File> | null>([]);
+  const attachments = ref<Array<File> | any>([]);
   const activeEmojiPicker = ref<boolean>(false);
   const activeAudioRecord = ref<boolean>(false);
   const timeout = ref<any | null>(null);
@@ -24,7 +30,7 @@ export default function useChatInput() {
 
   const attachmentsUrl = computed(() => {
 
-    const result = attachments.value?.map(attachment => {
+    const result = attachments.value?.map((attachment: any) => {
       if (attachment.type.includes('image')) {
 
         return URL.createObjectURL(attachment)
@@ -47,8 +53,8 @@ export default function useChatInput() {
     return attachArray
   }
 
-  async function sendMessage(e: any): Promise<any> {
-
+  async function sendMessage(e: any): Promise<IEmittedEventStatus | any> {
+    console.log('blabla')
     if (!e?.shiftKey && e?.which === 13) {
       e.preventDefault();
     }
@@ -56,41 +62,36 @@ export default function useChatInput() {
       (message.value && message.value.trim() === "") ||
       (!attachments.value && !message.value)
     ) {
-      return new Promise(resolve => {
-      })
+      return
     }
-
+    console.log(22)
     typing.value = false;
 
     activeEmojiPicker.value = false;
 
     const attachmentsResult = await getBase64ArrayAttachments()
-
+    console.log(attachmentsResult)
     const data = {
       text: message.value,
       chat_id: currentChat.value?._id,
       attachments: attachmentsResult,
     }
-    // console.log(data)
-    const promise = new Promise((resolve) => {
-      socket.value.emit(
-        ChatSocketEvents.NEW_MESSAGE, data, (response: { status: string }) => resolve(response)
-      );
-    })
-
+    console.log(data)
     textarea.value.focus()
     message.value = null;
-    attachments.value = null;
-    return await promise
+    attachments.value = [];
+    return new Promise(resolve => socket.value.emit(
+      ChatSocketEvents.NEW_MESSAGE, data, (response: IEmittedEventStatus) =>
+        resolve(response)
+    )) as Promise<IEmittedEventStatus>
   }
 
   function setAttachments(files: any) {
-
     if (files.length > 5) return notificationService.error('Can be uploaded more 5 images')
-    if (files.type) {
-      attachments.value?.push(files);
-    } else {
+    if (Array.isArray(files)) {
       attachments.value = [...files];
+    } else {
+      attachments.value.push(files);
     }
   }
 
@@ -113,8 +114,12 @@ export default function useChatInput() {
     });
   }
 
-  function createChat(name: string) {
-    socket.value.emit(ChatSocketEvents.CREATE_CHAT, {name})
+  function createChat(name: string): Promise<IEmittedEventStatus> {
+    return new Promise(resolve => {
+      socket.value.emit(ChatSocketEvents.CREATE_CHAT,
+        {name}, (response: IEmittedEventStatus) => resolve(response
+        ))
+    })
   }
 
   function readMessage(message_id: string) {
