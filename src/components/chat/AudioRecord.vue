@@ -1,23 +1,29 @@
 <template>
   <div class="audio-record">
     <div class="audio-record__content" v-if="mediaRecorder">
-      <div class="audio-record__overlay " ref="overlay"
-           @mouseup="send"></div>
+      <div class="audio-record__overlay bg-blur" ref="overlay"
+      >
+        <div class="flex " style="align-items: baseline"><p class="mr-1">
+          Recording</p>
+          <div class="dot-pulse"></div>
+        </div>
+      </div>
 
       <div class="timer" v-if="!isSending">{{ minutes + ' : ' + seconds }}</div>
       <div class="timer" v-else>Sending ...</div>
-      <Button is-icon icon="micro-off" ref="stopBtn"
-              @mouseup="close"/>
+      <div class="btns">
+        <Button is-icon icon="send" @click="send"/>
+        <Button is-icon icon="micro-off" ref="stopBtn"
+                @click="close"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-//todo:дорабоать отправку аудио
-//Доработать ui
 import notificationService from "@/services/notificationService";
 import Button from "@/components/ui/Button";
-
+//todo:аудиометр
 export default {
   name: "AudioRecord",
   components: {Button},
@@ -93,9 +99,9 @@ export default {
   },
   watch: {
     seconds: function () {
-      if (parseInt(this.seconds) === 30) {
-        this.send()
-      }
+      // if (parseInt(this.seconds) === 30) {
+      //   this.send()
+      // }
     }
   }
 }
@@ -126,6 +132,15 @@ export default {
     top: 0;
     left: 0;
     z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      font-size: 48px;
+      FONT-WEIGHT: 600;
+      color: #9880ff;
+    }
   }
 }
 
@@ -135,12 +150,95 @@ export default {
   z-index: 1;
 }
 
-.el-button {
-  transition: all .4s;
+.btns {
   z-index: 1;
+  display: flex;
 
-  &:hover {
-    transform: scale(1.3);
+  button {
+    transition: all .4s;
+    margin: 0 10px 0 0;
+
+    &:hover {
+      transform: scale(1.3);
+    }
   }
 }
+
+.dot-pulse {
+  position: relative;
+  left: -9999px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #9880ff;
+  color: #9880ff;
+  box-shadow: 9999px 0 0 -5px #9880ff;
+  animation: dotPulse 1.5s infinite linear;
+  animation-delay: .25s;
+}
+
+.dot-pulse::before, .dot-pulse::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #9880ff;
+  color: #9880ff;
+}
+
+.dot-pulse::before {
+  box-shadow: 9984px 0 0 -5px #9880ff;
+  animation: dotPulseBefore 1.5s infinite linear;
+  animation-delay: 0s;
+  left: -10px;
+}
+
+.dot-pulse::after {
+  box-shadow: 10014px 0 0 -5px #9880ff;
+  animation: dotPulseAfter 1.5s infinite linear;
+  animation-delay: .5s;
+}
+
+@keyframes dotPulseBefore {
+  0% {
+    box-shadow: 9984px 0 0 -5px #9880ff;
+  }
+  30% {
+    box-shadow: 9984px 0 0 2px #9880ff;
+  }
+  60%,
+  100% {
+    box-shadow: 9984px 0 0 -5px #9880ff;
+  }
+}
+
+@keyframes dotPulse {
+  0% {
+    box-shadow: 9999px 0 0 -5px #9880ff;
+  }
+  30% {
+    box-shadow: 9999px 0 0 2px #9880ff;
+  }
+  60%,
+  100% {
+    box-shadow: 9999px 0 0 -5px #9880ff;
+  }
+}
+
+@keyframes dotPulseAfter {
+  0% {
+    box-shadow: 10014px 0 0 -5px #9880ff;
+  }
+  30% {
+    box-shadow: 10014px 0 0 2px #9880ff;
+  }
+  60%,
+  100% {
+    box-shadow: 10014px 0 0 -5px #9880ff;
+  }
+}
+
 </style>

@@ -52,7 +52,7 @@ export default {
     width: 100%;
     text-align: center;
     font-size: 18px;
-    color: $color_blue;
+    color: $primary;
     font-weight: 600;
     padding: 10px 30px;
     transition: all .4s;

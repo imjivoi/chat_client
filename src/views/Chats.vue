@@ -13,10 +13,11 @@
         <div class="mb-2">
           <transition-group name="fade" tag="div" class="chats__items">
             <div class="chat-item-block" v-for="chat in chatsList"
+                 :key="chat._id"
+
             >
               <ChatItem
                 :id="chat._id"
-                :key="chat._id"
                 :created="chat.createdAt"
                 :name="chat.name"
                 :participants="chat.participants"
@@ -31,10 +32,9 @@
                   <div>Change name</div>
                 </template>
 
-                <div class="danger"
+                <div class="danger" @click="quitChat"
                      v-else>Quit
                 </div>
-
               </ContextMenu>
 
             </div>
@@ -103,6 +103,14 @@ export default defineComponent({
       contextMenu.value.close()
     }
 
+    function quitChat() {
+      socket.value.emit(ChatSocketEvents.QUIT_CHAT, {chat_id: contextChatId.value},
+        (response: IEmittedEventStatus) => {
+          if (!response.status) notificationService.error(response.message)
+        })
+      contextMenu.value.close()
+    }
+
     return {
       isLoading,
       chatsList,
@@ -113,7 +121,8 @@ export default defineComponent({
       openContextMenu,
       deleteChat,
       getImAdmin,
-      contextChatId
+      contextChatId,
+      quitChat
     };
   },
 });
@@ -160,7 +169,7 @@ export default defineComponent({
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: $color_blue;
+    color: $primary;
     font-size: 2em;
   }
 }

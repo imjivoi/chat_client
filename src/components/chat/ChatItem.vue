@@ -124,7 +124,7 @@ export default defineComponent({
       p {
         font-size: 10px;
         font-weight: 500;
-        color: $color_blue;
+        color: $primary;
       }
     }
 

@@ -13,6 +13,7 @@ import App from "./App.vue";
 import router from "./router";
 import {useAuthStore} from "./store/";
 import {setAuthHeader} from "./utils/axios"
+import ErrorService from "@/services/errorService";
 
 const app = createApp(App);
 
@@ -50,16 +51,19 @@ if (token) {
 }
 
 router.beforeEach((to, from, next) => {
-  if (to.path.includes('app') && !auth.isLogged) {
-    next({name: "Welcome"})
-  } else if (to.path === '/' && auth.isLogged) {
-    next('/app')
-  } else {
+    if (to.path.includes('app') && !auth.isLogged) {
+      next({name: "Login", query: {next: to.path}})
+      return
+    }
+    if (to.path === '/' && auth.isLogged) {
+      next('/app')
+      return;
+    }
+
     next()
   }
-  ;
-});
-// app.config.errorHandler = error => ErrorService.onError(error);
+);
+app.config.errorHandler = error => ErrorService.onError(error);
 
 app.mount("#app");
 

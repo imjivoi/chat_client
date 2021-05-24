@@ -62,7 +62,7 @@ import Spinner from "@/components/common/Spinner.vue";
 
 import {defineComponent} from "vue"
 import {useChatData} from "@/composable";
-
+//todo:принять, блокировать запрос в чат, удалять юзера
 export default defineComponent({
   name: "ChatInfo",
   components: {UserItem, Spinner, Button, Input},

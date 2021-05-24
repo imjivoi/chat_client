@@ -17,7 +17,6 @@
 </template>
 <script>
 //todo:emoji
-//todo:connect to chat when create,delete chat
 
 import ChatInfo from "@/components/chat/ChatInfo";
 import ChatContainer from "@/components/chat/ChatContainer";

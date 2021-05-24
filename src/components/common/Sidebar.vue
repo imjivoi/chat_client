@@ -130,29 +130,29 @@ export default defineComponent({
           0px 0px 10px rgba(42, 139, 242, 0.55),
           4px 0px 25px rgba(42, 139, 242, 0.75);
           border-radius: 3px;
-          background: $color_blue;
+          background: $primary;
           width: 3px;
           height: 40px;
         }
 
         span {
-          color: $color_blue;
+          color: $primary;
           transition: $transition;
         }
 
         svg {
-          fill: $color_blue;
+          fill: $primary;
         }
       }
 
       &:hover {
         span {
-          color: $color_blue;
+          color: $primary;
           transition: $transition;
         }
 
         svg {
-          fill: $color_blue;
+          fill: $primary;
         }
       }
 
@@ -187,11 +187,11 @@ export default defineComponent({
 
     &:hover {
       svg {
-        fill: $color_blue !important;
+        fill: $primary !important;
       }
 
       button {
-        color: $color_blue;
+        color: $primary;
         transition: $transition;
       }
     }
@@ -227,18 +227,18 @@ export default defineComponent({
     0px 0px 10px rgba(42, 139, 242, 0.55),
     4px 0px 25px rgba(42, 139, 242, 0.75);
     border-radius: 3px;
-    background: $color_blue;
+    background: $primary;
     width: 3px;
     height: 40px;
   }
 
   span {
-    color: $color_blue !important;
+    color: $primary !important;
     transition: $transition;
   }
 
   svg {
-    fill: $color_blue;
+    fill: $primary;
   }
 }
 </style>

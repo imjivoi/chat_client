@@ -289,7 +289,7 @@ export default defineComponent({
     bottom: 0;
 
     .check, .double-check {
-      color: $color_blue;
+      color: $primary;
       position: relative;
 
     }

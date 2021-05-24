@@ -29,15 +29,21 @@
       <Button is-icon icon="cross-circle" @click="closeEditMsg"/>
     </template>
     <template v-else>
-      <Button is-icon icon="send" class="send"
-              @click="send"
-              v-if="message || attachments?.length"/>
-      <Button is-icon icon="micro" class="send"
-              @mousedown="activeAudioRecord = true" v-else/>
-      <AudioRecord v-if="activeAudioRecord"
-                   @closeAudioRecord="canselAudiorecord"
-                   @setAttachments="setAudio"
-                   @sendMessage="send"/>
+      <transition name="fade-to-top">
+        <Button is-icon icon="send" class="send"
+                @click="send"
+                v-if="message || attachments?.length"/>
+        <Button is-icon icon="micro" class="send"
+                @click="activeAudioRecord = true" v-else/>
+
+      </transition>
+      <transition name="fade">
+        <AudioRecord v-if="activeAudioRecord"
+                     @closeAudioRecord="canselAudiorecord"
+                     @setAttachments="setAudio"
+                     @sendMessage="send"/>
+
+      </transition>
     </template>
 
   </div>
@@ -282,6 +288,8 @@ export default defineComponent({
   }
 
   .send {
+    position: absolute;
+    right: 10px;
   }
 }
 </style>

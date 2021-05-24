@@ -18,7 +18,7 @@
 <script lang="ts">
 import {computed, defineComponent, reactive, watch} from "vue";
 import notificationService from "@/services/notificationService";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {useAuthStore} from "@/store";
 import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
@@ -35,6 +35,7 @@ export default defineComponent({
 
     const auth = useAuthStore();
     const router = useRouter();
+    const route = useRoute()
 
     const {
       validateEmailField,
@@ -55,6 +56,10 @@ export default defineComponent({
           })
           .then(() => {
             notificationService.success("Authorized");
+            if (route.query.next) {
+              router.push({path: route.query.next})
+              return
+            }
             router.push({name: 'Home'});
           });
       }

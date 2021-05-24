@@ -124,7 +124,7 @@ export default defineComponent({
   }
 
   &__primary {
-    background: $color_blue;
+    background: $primary;
   }
 
   &__danger {
@@ -141,8 +141,8 @@ export default defineComponent({
 
   &__outline {
     background: white;
-    color: $color_blue;
-    border: 1px solid $color_blue;
+    color: $primary;
+    border: 1px solid $primary;
 
     &:hover {
       opacity: 1;
@@ -155,10 +155,10 @@ export default defineComponent({
 
     svg {
       width: 25px;
-      fill: $color_blue;
+      fill: $primary;
 
       /deep/ path {
-        fill: $color_blue;
+        fill: $primary;
 
       }
     }

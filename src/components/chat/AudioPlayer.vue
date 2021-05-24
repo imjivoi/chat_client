@@ -99,20 +99,34 @@ export default {
 
   input {
     width: 100%;
+    background: #f3f3fb;
+    border-radius: 10px;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+
+  }
+
+  input::-webkit-slider-thumb {
+    background: $primary;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
   }
 }
 
 .timeline {
   width: 80%;
   height: 1px;
-  background-color: #2a8bf247;
+  background-color: $primary;
 }
 
 .current-time, .duration-time {
   position: absolute;
   left: 40px;
   bottom: 0;
-  color: #2a8bf2;
+  color: $primary;
   font-size: 12px;
 }
 

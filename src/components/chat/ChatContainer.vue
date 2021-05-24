@@ -99,7 +99,12 @@ export default defineComponent({
   setup(props) {
     const {chat} = toRefs(props)
     const content = ref()
-    const {pickedMsg, deleteMessage, openEditMessage} = useChatInput()
+    const {
+      pickedMsg,
+      deleteMessage,
+      openEditMessage,
+      closeEditMsg
+    } = useChatInput()
 
 
     const
@@ -126,6 +131,7 @@ export default defineComponent({
       if (pickedMsg.value?._id && confirm('Do you really want to delete message?')) {
         deleteMessage(pickedMsg.value._id)
         pickedMsg.value = null
+        closeEditMsg()
       }
     }
 
@@ -201,7 +207,7 @@ export default defineComponent({
 
   .chat__status {
     font-size: 12px;
-    color: $color_blue;
+    color: $primary;
     font-weight: 500;
   }
 
