@@ -24,6 +24,7 @@
             :avatar="participant.user.avatar"
             :participant-id="participant._id"
             :is-request="true"
+            :is-admin="isAdmin(participant._id)"
             @update="updateParticipant"
 
           />
@@ -81,6 +82,10 @@ export default defineComponent({
         imAdmin
       } = useChatData()
 
+    function isAdmin(userId: string) {
+      return userId === currentChat.value?.admin._id
+    }
+
     return {
       acceptedParticipants,
       requests,
@@ -90,7 +95,9 @@ export default defineComponent({
       copyLink,
       isValidInviteLink,
       updateInvite,
-      updateParticipant, imAdmin
+      updateParticipant,
+      imAdmin,
+      isAdmin
     }
   }
 })

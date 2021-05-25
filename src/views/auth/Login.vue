@@ -56,8 +56,9 @@ export default defineComponent({
           })
           .then(() => {
             notificationService.success("Authorized");
-            if (route.query.next) {
-              router.push({path: route.query.next})
+            const next = route.query.next
+            if (next && typeof next === 'string') {
+              router.push({path: next})
               return
             }
             router.push({name: 'Home'});

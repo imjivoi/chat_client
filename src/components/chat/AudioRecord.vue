@@ -3,6 +3,15 @@
     <div class="audio-record__content" v-if="mediaRecorder">
       <div class="audio-record__overlay bg-blur" ref="overlay"
       >
+        <div class="waves">
+          <div class="sonar-emitter">
+            <transition-group name="fade">
+              <div class="sonar-wave sonar-wave--anim"
+                   v-for="i in volume" key="i"></div>
+
+            </transition-group>
+          </div>
+        </div>
         <div class="flex " style="align-items: baseline"><p class="mr-1">
           Recording</p>
           <div class="dot-pulse"></div>
@@ -23,7 +32,6 @@
 <script>
 import notificationService from "@/services/notificationService";
 import Button from "@/components/ui/Button";
-//todo:аудиометр
 export default {
   name: "AudioRecord",
   components: {Button},
@@ -33,7 +41,9 @@ export default {
     interval: null,
     mediaRecorder: null,
     status: '',
-    isSending: false
+    isSending: false,
+    volume: null,
+    jsNode: null
   }),
   methods: {
 
@@ -70,12 +80,41 @@ export default {
       setTimeout(() => this.$emit("sendMessage"), 500
       )
 
+    },
+    createAnalyzer(stream) {
+      const audioContext = new AudioContext();
+      const analyser = audioContext.createAnalyser();
+      const microphone = audioContext.createMediaStreamSource(stream);
+      this.jsNode = audioContext.createScriptProcessor(2048, 1, 1);
+
+      analyser.smoothingTimeConstant = 0.8;
+      analyser.fftSize = 1024;
+
+      microphone.connect(analyser);
+      analyser.connect(this.jsNode);
+      this.jsNode.connect(audioContext.destination);
+      this.jsNode.addEventListener('audioprocess', () => {
+        const array = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(array);
+        let values = 0;
+
+        const length = array.length;
+        for (let i = 0; i < length; i++) {
+          values += (array[i]);
+        }
+
+        const average = values / length;
+
+        this.volume = Math.round(average);
+      })
+
     }
   },
   mounted() {
     window.navigator.mediaDevices
       .getUserMedia({audio: true})
       .then((stream) => {
+        this.createAnalyzer(stream)
         this.interval = setInterval(() => this.timeCycle(), 1000
         )
         this.mediaRecorder = new MediaRecorder(stream);
@@ -96,12 +135,14 @@ export default {
   },
   beforeMount() {
     this.mediaRecorder = null;
+    this.volume = null;
+    this.jsNode = null
   },
   watch: {
     seconds: function () {
-      // if (parseInt(this.seconds) === 30) {
-      //   this.send()
-      // }
+      if (parseInt(this.seconds) === 30) {
+        // this.send()
+      }
     }
   }
 }
@@ -160,6 +201,47 @@ export default {
 
     &:hover {
       transform: scale(1.3);
+    }
+  }
+}
+
+.waves {
+  position: absolute;
+
+  .sonar-emitter {
+    position: relative;
+    margin: 32px auto;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background-color: transparent;
+  }
+
+  .sonar-wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: $primary;
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+    transition: all .4s;
+  }
+
+  .sonar-wave--anim {
+    animation: sonarWave 2s linear infinite;
+  }
+
+  @keyframes sonarWave {
+    from {
+      opacity: 0.7;
+    }
+    to {
+      transform: scale(2);
+      opacity: 0;
     }
   }
 }

@@ -26,7 +26,7 @@ export const useAuthStore = defineStore({
             resolve(res.data);
           })
           .catch(error => {
-            notificationService.error(error.response.data.detail);
+            notificationService.error(error.response?.data?.detail ?? 'Something went wrong');
             reject(error);
           });
         this.isLoading = false;
