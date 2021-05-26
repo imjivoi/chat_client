@@ -43,9 +43,10 @@
         </div>
       </div>
     </div>
-    <div v-else class="mt-5" style="height:88%">
-      <h3>Click button to create chat</h3>
-      <Button class="mt-2" label="Create chat" @click="showModal"/>
+    <div v-else class="mt-5" style="height:88%;text-align: center">
+      <h3>You have not chats yet</h3>
+      <Button style="margin: 20px auto 0" label="Create chat"
+              @click="showModal"/>
     </div>
   </template>
 </template>

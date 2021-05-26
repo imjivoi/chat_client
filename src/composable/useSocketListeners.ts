@@ -85,8 +85,11 @@ export default function () {
                                                    chat_id,
                                                    participant_id
                                                  }: { chat_id: string, participant_id: string }) => {
+
       const chat = getCurrentChat(chat_id)
-      chat.participants = chat?.participants.filter((participant: IParticipant) => participant._id !== participant_id)
+      chat.participants = chat.participants.filter((participant: IParticipant) => {
+        return participant._id !== participant_id
+      })
     })
   }
 

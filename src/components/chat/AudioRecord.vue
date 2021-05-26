@@ -30,11 +30,13 @@
 </template>
 
 <script>
+import AudioVisualizer from "@/components/common/AudioVisualizer";
 import notificationService from "@/services/notificationService";
 import Button from "@/components/ui/Button";
+
 export default {
   name: "AudioRecord",
-  components: {Button},
+  components: {Button, AudioVisualizer},
   data: () => ({
     minutes: '00',
     seconds: '00',
@@ -42,7 +44,7 @@ export default {
     mediaRecorder: null,
     status: '',
     isSending: false,
-    volume: null,
+    volume: 0,
     jsNode: null
   }),
   methods: {

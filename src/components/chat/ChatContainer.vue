@@ -166,6 +166,7 @@ export default defineComponent({
   background: #fff;
   box-shadow: $box_shadow;
   height: calc(100vh - 120px);
+  border-radius: 10px;
 }
 
 .chat__header {

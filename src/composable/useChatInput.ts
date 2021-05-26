@@ -58,10 +58,10 @@ export default function useChatInput() {
       e.preventDefault();
     }
     if (
-      (message.value && message.value.trim() === "") ||
+      (!message.value || message.value.trim() === "") ||
       (!attachments.value && !message.value)
     ) {
-      return
+      return {status: true}
     }
     typing.value = false;
 

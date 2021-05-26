@@ -21,8 +21,10 @@ import Trash from "./Trash.vue"
 import Play from "./Play.vue"
 import Pause from "./Pause.vue"
 import Close from "./Close.vue"
+import MoreVertical from "./MoreVertical.vue"
 
 export {
+  MoreVertical,
   Close,
   Pause,
   Play,
