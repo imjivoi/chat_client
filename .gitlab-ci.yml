@@ -4,6 +4,8 @@ services:
 stages:
   - build
   - deploy
+variables:
+  DOCKER_HOST: tcp://localhost:2375/
 step-deploy-prod:
   stage: deploy
   only:
