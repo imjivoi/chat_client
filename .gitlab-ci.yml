@@ -1,11 +1,12 @@
 image: docker
 services:
-  - docker:dind
+  - name: docker:dind
+    alias: thedockerhost
 stages:
   - build
   - deploy
 variables:
-  DOCKER_HOST: tcp://localhost:2375/
+  DOCKER_HOST: tcp://thedockerhost:2375/
 step-deploy-prod:
   stage: deploy
   only:
