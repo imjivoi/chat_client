@@ -9,5 +9,5 @@ step-deploy-prod:
   only:
     - dev
   script:
-    - docker build -t app/chat-client.
+    - docker build -t chat-client .
     - docker run -d -p 80:80 --rm --name chat-client app/chat-client
