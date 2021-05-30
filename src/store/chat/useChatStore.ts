@@ -42,7 +42,7 @@ export const useChatStore = defineStore({
       this.isLoading = true;
       try {
         const { data } = await chatAPI.getInvite(chat_id);
-        const chat = this.list.find((chat: IChatItem) => chat._id === chat_id);
+        const chat = this.list.find((chat: IChatItem) => String(chat._id) === chat_id);
 
         if (data && chat) {
           chat.invite = data;
@@ -52,7 +52,7 @@ export const useChatStore = defineStore({
     },
     async CREATE_INVITE(id: string | string[], expiresAt?: number) {
       const { data } = await chatAPI.createInvite(id, expiresAt);
-      let chat = this.list.find((chat: IChatItem) => chat._id === id);
+      let chat = this.list.find((chat: IChatItem) => String(chat._id) === id);
       if (chat) {
         chat.invite = data;
       }
