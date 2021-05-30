@@ -1,5 +1,5 @@
-import { IUserData } from "../../auth/types/user";
-import {IChatItem, IParticipant} from "@/store/chat/types/chat";
+import { IUserData } from '../../auth/types/user';
+import { IChatItem, IParticipant } from '@/store/chat/types/chat';
 
 export interface IMessage {
   sender?: IParticipant;
@@ -8,7 +8,7 @@ export interface IMessage {
   updatedAt?: string;
   text: string | null;
   attachment?: any | null;
-  _id?: string;
+  _id?: string | number;
   isReaded?: boolean;
 }
 

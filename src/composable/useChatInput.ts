@@ -1,20 +1,19 @@
-import {ChatSocketEvents} from "@/store/chat/types/chat-socket";
-import {toBase64} from "@/utils/base64encryption";
-import {computed, inject, ref, Ref, watch} from "vue";
-import {Socket} from "socket.io"
-import notificationService from "@/services/notificationService";
-import {useChatData} from "@/composable/index";
-import {IMessage} from "@/store/chat/types/message";
+import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
+import { toBase64 } from '@/utils/base64encryption';
+import { computed, inject, ref, Ref, watch } from 'vue';
+import { Socket } from 'socket.io';
+import notificationService from '@/services/notificationService';
+import { useChatData } from '@/composable/index';
+import { IMessage } from '@/store/chat/types/message';
 
-const isEditMsgOpen = ref(false)
-const pickedMsg = ref<IMessage | null>(null)
+const isEditMsgOpen = ref(false);
+const pickedMsg = ref<IMessage | null>(null);
 const message = ref<string | null>(null);
 const typing = ref<boolean>(false);
 
-
 export interface IEmittedEventStatus {
-  status: Boolean,
-  message: string
+  status: Boolean;
+  message: string;
 }
 
 export default function useChatInput() {
@@ -22,20 +21,19 @@ export default function useChatInput() {
   const activeEmojiPicker = ref<boolean>(false);
   const activeAudioRecord = ref<boolean>(false);
   const timeout = ref<any | null>(null);
-  const textarea = ref()
-  const socket = inject('socket') as Ref<Socket>
+  const textarea = ref();
+  const socket = inject('socket') as Ref<Socket>;
 
-
-  const {currentParticipant, currentChat} = useChatData()
+  const { currentParticipant, currentChat } = useChatData();
 
   const attachmentsUrl = computed(() => {
-
+    console.log(attachments.value);
     const result = attachments.value?.map((attachment: any) => {
+      console.log(attachment.type);
       if (attachment.type.includes('image')) {
-
-        return URL.createObjectURL(attachment)
+        return URL.createObjectURL(attachment);
       }
-    })
+    });
     return result?.filter(Boolean);
   });
 
@@ -44,58 +42,52 @@ export default function useChatInput() {
 
     if (attachments.value?.length) {
       for (let i = 0; i < attachments.value.length; i++) {
-        await toBase64(attachments.value[i])
-          .then((res: any) =>
-            attachArray.push(res)
-          );
+        await toBase64(attachments.value[i]).then((res: any) => attachArray.push(res));
       }
     }
-    return attachArray
+    return attachArray;
   }
 
   async function sendMessage(e: any): Promise<IEmittedEventStatus | any> {
+    console.log(11);
     if (!e?.shiftKey && e?.which === 13) {
       e.preventDefault();
     }
-    if (
-      (!message.value || message.value.trim() === "") ||
-      (!attachments.value && !message.value)
-    ) {
-      return {status: true}
+    if (!message.value?.trim().length && !attachments.value.length) {
+      return { status: true };
     }
     typing.value = false;
 
     activeEmojiPicker.value = false;
 
-    const attachmentsResult = await getBase64ArrayAttachments()
+    const attachmentsResult = await getBase64ArrayAttachments();
     const data = {
       text: message.value,
       chat_id: currentChat.value?._id,
       attachments: attachmentsResult,
-    }
-    console.log(data)
-    textarea.value.focus()
+    };
+    console.log(data);
+    textarea.value.focus();
     message.value = null;
     attachments.value = [];
-    return new Promise(resolve => socket.value.emit(
-      ChatSocketEvents.NEW_MESSAGE, data, (response: IEmittedEventStatus) =>
-        resolve(response)
-    )) as Promise<IEmittedEventStatus>
+    return new Promise(resolve =>
+      socket.value.emit(ChatSocketEvents.NEW_MESSAGE, data, (response: IEmittedEventStatus) =>
+        resolve(response),
+      ),
+    ) as Promise<IEmittedEventStatus>;
   }
 
   function setAttachments(files: any) {
-    if (files.length > 5) return notificationService.error('Can be uploaded more 5 images')
-    if (Array.isArray(files)) {
-      attachments.value = [...files];
+    if (files.length > 5) return notificationService.error('Can be uploaded more 5 images');
+    if (files.length && files[0]) {
+      attachments.value = [].concat(...files);
     } else {
       attachments.value.push(files);
     }
   }
 
   function deleteFile(index: number | 'all') {
-    typeof index === 'number'
-      ? attachments.value?.splice(index, 1)
-      : attachments.value = []
+    typeof index === 'number' ? attachments.value?.splice(index, 1) : (attachments.value = []);
   }
 
   function setEmoji(emoji: any) {
@@ -107,68 +99,66 @@ export default function useChatInput() {
       chat_id: currentChat.value?._id,
       status,
       participant_id: currentParticipant.value?._id,
-      isAudio
+      isAudio,
     });
   }
 
   function createChat(name: string): Promise<IEmittedEventStatus> {
     return new Promise(resolve => {
-      socket.value.emit(ChatSocketEvents.CREATE_CHAT,
-        {name}, (response: IEmittedEventStatus) => resolve(response
-        ))
-    })
+      socket.value.emit(ChatSocketEvents.CREATE_CHAT, { name }, (response: IEmittedEventStatus) =>
+        resolve(response),
+      );
+    });
   }
 
-  function readMessage(message_id: string) {
-    socket.value.emit(ChatSocketEvents.READ_MESSAGE, {chat_id: currentChat.value?._id, message_id})
+  function readMessage(message_id: string | number) {
+    socket.value.emit(ChatSocketEvents.READ_MESSAGE, {
+      chat_id: currentChat.value?._id,
+      message_id,
+    });
   }
 
   function readMessages() {
-    socket.value.emit(ChatSocketEvents.READ_MESSAGES, {chat_id: currentChat.value?._id})
+    socket.value.emit(ChatSocketEvents.READ_MESSAGES, { chat_id: currentChat.value?._id });
   }
 
-  function deleteMessage(message_id: string) {
+  function deleteMessage(message_id: string | number) {
     socket.value.emit(ChatSocketEvents.DELETE_MESSAGE, {
       message_id,
-      chat_id: currentChat.value?._id
-    })
+      chat_id: currentChat.value?._id,
+    });
   }
 
   function closeEditMsg() {
-    pickedMsg.value = null
-    isEditMsgOpen.value = false
-    message.value = null
-
+    pickedMsg.value = null;
+    isEditMsgOpen.value = false;
+    message.value = null;
   }
 
   function updateMessage() {
     socket.value.emit(ChatSocketEvents.UPDATE_MESSAGE, {
       message_id: pickedMsg.value?._id,
       text: message.value,
-      chat_id: currentChat.value?._id
-    })
-    closeEditMsg()
+      chat_id: currentChat.value?._id,
+    });
+    closeEditMsg();
   }
 
   function openEditMessage() {
     if (pickedMsg.value?.text) {
-      isEditMsgOpen.value = true
-      message.value = pickedMsg.value?.text
-
+      isEditMsgOpen.value = true;
+      message.value = pickedMsg.value?.text;
     }
-
   }
-
 
   watch(activeAudioRecord, () => {
     if (activeAudioRecord.value) {
-      sendTyping(true, true)
-      return
+      sendTyping(true, true);
+      return;
     }
 
-    sendTyping(false, true)
-  })
-
+    sendTyping(false, true);
+  });
 
   return {
     message,
@@ -192,6 +182,6 @@ export default function useChatInput() {
     updateMessage,
     isEditMsgOpen,
     openEditMessage,
-    closeEditMsg
+    closeEditMsg,
   };
 }

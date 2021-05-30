@@ -10,20 +10,9 @@
         </div>
       </div>
       <div class="chat__options" v-if="pickedMsg">
-        <Button is-icon icon="edit" @click="openEditMessage"/>
-        <Button is-icon icon="trash"
-                @click="deleteMsg"/>
-
-        <!--        <el-popconfirm-->
-        <!--          title="Are you sure to delete this message?"-->
-        <!--          @confirm="deleteMsg"-->
-        <!--        >-->
-        <!--          <template #reference>-->
-        <!--            <el-button icon="el-icon-delete-solid" circle></el-button>-->
-        <!--          </template>-->
-        <!--        </el-popconfirm>-->
+        <Button is-icon icon="edit" @click="openEditMessage" />
+        <Button is-icon icon="trash" @click="deleteMsg" />
       </div>
-
     </div>
     <div class="chat__messages">
       <div ref="content" class="chat__messages-content">
@@ -32,51 +21,41 @@
             v-for="message in chat.messages"
             :key="message._id"
             :messageData="message"
-            :is-me="message.sender._id===currentParticipant._id"
-            :is-picked="pickedMsg?._id===message._id"
+            :is-me="message.sender._id === currentParticipant._id"
+            :is-picked="pickedMsg?._id === message._id"
             @pickMsg="pickMsg"
           />
-
         </transition-group>
         <TypingMessage
-          v-if="chat.typing?.status && typingUser._id!==currentParticipant._id"
+          v-if="chat.typing?.status && typingUser._id !== currentParticipant._id"
           :username="typingUser.user.username"
           :is-audio="chat.typing.isAudio"
         />
       </div>
     </div>
-    <ChatInput/>
-
+    <ChatInput />
   </div>
 
-  <Spinner v-else/>
+  <Spinner v-else />
 </template>
 
 <script lang="ts">
-import TypingMessage from "./TypingMessage.vue"
-import OptionsIcon from "../icons/Options.vue";
-import AdjustmentIcon from "../icons/Adjustment.vue";
-import Spinner from "../common/Spinner.vue";
-import Message from "../chat/Message.vue";
-import ChatInput from "../chat/ChatInput.vue";
+import TypingMessage from './TypingMessage.vue';
+import OptionsIcon from '../icons/Options.vue';
+import AdjustmentIcon from '../icons/Adjustment.vue';
+import Spinner from '../common/Spinner.vue';
+import Message from '../chat/Message.vue';
+import ChatInput from '../chat/ChatInput.vue';
 
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  PropType,
-  ref,
-  toRefs,
-  watch
-} from "vue";
-import {IChatItem, IParticipant} from "@/store/chat/types/chat";
-import {onMounted} from "@vue/runtime-core";
-import {useChatInput} from "@/composable";
-import {IMessage} from "@/store/chat/types/message";
-import Button from "@/components/ui/Button.vue";
+import { computed, defineComponent, nextTick, PropType, ref, toRefs, watch } from 'vue';
+import { IChatItem, IParticipant } from '@/store/chat/types/chat';
+import { onMounted } from '@vue/runtime-core';
+import { useChatInput } from '@/composable';
+import { IMessage } from '@/store/chat/types/message';
+import Button from '@/components/ui/Button.vue';
 
 export default defineComponent({
-  name: "ChatContainer",
+  name: 'ChatContainer',
   components: {
     Button,
     ChatInput,
@@ -84,75 +63,68 @@ export default defineComponent({
     Spinner,
     AdjustmentIcon,
     OptionsIcon,
-    TypingMessage
+    TypingMessage,
   },
   props: {
     chat: {
       type: Object as PropType<IChatItem>,
-      required: true
+      required: true,
     },
     currentParticipant: {
       type: Object as PropType<IParticipant>,
-      required: true
-    }
+      required: true,
+    },
   },
   setup(props) {
-    const {chat} = toRefs(props)
-    const content = ref()
-    const {
-      pickedMsg,
-      deleteMessage,
-      openEditMessage,
-      closeEditMsg
-    } = useChatInput()
+    const { chat } = toRefs(props);
+    const content = ref();
+    const { pickedMsg, deleteMessage, openEditMessage, closeEditMsg } = useChatInput();
 
-
-    const
-      typingUser = computed(() =>
-        chat.value.participants.find(participant =>
-          participant._id === chat.value.typing?.participant_id))
+    const typingUser = computed(() =>
+      chat.value.participants.find(
+        participant => participant._id === chat.value.typing?.participant_id,
+      ),
+    );
 
     function toBottom() {
       nextTick(() => {
-        if (content.value)
-          content.value.scrollTop = content.value.scrollHeight;
+        if (content.value) content.value.scrollTop = content.value.scrollHeight;
       });
     }
 
     function pickMsg(message: IMessage) {
       if (pickedMsg.value?._id === message._id) {
-        pickedMsg.value = null
-        return
+        pickedMsg.value = null;
+        return;
       }
-      pickedMsg.value = message
+      pickedMsg.value = message;
     }
 
     function deleteMsg() {
       if (pickedMsg.value?._id && confirm('Do you really want to delete message?')) {
-        deleteMessage(pickedMsg.value._id)
-        pickedMsg.value = null
-        closeEditMsg()
+        deleteMessage(pickedMsg.value._id);
+        pickedMsg.value = null;
+        closeEditMsg();
       }
     }
 
+    onMounted(() => toBottom());
 
-    onMounted(() => toBottom())
-
-    watch(chat, () => {
-      toBottom();
-    }, {deep: true, immediate: true});
-
+    watch(
+      chat,
+      () => {
+        toBottom();
+      },
+      { deep: true, immediate: true },
+    );
 
     return {
-
       content,
       typingUser,
       pickedMsg,
       pickMsg,
       deleteMsg,
       openEditMessage,
-
-
     };
   },
 });
@@ -220,9 +192,8 @@ export default defineComponent({
       width: 60px;
       background: #fff;
       border: none;
-      box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.03),
-      0px 7px 25px rgba(42, 139, 242, 0.03),
-      0px 5px 25px rgba(42, 139, 242, 0.07);
+      box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.03), 0px 7px 25px rgba(42, 139, 242, 0.03),
+        0px 5px 25px rgba(42, 139, 242, 0.07);
       display: flex;
       justify-content: center;
       align-items: center;
