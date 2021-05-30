@@ -1,5 +1,5 @@
 export default {
+  serverHost: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_SERVER_HOST : '',
   apiUrl: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_BASE_URL : '/api',
-  socketUrl:
-    process.env.NODE_ENV === 'development' ? process.env.VUE_APP_SOCKET_URL || '127.0.0.1:80' : '',
+  socketUrl: process.env.VUE_APP_SOCKET_URL || '127.0.0.1:60',
 };

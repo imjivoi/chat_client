@@ -1,29 +1,28 @@
 <template>
-  <div class="message" :class="{ messageMe: isMe }"
-       @contextmenu.prevent="handleRightClick"
-       ref="message">
+  <div
+    class="message"
+    :class="{ messageMe: isMe }"
+    @contextmenu.prevent="handleRightClick"
+    ref="message"
+  >
     <div class="message__container">
-
-
-      <div class="message__content"
-           :style="{background: isPicked ? '#707c979e' : ''}">
+      <div class="message__content" :style="{ background: isPicked ? '#707c979e' : '' }">
         <div
           class="message__text"
-          :style="hasAttachment ? `margin-bottom:10px` :
-         ''"
+          :style="hasAttachment ? `margin-bottom:10px` : ''"
           v-if="messageData.text"
         >
           <p>{{ messageData.text }}</p>
         </div>
-        <div class="message__attachments" v-if="hasAttachment ">
+        <div class="message__attachments" v-if="hasAttachment">
           <ul>
             <li v-for="i in attachments" :key="i">
-
-              <img :src="baseUrl + '/'+i.file" alt=""
-                   v-if="i.type.includes('image')"/>
-              <AudioPlayer v-if="i.type.includes('audio') " :src="audioSrc"
-                           :color="isMe ? '' :
-            '#fff'"/>
+              <img :src="baseUrl + '/' + i.file" alt="" v-if="i.type.includes('image')" />
+              <AudioPlayer
+                v-if="i.type.includes('audio')"
+                :src="audioSrc"
+                :color="isMe ? '' : '#fff'"
+              />
             </li>
           </ul>
         </div>
@@ -32,40 +31,34 @@
         </div>
       </div>
       <div class="message__user-avatar">
-        <Avatar :image="messageData.sender.user.avatar "
-                :nickname="messageData.sender.user.username"/>
-
+        <Avatar
+          :image="messageData.sender.user.avatar"
+          :nickname="messageData.sender.user.username"
+        />
       </div>
       <div class="message__readed">
         <transition name="fade">
-          <i
-            class="el-icon-check check"
-
-            v-if="messageData.isReaded"
-          ></i>
+          <i class="el-icon-check check" v-if="messageData.isReaded"></i>
         </transition>
-
-
       </div>
-
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import AudioPlayer from "./AudioPlayer.vue"
-import Modal from "../common/Modal.vue";
-import {formatDistanceToNow} from "date-fns";
+import AudioPlayer from './AudioPlayer.vue';
+import Modal from '../common/Modal.vue';
+import { formatDistanceToNow } from 'date-fns';
 //@ts-ignore
-import ClickOutside from "vue-click-outside";
+import ClickOutside from 'vue-click-outside';
 
-import {computed, defineComponent, PropType, ref, toRefs} from "vue";
-import {IMessage} from "@/store/chat/types/message";
-import Avatar from "@/components/ui/Avatar.vue";
+import { computed, defineComponent, PropType, ref, toRefs } from 'vue';
+import { IMessage } from '@/store/chat/types/message';
+import Avatar from '@/components/ui/Avatar.vue';
 
 export default defineComponent({
   name: 'Message',
-  components: {Avatar, Modal, AudioPlayer},
+  components: { Avatar, Modal, AudioPlayer },
   props: {
     messageData: {
       type: Object as PropType<IMessage>,
@@ -78,32 +71,33 @@ export default defineComponent({
     },
     isPicked: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: {
-    pickMsg: null
+    pickMsg: null,
   },
-  setup(props, {emit}) {
-
-    const {messageData, isMe} = toRefs(props)
-    const message = ref<HTMLElement | null>()
+  setup(props, { emit }) {
+    const { messageData, isMe } = toRefs(props);
+    const message = ref<HTMLElement | null>();
     const activeMessageOptions = ref(false);
 
-    const hasAttachment = computed(() => messageData.value.attachment &&
-      messageData.value.attachment.content.length)
-    const attachments = computed(() => messageData.value?.attachment?.content)
+    const hasAttachment = computed(
+      () => messageData.value.attachment && messageData.value.attachment.content.length,
+    );
+    const attachments = computed(() => messageData.value?.attachment?.content);
     const audioSrc = computed(() => {
-      const file = attachments.value?.find((item: any) => item.type === 'audio')
-      return file?.file?.replace('audio', 'audio/webm')
-    })
+      const file = attachments.value?.find((item: any) => item.type === 'audio');
+      return file?.file?.replace('audio', 'audio/webm');
+    });
 
-
-    const baseUrl = process.env.VUE_APP_BASE_URL;
+    const baseUrl = process.env.VUE_APP_SERVER_HOST;
 
     const createdAt = formatDistanceToNow(new Date(messageData.value.createdAt));
-    const updatedAt = computed(() => messageData.value.updatedAt &&
-      formatDistanceToNow(new Date(messageData.value!.updatedAt!)))
+    const updatedAt = computed(
+      () =>
+        messageData.value.updatedAt && formatDistanceToNow(new Date(messageData.value!.updatedAt!)),
+    );
 
     function hideMessageOptions() {
       activeMessageOptions.value = false;
@@ -111,10 +105,9 @@ export default defineComponent({
 
     function handleRightClick() {
       if (isMe.value) {
-        emit('pickMsg', messageData.value)
+        emit('pickMsg', messageData.value);
       }
     }
-
 
     return {
       activeMessageOptions,
@@ -130,7 +123,6 @@ export default defineComponent({
     };
   },
 
-
   directives: {
     ClickOutside,
   },
@@ -139,7 +131,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .message {
-
   &__container {
     margin: 0 auto 50px 0;
     display: flex;
@@ -148,11 +139,9 @@ export default defineComponent({
     width: fit-content;
     max-width: 80%;
     position: relative;
-
   }
 
   &.messageMe {
-
     .message__container {
       margin: 0 30px 35px auto;
       flex-direction: row;
@@ -193,9 +182,7 @@ export default defineComponent({
           right: 0;
         }
       }
-
     }
-
   }
 
   &__options {
@@ -213,9 +200,8 @@ export default defineComponent({
     border-radius: 10px;
     border-bottom-left-radius: 0;
     color: #fff;
-    box-shadow: 10px 10px 25px rgba(42, 139, 242, 0.1),
-    15px 15px 35px rgba(42, 139, 242, 0.05),
-    10px 10px 50px rgba(42, 139, 242, 0.1); // max-width: 90%;
+    box-shadow: 10px 10px 25px rgba(42, 139, 242, 0.1), 15px 15px 35px rgba(42, 139, 242, 0.05),
+      10px 10px 50px rgba(42, 139, 242, 0.1); // max-width: 90%;
     position: relative;
   }
 
@@ -288,10 +274,10 @@ export default defineComponent({
     right: -25px;
     bottom: 0;
 
-    .check, .double-check {
+    .check,
+    .double-check {
       color: $primary;
       position: relative;
-
     }
 
     .double-check {

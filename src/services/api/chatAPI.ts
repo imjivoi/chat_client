@@ -1,16 +1,16 @@
-import {HTTP} from "../../utils/axios";
+import { HTTP } from '../../utils/axios';
 
-const url = "/chats/";
+const url = '/chats/';
 
 export interface ICreateChatData {
   title?: string;
 }
 
 export interface IUpdateParticipant {
-  accepted?: boolean,
-  blocked?: boolean,
-  chat_id: string,
-  participant_id: string
+  accepted?: boolean;
+  blocked?: boolean;
+  chat_id: string | number;
+  participant_id: string | number;
 }
 
 export default {
@@ -24,44 +24,46 @@ export default {
   deleteChat(id: string | null) {
     return HTTP.delete(`${url}?id=${id}`);
   },
-  exitFromChat(chat_id: string | null) {
-    return HTTP.put(url + "exit/", {chat_id: chat_id});
+  exitFromChat(chat_id: string | number | null) {
+    return HTTP.put(url + 'exit/', { chat_id: chat_id });
   },
-  deleteUserFromChat(chat_id: string, user_id: string) {
+  deleteUserFromChat(chat_id: string | number, user_id: string | number) {
     return HTTP.delete(`${url}+delete/?chat_id=${chat_id}&user_id=${user_id}`);
   },
-  addUserToChat(chat_id: string, user_id: string) {
-    return HTTP.put(url + "add/", {
+  addUserToChat(chat_id: string | number, user_id: string | number) {
+    return HTTP.put(url + 'add/', {
       user_id: user_id,
       chat_id: chat_id,
     });
   },
-  changeChatTitle(chat_id: string, title: string) {
+  changeChatTitle(chat_id: string | number, title: string) {
     return HTTP.put(url, {
       title: title,
       chat_id: chat_id,
     });
   },
-  getMessages(chat_id: string | string[]) {
+  getMessages(chat_id: string | number | string[]) {
     return HTTP.get(`${url}messages/${chat_id}`);
   },
-  createInvite(chat_id: string | string[], expiresAt?: number) {
+  createInvite(chat_id: string | number | string[], expiresAt?: number) {
     return HTTP.post(url + 'invite', {
-      chat_id, expiresAt
-    })
+      chat_id,
+      expiresAt,
+    });
   },
   requestInvite(key: string | string[]) {
-    return HTTP.get(`${url}invite/${key}`)
+    return HTTP.get(`${url}invite/${key}`);
   },
-  getInvite(chat_id: string | string[]) {
-    return HTTP.get(`${url}get-invite/${chat_id}`)
+  getInvite(chat_id: string | number | string[]) {
+    return HTTP.get(`${url}get-invite/${chat_id}`);
   },
-  updateInvite(chat_id: string | string[], expiresAt?: number) {
+  updateInvite(chat_id: string | number | string[], expiresAt?: number) {
     return HTTP.put(url + 'invite', {
-      chat_id, expiresAt
-    })
+      chat_id,
+      expiresAt,
+    });
   },
   updateParticipant(data: IUpdateParticipant) {
-    return HTTP.put(url + 'participant', data)
-  }
+    return HTTP.put(url + 'participant', data);
+  },
 };

@@ -1,18 +1,18 @@
-import router from "@/router";
-import chatAPI, {ICreateChatData, IUpdateParticipant} from "@/services/api/chatAPI";
-import {defineStore} from "pinia";
-import {state} from "./state";
-import {IChatItem} from "@/store/chat/types/chat";
+import router from '@/router';
+import chatAPI, { ICreateChatData, IUpdateParticipant } from '@/services/api/chatAPI';
+import { defineStore } from 'pinia';
+import { state } from './state';
+import { IChatItem } from '@/store/chat/types/chat';
 
 export const useChatStore = defineStore({
-  id: "chat",
+  id: 'chat',
   state: () => state,
   actions: {
     GET_CHATS() {
       return new Promise(async (resolve, reject) => {
         try {
           this.isLoading = true;
-          const {data} = await chatAPI.getChats();
+          const { data } = await chatAPI.getChats();
           this.list = data;
           resolve(data);
         } catch (error) {
@@ -38,79 +38,75 @@ export const useChatStore = defineStore({
         }
       });
     },
-    async GET_INVITE(chat_id: string | string[]) {
-      this.isLoading = true
+    async GET_INVITE(chat_id: string | number | string[]) {
+      this.isLoading = true;
       try {
-        const {data} = await chatAPI.getInvite(chat_id);
-        const chat = this.list.find((chat: IChatItem) => chat._id === chat_id)
+        const { data } = await chatAPI.getInvite(chat_id);
+        const chat = this.list.find((chat: IChatItem) => chat._id === chat_id);
 
         if (data && chat) {
-          chat.invite = data
+          chat.invite = data;
         }
-      } catch (e) {
-
-      }
-      this.isLoading = false
+      } catch (e) {}
+      this.isLoading = false;
     },
-    async CREATE_INVITE(id: string | string[], expiresAt?: number
-    ) {
-      const {data} = await chatAPI.createInvite(id, expiresAt)
-      let chat = this.list.find((chat: IChatItem) => chat._id === id)
+    async CREATE_INVITE(id: string | string[], expiresAt?: number) {
+      const { data } = await chatAPI.createInvite(id, expiresAt);
+      let chat = this.list.find((chat: IChatItem) => chat._id === id);
       if (chat) {
-        chat.invite = data
-
+        chat.invite = data;
       }
     },
 
     async UPDATE_INVITE(id: string | string[], expiresAt?: number) {
-      const {data} = await chatAPI.updateInvite(id, expiresAt)
-      let chat = this.list.find((chat: IChatItem) => chat._id === id)
+      const { data } = await chatAPI.updateInvite(id, expiresAt);
+      let chat = this.list.find((chat: IChatItem) => chat._id === id);
       if (chat) {
-        chat.invite = data
-
+        chat.invite = data;
       }
     },
     SEND_REQUEST(key: string | string[]) {
-      return new Promise((resolve) => {
-        chatAPI.requestInvite(key)
+      return new Promise(resolve => {
+        chatAPI
+          .requestInvite(key)
           .then(res => {
-            resolve(res)
+            resolve(res);
           })
           .catch(e => {
-            const {status, data} = e.response
+            const { status, data } = e.response;
             if (status === 302) {
               router.push({
-                name: 'Chat', params: {
-                  id: data.chat_id
-                }
-              })
+                name: 'Chat',
+                params: {
+                  id: data.chat_id,
+                },
+              });
             } else {
               router.push({
-                name: 'Error', query: {
+                name: 'Error',
+                query: {
                   status: status,
-                  message: data.message
-                }
-              })
+                  message: data.message,
+                },
+              });
             }
-          })
-      })
+          });
+      });
     },
     async UPDATE_PARTICIPANT(participant: IUpdateParticipant) {
       try {
-        await chatAPI.updateParticipant(participant)
-      } catch (e) {
-      }
+        await chatAPI.updateParticipant(participant);
+      } catch (e) {}
     },
-    async GET_MESSAGES(chat_id: string | string[]) {
+    async GET_MESSAGES(chat_id: string | number | string[]) {
       try {
-        const {data} = await chatAPI.getMessages(chat_id)
-        let currentChat = this.list.find((chat: IChatItem) => chat._id === chat_id)
+        const { data } = await chatAPI.getMessages(chat_id);
+        let currentChat = this.list.find((chat: IChatItem) => String(chat._id) === String(chat_id));
+        console.log(currentChat);
         if (currentChat) {
-          currentChat.messages = data
+          currentChat.messages = data;
         }
-      } catch (e) {
-
-      }
-    }
+      } catch (e) {}
+    },
   },
 });
