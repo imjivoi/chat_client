@@ -1,13 +1,16 @@
-image: docker
-services:
-  - docker:dind
+image: node:last
+
 stages:
   - build
   - deploy
-step-deploy-prod:
+step:
   stage: deploy
   only:
     - dev
   script:
-    - docker build -t chat-client .
-    - docker run -d -p 80:80 --rm --name chat-client chat-client
+    - npm config set registry https://registry.npmjs.org
+    - npm i
+    - npm run build
+  artifacts:
+    paths:
+      - dist
