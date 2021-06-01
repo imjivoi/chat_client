@@ -1,19 +1,16 @@
 <template>
   <div class="audio-record">
     <div class="audio-record__content" v-if="mediaRecorder">
-      <div class="audio-record__overlay bg-blur" ref="overlay"
-      >
+      <div class="audio-record__overlay bg-blur" ref="overlay">
         <div class="waves">
           <div class="sonar-emitter">
-            <transition-group name="fade">
-              <div class="sonar-wave sonar-wave--anim"
-                   v-for="i in volume" key="i"></div>
-
-            </transition-group>
+            <div class="sonar-wave " :style="{ transform: `scale(${1 + volume / 50})` }"></div>
           </div>
         </div>
-        <div class="flex " style="align-items: baseline"><p class="mr-1">
-          Recording</p>
+        <div class="flex " style="align-items: baseline">
+          <p class="mr-1">
+            Recording
+          </p>
           <div class="dot-pulse"></div>
         </div>
       </div>
@@ -21,22 +18,21 @@
       <div class="timer" v-if="!isSending">{{ minutes + ' : ' + seconds }}</div>
       <div class="timer" v-else>Sending ...</div>
       <div class="btns">
-        <Button is-icon icon="send" @click="send"/>
-        <Button is-icon icon="micro-off" ref="stopBtn"
-                @click="close"/>
+        <Button is-icon icon="send" @click="send" />
+        <Button is-icon icon="micro-off" ref="stopBtn" @click="close" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import AudioVisualizer from "@/components/common/AudioVisualizer";
-import notificationService from "@/services/notificationService";
-import Button from "@/components/ui/Button";
+import AudioVisualizer from '@/components/common/AudioVisualizer';
+import notificationService from '@/services/notificationService';
+import Button from '@/components/ui/Button';
 
 export default {
-  name: "AudioRecord",
-  components: {Button, AudioVisualizer},
+  name: 'AudioRecord',
+  components: { Button, AudioVisualizer },
   data: () => ({
     minutes: '00',
     seconds: '00',
@@ -45,43 +41,40 @@ export default {
     status: '',
     isSending: false,
     volume: 0,
-    jsNode: null
+    jsNode: null,
   }),
   methods: {
-
     timeCycle() {
       let sec = parseInt(this.seconds);
       let min = parseInt(this.minutes);
-      sec++
+      sec++;
       if (sec === 60) {
         min++;
-        sec = 0
+        sec = 0;
       }
 
-      sec < 10 ? sec = '0' + sec : sec
-      min < 10 ? min = '0' + min : min
+      sec < 10 ? (sec = '0' + sec) : sec;
+      min < 10 ? (min = '0' + min) : min;
 
-      this.minutes = min
-      this.seconds = sec
+      this.minutes = min;
+      this.seconds = sec;
     },
     stopRecord() {
       clearInterval(this.interval);
       this.minutes = 0;
-      this.seconds = 0
+      this.seconds = 0;
       this.mediaRecorder.stop();
     },
     close() {
-      this.stopRecord()
-      this.status = 'cancel'
-      this.$emit("closeAudioRecord");
+      this.stopRecord();
+      this.status = 'cancel';
+      this.$emit('closeAudioRecord');
     },
     send() {
-      this.isSending = true
+      this.isSending = true;
       this.stopRecord();
-      this.status = 'send'
-      setTimeout(() => this.$emit("sendMessage"), 500
-      )
-
+      this.status = 'send';
+      setTimeout(() => this.$emit('sendMessage'), 500);
     },
     createAnalyzer(stream) {
       const audioContext = new AudioContext();
@@ -102,52 +95,46 @@ export default {
 
         const length = array.length;
         for (let i = 0; i < length; i++) {
-          values += (array[i]);
+          values += array[i];
         }
 
         const average = values / length;
 
         this.volume = Math.round(average);
-      })
-
-    }
+      });
+    },
   },
   mounted() {
     window.navigator.mediaDevices
-      .getUserMedia({audio: true})
-      .then((stream) => {
-        this.createAnalyzer(stream)
-        this.interval = setInterval(() => this.timeCycle(), 1000
-        )
+      .getUserMedia({ audio: true })
+      .then(stream => {
+        this.createAnalyzer(stream);
+        this.interval = setInterval(() => this.timeCycle(), 1000);
         this.mediaRecorder = new MediaRecorder(stream);
         this.mediaRecorder.start();
-        this.mediaRecorder.addEventListener("dataavailable", (event) => {
-          const file = new File(
-            new Array(event.data),
-            `audio_${new Date().toString()}.webm`,
-            {
-              type: "audio",
-            }
-          );
-          if (this.status === 'cancel') return
-          this.$emit('setAttachments', file)
-
+        this.mediaRecorder.addEventListener('dataavailable', event => {
+          const file = new File(new Array(event.data), `audio_${new Date().toString()}.webm`, {
+            type: 'audio',
+          });
+          if (this.status === 'cancel') return;
+          this.$emit('setAttachments', file);
         });
-      }).catch(() => notificationService.error('You must allow recording'))
+      })
+      .catch(() => notificationService.error('You must allow recording'));
   },
   beforeMount() {
     this.mediaRecorder = null;
     this.volume = null;
-    this.jsNode = null
+    this.jsNode = null;
   },
   watch: {
-    seconds: function () {
+    seconds: function() {
       if (parseInt(this.seconds) === 30) {
         // this.send()
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -181,7 +168,7 @@ export default {
 
     p {
       font-size: 48px;
-      FONT-WEIGHT: 600;
+      font-weight: 600;
       color: #9880ff;
     }
   }
@@ -198,7 +185,7 @@ export default {
   display: flex;
 
   button {
-    transition: all .4s;
+    transition: all 0.4s;
     margin: 0 10px 0 0;
 
     &:hover {
@@ -213,8 +200,8 @@ export default {
   .sonar-emitter {
     position: relative;
     margin: 32px auto;
-    width: 320px;
-    height: 320px;
+    width: 400px;
+    height: 400px;
     border-radius: 50%;
     background-color: transparent;
   }
@@ -227,10 +214,11 @@ export default {
     height: 100%;
     border-radius: 50%;
     background-color: $primary;
-    opacity: 0;
+    opacity: 0.7;
     z-index: -1;
     pointer-events: none;
-    transition: all .4s;
+    transition: all 0.1s;
+    transform: scale(1);
   }
 
   .sonar-wave--anim {
@@ -258,10 +246,11 @@ export default {
   color: #9880ff;
   box-shadow: 9999px 0 0 -5px #9880ff;
   animation: dotPulse 1.5s infinite linear;
-  animation-delay: .25s;
+  animation-delay: 0.25s;
 }
 
-.dot-pulse::before, .dot-pulse::after {
+.dot-pulse::before,
+.dot-pulse::after {
   content: '';
   display: inline-block;
   position: absolute;
@@ -283,7 +272,7 @@ export default {
 .dot-pulse::after {
   box-shadow: 10014px 0 0 -5px #9880ff;
   animation: dotPulseAfter 1.5s infinite linear;
-  animation-delay: .5s;
+  animation-delay: 0.5s;
 }
 
 @keyframes dotPulseBefore {
@@ -324,5 +313,4 @@ export default {
     box-shadow: 10014px 0 0 -5px #9880ff;
   }
 }
-
 </style>

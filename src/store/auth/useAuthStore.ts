@@ -1,15 +1,15 @@
-import authAPI from "@/services/api/authAPI";
-import {defineStore} from "pinia";
-import {VueCookieNext} from "vue-cookie-next";
-import notificationService from "@/services/notificationService";
-import router from "@/router";
-import {IAuth} from "./types/user";
-import {state} from "./state";
-import {getDefaultState} from "./default-state";
-import {setAuthHeader} from "@/utils/axios";
+import authAPI from '@/services/api/authAPI';
+import { defineStore } from 'pinia';
+import { VueCookieNext } from 'vue-cookie-next';
+import notificationService from '@/services/notificationService';
+import router from '@/router';
+import { IAuth } from './types/user';
+import { state } from './state';
+import { getDefaultState } from './default-state';
+import { setAuthHeader } from '@/utils/axios';
 
 export const useAuthStore = defineStore({
-  id: "auth",
+  id: 'auth',
   state: () => state,
   actions: {
     GET_AUTH(payload: IAuth) {
@@ -18,7 +18,7 @@ export const useAuthStore = defineStore({
         authAPI
           .getToken(payload)
           .then(res => {
-            VueCookieNext.setCookie("accessToken", res.data.accessToken);
+            VueCookieNext.setCookie('accessToken', res.data.accessToken);
             this.isLogged = true;
             setAuthHeader(res.data.accessToken);
 
@@ -26,7 +26,6 @@ export const useAuthStore = defineStore({
             resolve(res.data);
           })
           .catch(error => {
-            notificationService.error(error.response?.data?.detail ?? 'Something went wrong');
             reject(error);
           });
         this.isLoading = false;
@@ -34,7 +33,7 @@ export const useAuthStore = defineStore({
     },
     GET_USER_DATA() {
       return new Promise((resolve, reject) => {
-        const token = VueCookieNext.getCookie("accessToken");
+        const token = VueCookieNext.getCookie('accessToken');
         if (!token) {
           reject('Token is empty');
           return;
@@ -52,8 +51,8 @@ export const useAuthStore = defineStore({
       });
     },
     LOGOUT() {
-      router.push({name: "Welcome"});
-      VueCookieNext.removeCookie('accessToken')
+      router.push({ name: 'Welcome' });
+      VueCookieNext.removeCookie('accessToken');
       this.$state = getDefaultState();
     },
     REGISTER(payload: IAuth) {
@@ -61,17 +60,17 @@ export const useAuthStore = defineStore({
         this.isLoading = true;
         authAPI
           .register(payload)
-          .then(({data}) => {
+          .then(({ data }) => {
             this.userData = data.user;
             this.isLogged = true;
-            VueCookieNext.setCookie("accessToken", data.accessToken);
-            router.push({name: "Home"})
+            VueCookieNext.setCookie('accessToken', data.accessToken);
+            router.push({ name: 'Home' });
 
             resolve(data);
           })
           .catch(error => reject(error));
         this.isLoading = false;
       });
-    }
-  }
+    },
+  },
 });

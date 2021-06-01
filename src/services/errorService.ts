@@ -1,4 +1,6 @@
-import notificationService from "./notificationService";
+import notificationService from './notificationService';
+import { AxiosError } from 'axios';
+import statusCodes from '../resource/statusCodes.json';
 
 export default class ErrorService {
   constructor() {}
@@ -7,11 +9,12 @@ export default class ErrorService {
     console.log(error);
   }
 
-  static requestError(error: any) {
-    console.log(error);
-  }
-
-  static displayErrorAlert(message: string) {
-    notificationService.error(message);
+  static requestError(error: AxiosError) {
+    const errorCode = error.response?.status;
+    if (errorCode) {
+      //@ts-ignore
+      const errorText = statusCodes[errorCode];
+      notificationService.error(errorText);
+    }
   }
 }

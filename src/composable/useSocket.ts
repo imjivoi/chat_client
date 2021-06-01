@@ -17,7 +17,7 @@ export default function useSocket(url: string) {
   const { initListeners } = useSocketListeners();
 
   onMounted(() => {
-    socket.value = io.connect(url, {
+    socket.value = io(url, {
       reconnectionDelayMax: 10000,
       query: {
         token: token,

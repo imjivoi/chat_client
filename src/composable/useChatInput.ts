@@ -27,9 +27,7 @@ export default function useChatInput() {
   const { currentParticipant, currentChat } = useChatData();
 
   const attachmentsUrl = computed(() => {
-    console.log(attachments.value);
     const result = attachments.value?.map((attachment: any) => {
-      console.log(attachment.type);
       if (attachment.type.includes('image')) {
         return URL.createObjectURL(attachment);
       }
@@ -49,7 +47,6 @@ export default function useChatInput() {
   }
 
   async function sendMessage(e: any): Promise<IEmittedEventStatus | any> {
-    console.log(11);
     if (!e?.shiftKey && e?.which === 13) {
       e.preventDefault();
     }
@@ -78,7 +75,7 @@ export default function useChatInput() {
   }
 
   function setAttachments(files: any) {
-    if (files.length > 5) return notificationService.error('Can be uploaded more 5 images');
+    if (files.length > 5) return notificationService.error('Cannot be uploaded more 5 images');
     if (files.length && files[0]) {
       attachments.value = [].concat(...files);
     } else {
