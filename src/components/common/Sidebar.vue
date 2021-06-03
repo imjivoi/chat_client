@@ -2,71 +2,65 @@
   <aside class="sidebar">
     <div class="sidebar__profile" v-if="userData">
       <div class="sidebar__profile-avatar">
-        <Avatar :image="userData.avatar" :nickname="userData.username"/>
+        <Avatar :image="userData.avatar" :nickname="userData.username" :size="100" />
       </div>
       <div class="sidebar__profile-name">{{ userData.username }}</div>
     </div>
     <ul>
       <li v-for="item in sidebarItems" :key="item.title">
-        <router-link :to="{name:item.linkName}  "
-                     :class="{active:$route.name===item.title ||
-                      $route.meta.parent===item.title}"
+        <router-link
+          :to="{ name: item.linkName }"
+          :class="{ active: $route.name === item.title || $route.meta.parent === item.title }"
         >
-          <component
-            :is="item.title"
-            class="icon"
-          ></component
-          >
-          <span>{{ item.title }}</span></router-link
+          <component :is="item.title" class="icon"></component>
+          <span>{{ $t(item.title) }}</span></router-link
         >
       </li>
     </ul>
     <div class="sidebar__bottom" @click="logout">
-      <Logout/>
+      <Logout />
       <button>logout</button>
     </div>
   </aside>
 </template>
 
 <script lang="ts">
-import {
-  Chats,
-  Home,
-  Logout,
-  Notifications,
-  Settings,
-  User,
-  Voices,
-} from "@/components/icons";
-import {useAuthStore} from "@/store/auth/useAuthStore";
-import {computed, defineComponent} from "vue";
-import Avatar from "@/components/ui/Avatar.vue";
+import { Chats, Home, Logout, Notifications, Settings, User, Voices } from '@/components/icons';
+import { useAuthStore } from '@/store/auth/useAuthStore';
+import { computed, defineComponent } from 'vue';
+import Avatar from '@/components/ui/Avatar.vue';
 
 export default defineComponent({
-  name: "Sidebar",
+  name: 'Sidebar',
   components: {
     Avatar,
-    Home, Voices, Notifications, Settings, Logout, User, Chats
+    Home,
+    Voices,
+    Notifications,
+    Settings,
+    Logout,
+    User,
+    Chats,
   },
   setup() {
     const auth = useAuthStore();
     const userData = computed(() => auth.userData);
 
     function logout() {
-      auth.LOGOUT()
+      auth.LOGOUT();
     }
 
     const sidebarItems = [
-      {title: "Home", linkName: "Home"},
-      {title: "Chats", linkName: "Chats"},
-      {title: "Voices", linkName: "Voices"},
-      {title: "Settings", linkName: "Settings"},
+      { title: 'Home', linkName: 'Home' },
+      { title: 'Chats', linkName: 'Chats' },
+      { title: 'Voices', linkName: 'Voices' },
+      { title: 'Settings', linkName: 'Settings' },
     ];
 
     return {
       userData,
       sidebarItems,
-      logout
+      logout,
     };
   },
 });
@@ -86,8 +80,7 @@ export default defineComponent({
     margin: 81px auto 0;
 
     &-avatar {
-      width: 86px;
-      height: 86px;
+      width: fit-content;
       border-radius: 50%;
       overflow: hidden;
       margin: 0 auto;
@@ -122,13 +115,12 @@ export default defineComponent({
 
       &.active {
         &::after {
-          content: "";
+          content: '';
           position: absolute;
           top: -8px;
           left: 0;
-          box-shadow: 1px 0px 10px rgba(42, 139, 242, 0.45),
-          0px 0px 10px rgba(42, 139, 242, 0.55),
-          4px 0px 25px rgba(42, 139, 242, 0.75);
+          box-shadow: 1px 0px 10px rgba(42, 139, 242, 0.45), 0px 0px 10px rgba(42, 139, 242, 0.55),
+            4px 0px 25px rgba(42, 139, 242, 0.75);
           border-radius: 3px;
           background: $primary;
           width: 3px;
@@ -219,13 +211,12 @@ export default defineComponent({
 
 .active {
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     top: -8px;
     left: 0;
-    box-shadow: 1px 0px 10px rgba(42, 139, 242, 0.45),
-    0px 0px 10px rgba(42, 139, 242, 0.55),
-    4px 0px 25px rgba(42, 139, 242, 0.75);
+    box-shadow: 1px 0px 10px rgba(42, 139, 242, 0.45), 0px 0px 10px rgba(42, 139, 242, 0.55),
+      4px 0px 25px rgba(42, 139, 242, 0.75);
     border-radius: 3px;
     background: $primary;
     width: 3px;

@@ -102,7 +102,6 @@ export const useChatStore = defineStore({
       try {
         const { data } = await chatAPI.getMessages(chat_id);
         let currentChat = this.list.find((chat: IChatItem) => String(chat._id) === String(chat_id));
-        console.log(currentChat);
         if (currentChat) {
           currentChat.messages = data;
         }

@@ -11,11 +11,12 @@
       </div>
     </div>
     <div class="chat-item__participants">
-      <div class="chat-item__participant"
-           v-for="participant in firstParticipants"
-           :key="participant._id">
-        <Avatar :image="participant.user.avatar"
-                :nickname="participant.user.username"/>
+      <div
+        class="chat-item__participant"
+        v-for="participant in firstParticipants"
+        :key="participant._id"
+      >
+        <Avatar :image="participant.user.avatar" :nickname="participant.user.username" />
         <p>{{ participant.user.username }}</p>
       </div>
     </div>
@@ -23,18 +24,16 @@
 </template>
 
 <script lang="ts">
-
-
-import {format} from "date-fns";
-import {defineComponent, PropType} from "vue";
-import {IParticipant} from "@/store/chat/types/chat";
-import Avatar from "@/components/ui/Avatar.vue";
+import { format } from 'date-fns';
+import { defineComponent, PropType } from 'vue';
+import { IParticipant } from '@/store/chat/types/chat';
+import Avatar from '@/components/ui/Avatar.vue';
 
 export default defineComponent({
-  components: {Avatar},
+  components: { Avatar },
   props: {
     id: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
     name: {
@@ -42,22 +41,22 @@ export default defineComponent({
     },
     created: {
       type: String,
-      required: true
+      required: true,
     },
     participants: {
       type: Array as PropType<IParticipant[]>,
-      default: []
-    }
+      default: [],
+    },
   },
 
   computed: {
     createdAt(): string {
-      return format(new Date(this.created), 'P')
+      return format(new Date(this.created), 'P');
     },
     firstParticipants(): IParticipant[] | [] {
-      return this.participants?.filter((participant, idx) => idx !== 4)
-    }
-  }
+      return this.participants?.filter((participant, idx) => idx !== 4);
+    },
+  },
 });
 </script>
 

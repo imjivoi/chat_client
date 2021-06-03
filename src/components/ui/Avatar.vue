@@ -16,15 +16,15 @@ export default {
   },
   computed: {
     label() {
-      return this.image ? "" : this.nickname.slice("")[0];
+      return this.image ? '' : this.nickname.slice('')[0];
     },
   },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .avatar {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 34px;
@@ -33,6 +33,13 @@ export default {
   background-color: #dee2e6;
   border-radius: 50%;
   overflow: hidden;
+  position: relative;
+  span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 img {

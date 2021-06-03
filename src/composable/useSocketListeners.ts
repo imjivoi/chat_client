@@ -22,7 +22,6 @@ export default function() {
     state.initiated = true;
     socket.value.on(ChatSocketEvents.NEW_MESSAGE, ({ chat, ...data }: IMessage) => {
       const currentChat = getCurrentChat(chat?._id);
-
       currentChat?.messages?.push(data);
       if (
         openedChat.value?._id === currentChat?._id &&

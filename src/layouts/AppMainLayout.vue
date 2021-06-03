@@ -5,8 +5,8 @@
     <SideBar />
     <div class="wrapper">
       <div class="flex align-center mb-2 transition">
-        <Back v-if="isRouteBack" @click.native="goBack" class="arrow-back mr-1 transition" />
-        <h2 class="transition">{{ routeTitle }}</h2>
+        <Back v-if="isRouteBack" @click="goBack" class="arrow-back mr-1 transition" />
+        <h2 class="transition">{{ $t(routeTitle) }}</h2>
       </div>
       <router-view />
     </div>
