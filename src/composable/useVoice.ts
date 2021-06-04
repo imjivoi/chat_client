@@ -1,15 +1,15 @@
-import { useAuthStore } from "@/store/auth/useAuthStore";
-import { VoiceIoEvents } from "@/store/voice/types/voice";
+import { useUserStore } from '@/store/';
+import { VoiceIoEvents } from '@/store/voice/types/voice';
 //@ts-ignore
 
-import Peer from "simple-peer";
-import { computed, inject,  ref } from "vue";
+import Peer from 'simple-peer';
+import { computed, inject, ref } from 'vue';
 
 export default function useVoice() {
-  const auth = useAuthStore();
+  const auth = useUserStore();
 
   const userData = computed(() => auth.userData);
-  const socket: any = inject("socket");
+  const socket: any = inject('socket');
   const socketId = ref();
   const connection = ref();
   const userAudio = ref();
@@ -31,7 +31,7 @@ export default function useVoice() {
       trickle: false,
       stream: myStream.value,
     });
-    peer.on("signal", (data: any) => {
+    peer.on('signal', (data: any) => {
       socket.emit(VoiceIoEvents.CALL_USER, {
         userToCall: id,
         signalData: data,
@@ -39,7 +39,7 @@ export default function useVoice() {
         name: userData.value?.username,
       });
     });
-    peer.on("stream", (stream: any) => {
+    peer.on('stream', (stream: any) => {
       userAudio.value.srcObject = stream;
     });
     socket.on(VoiceIoEvents.CALL_ACCEPTED, (signal: any) => {
@@ -57,13 +57,13 @@ export default function useVoice() {
       trickle: false,
       stream: myStream.value,
     });
-    peer.on("signal", (data: any) => {
+    peer.on('signal', (data: any) => {
       socket.emit(VoiceIoEvents.ANSWER_CALL, {
         signal: data,
         to: caller.value,
       });
     });
-    peer.on("stream", (stream: any) => {
+    peer.on('stream', (stream: any) => {
       userAudio.value.srcObject = stream;
     });
     peer.signal(callerSignal.value);
@@ -77,7 +77,7 @@ export default function useVoice() {
       callerSignal.value = data.signal;
     });
 
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
       myStream.value = stream;
     });
   };

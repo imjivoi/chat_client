@@ -7,7 +7,7 @@
       @click="deleteFile(idx)"
     >
       <img :src="imgUrl" alt="" />
-      <span>Remove</span>
+      <span>{{ $t('Remove') }}</span>
     </div>
     <div
       class="img-container"
@@ -15,7 +15,7 @@
       v-if="attachmentsUrl.length > 1"
       @click="deleteFile('all')"
     >
-      <span>Remove all</span>
+      <span>{{ $t('Remove all') }}</span>
     </div>
   </div>
   <div class="input-block" v-click-outside="hideEmojiPicker">
@@ -24,7 +24,7 @@
       <Button is-icon icon="cloud" @click="chooseFiles" />
     </div>
     <textarea
-      placeholder="Type your message here"
+      :placeholder="$t('Type your message here')"
       v-model="message"
       @keypress.enter.exact="send"
       ref="textarea"

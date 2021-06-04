@@ -1,4 +1,4 @@
-import { useAuthStore, useChatStore } from '@/store';
+import { useUserStore, useChatStore } from '@/store';
 import { useRoute } from 'vue-router';
 import { computed } from 'vue';
 import expiresDate from '@/helpers/expiresDate';
@@ -9,7 +9,7 @@ import { IMessage } from '@/store/chat/types/message';
 export default function useChatData() {
   const chatStore = useChatStore();
   const route = useRoute();
-  const userStore = useAuthStore();
+  const userStore = useUserStore();
 
   const user = userStore.userData;
 

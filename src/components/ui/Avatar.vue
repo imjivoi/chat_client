@@ -11,7 +11,7 @@ export default {
     nickname: { type: String },
     image: { type: String },
     size: {
-      type: String,
+      type: [String, Number],
     },
   },
   computed: {
@@ -44,5 +44,7 @@ export default {
 
 img {
   width: 100%;
+  object-fit: cover;
+  height: 100%;
 }
 </style>

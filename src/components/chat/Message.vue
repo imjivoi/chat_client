@@ -48,13 +48,13 @@
 <script lang="ts">
 import AudioPlayer from './AudioPlayer.vue';
 import Modal from '../common/Modal.vue';
-import { formatDistanceToNow } from 'date-fns';
+import Avatar from '@/components/ui/Avatar.vue';
+
 //@ts-ignore
 import ClickOutside from 'vue-click-outside';
-
+import { timeDistanceToNow } from '@/helpers/date';
 import { computed, defineComponent, PropType, ref, toRefs } from 'vue';
 import { IMessage } from '@/store/chat/types/message';
-import Avatar from '@/components/ui/Avatar.vue';
 
 export default defineComponent({
   name: 'Message',
@@ -93,10 +93,10 @@ export default defineComponent({
 
     const baseUrl = process.env.VUE_APP_SERVER_HOST;
 
-    const createdAt = formatDistanceToNow(new Date(messageData.value.createdAt));
+    const createdAt = timeDistanceToNow(new Date(messageData.value.createdAt));
     const updatedAt = computed(
       () =>
-        messageData.value.updatedAt && formatDistanceToNow(new Date(messageData.value!.updatedAt!)),
+        messageData.value.updatedAt && timeDistanceToNow(new Date(messageData.value!.updatedAt)),
     );
 
     function hideMessageOptions() {

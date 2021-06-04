@@ -2,7 +2,11 @@
   <aside class="sidebar">
     <div class="sidebar__profile" v-if="userData">
       <div class="sidebar__profile-avatar">
-        <Avatar :image="userData.avatar" :nickname="userData.username" :size="100" />
+        <Avatar
+          :image="baseUrl + '/' + userData.avatar"
+          :nickname="userData.username"
+          :size="100"
+        />
       </div>
       <div class="sidebar__profile-name">{{ userData.username }}</div>
     </div>
@@ -19,14 +23,14 @@
     </ul>
     <div class="sidebar__bottom" @click="logout">
       <Logout />
-      <button>logout</button>
+      <button>{{ $t('Logout') }}</button>
     </div>
   </aside>
 </template>
 
 <script lang="ts">
 import { Chats, Home, Logout, Notifications, Settings, User, Voices } from '@/components/icons';
-import { useAuthStore } from '@/store/auth/useAuthStore';
+import { useUserStore } from '@/store/auth/useUserStore';
 import { computed, defineComponent } from 'vue';
 import Avatar from '@/components/ui/Avatar.vue';
 
@@ -43,11 +47,11 @@ export default defineComponent({
     Chats,
   },
   setup() {
-    const auth = useAuthStore();
+    const auth = useUserStore();
     const userData = computed(() => auth.userData);
-
+    const baseUrl = process.env.VUE_APP_SERVER_HOST;
     function logout() {
-      auth.LOGOUT();
+      auth.logout();
     }
 
     const sidebarItems = [
@@ -61,6 +65,7 @@ export default defineComponent({
       userData,
       sidebarItems,
       logout,
+      baseUrl,
     };
   },
 });

@@ -1,4 +1,4 @@
-import authAPI from '@/services/api/authAPI';
+import authAPI from '@/services/api/userAPI';
 import { defineStore } from 'pinia';
 import { VueCookieNext } from 'vue-cookie-next';
 import notificationService from '@/services/notificationService';
@@ -8,11 +8,11 @@ import { state } from './state';
 import { getDefaultState } from './default-state';
 import { setAuthHeader } from '@/utils/axios';
 
-export const useAuthStore = defineStore({
-  id: 'auth',
+export const useUserStore = defineStore({
+  id: 'user',
   state: () => state,
   actions: {
-    GET_AUTH(payload: IAuth) {
+    getAuth(payload: IAuth) {
       return new Promise((resolve, reject) => {
         this.isLoading = true;
         authAPI
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore({
         this.isLoading = false;
       });
     },
-    GET_USER_DATA() {
+    getUserData() {
       return new Promise((resolve, reject) => {
         const token = VueCookieNext.getCookie('accessToken');
         if (!token) {
@@ -50,12 +50,12 @@ export const useAuthStore = defineStore({
           });
       });
     },
-    LOGOUT() {
+    logout() {
       router.push({ name: 'Welcome' });
       VueCookieNext.removeCookie('accessToken');
       this.$state = getDefaultState();
     },
-    REGISTER(payload: IAuth) {
+    register(payload: IAuth) {
       return new Promise((resolve, reject) => {
         this.isLoading = true;
         authAPI
@@ -71,6 +71,10 @@ export const useAuthStore = defineStore({
           .catch(error => reject(error));
         this.isLoading = false;
       });
+    },
+    async uploadAvatar(payload: FormData) {
+      const { data } = await authAPI.uploadAvatar(payload);
+      this.userData = data;
     },
   },
 });

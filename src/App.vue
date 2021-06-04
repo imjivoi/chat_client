@@ -1,29 +1,28 @@
 <template>
   <AppLayout>
-    <router-view/>
+    <router-view />
   </AppLayout>
 </template>
 <script lang="ts">
-import AppLayout from "@/layouts/AppLayout.vue";
+import AppLayout from '@/layouts/AppLayout.vue';
 
-import {useAuthStore, useModal} from "@/store/";
+import { useUserStore, useModal } from '@/store/';
 
-import {computed, defineComponent, onBeforeMount} from "vue";
+import { computed, defineComponent, onBeforeMount } from 'vue';
 
 export default defineComponent({
-  components: {AppLayout},
+  components: { AppLayout },
 
   setup() {
-    const auth = useAuthStore();
+    const auth = useUserStore();
     const modal = useModal();
     onBeforeMount(async () => {
       try {
-        await auth.GET_USER_DATA();
-      } catch (error) {
-      }
+        await auth.getUserData();
+      } catch (error) {}
     });
 
-    return {isActiveModal: computed(() => modal.isActive)};
+    return { isActiveModal: computed(() => modal.isActive) };
   },
 });
 </script>

@@ -20,5 +20,13 @@
   "Register": "Зарегистрироваться",
   "Already registered?": "Уже зарегистрирован?",
   "Don't registered yet?": "Еще не зарегистрирован?",
-  "Upload avatar": "Загрузить аватар"
+  "Upload avatar": "Загрузить аватар",
+  "Upload": "Загрузить",
+  "Requests": "Запросы",
+  "accept": "принять",
+  "block": "блокировать",
+  "Remove": "Удалить",
+  "Remove all": "Удалить всё",
+  "Change language": "Изменить язык",
+  "Avatar": "Аватар"
 }

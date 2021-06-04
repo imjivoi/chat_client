@@ -26,13 +26,13 @@ import { useSocket } from '@/composable';
 import { useRoute, useRouter } from 'vue-router';
 
 import { computed, defineComponent, provide } from 'vue';
-import { useAuthStore } from '@/store';
+import { useUserStore } from '@/store';
 
 export default defineComponent({
   name: 'AppLayoutDefault',
   components: { SideBar, Spinner, Modal, Back },
   setup() {
-    const auth = useAuthStore();
+    const auth = useUserStore();
     const { socket } = useSocket(appConfig.socketUrl);
     const route = useRoute();
     const router = useRouter();

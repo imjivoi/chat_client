@@ -6,7 +6,7 @@
   <template v-else>
     <div v-if="chatCount" style="height:88%">
       <div class="chats__header flex justify-between align-center mb-1">
-        <Button icon="plus" label="Create chat" @click="showModal" />
+        <Button icon="plus" :label="$t('Create chat')" @click="showModal" />
       </div>
       <div style="width:100%">
         <div class="mb-2">

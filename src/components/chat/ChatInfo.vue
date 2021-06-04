@@ -1,7 +1,7 @@
 <template>
   <div class="info" v-if="chat">
     <div class="participants">
-      <h4>Participants</h4>
+      <h4>{{ $t('Participants') }}</h4>
       <ul class="participant-list">
         <li v-for="participant in acceptedParticipants" :key="participant._id">
           <UserItem
@@ -11,14 +11,14 @@
             :participant-id="participant._id"
           />
           <Popover v-if="imAdmin && !isAdmin(participant.user._id)">
-            <div class="pop-item">block</div>
+            <div class="pop-item">{{ $t('block') }}</div>
           </Popover>
         </li>
       </ul>
     </div>
     <template v-if="imAdmin">
       <div class="requests" v-if="requests.length">
-        <h4>Requests</h4>
+        <h4>{{ $t('Requests') }}</h4>
         <ul class="participant-list">
           <li v-for="participant in requests" :key="participant._id">
             <UserItem
@@ -30,10 +30,10 @@
             />
             <Popover>
               <div class="pop-item " @click="acceptRequest(participant._id)">
-                accept
+                {{ $t('accept') }}
               </div>
               <div class="pop-item " @click="blockParticipant(participant._id)">
-                block
+                {{ $t('block') }}
               </div>
             </Popover>
           </li>
@@ -41,12 +41,12 @@
       </div>
 
       <div class="invite">
-        <h4>Invite</h4>
+        <h4>{{ $t('Invite') }}</h4>
 
         <div class="mt-1 mh-auto" style="text-align: center">
           <Button
             type="outline"
-            label="Create invite"
+            :label="$t('Create invite')"
             @click="createInvite"
             style="width: 100%"
             v-if="!chat.invite"
@@ -55,8 +55,7 @@
             <Input v-model:text="inviteLink" placeholder="Please input" disabled />
             <Button
               type="outline"
-              label="Copy
-            invite link"
+              :label="$t('Copy invite link')"
               @click="copyLink"
               class="mt-1"
               style="width: 100%"
@@ -64,7 +63,7 @@
             />
             <Button
               type="outline"
-              label="Update link"
+              :label="$t('Update link')"
               @click="updateInvite"
               class="mt-1"
               style="width: 100%"
