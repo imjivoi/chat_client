@@ -2,11 +2,7 @@
   <aside class="sidebar">
     <div class="sidebar__profile" v-if="userData">
       <div class="sidebar__profile-avatar">
-        <Avatar
-          :image="baseUrl + '/' + userData.avatar"
-          :nickname="userData.username"
-          :size="100"
-        />
+        <Avatar :image="userData.avatar" :nickname="userData.username" :size="100" />
       </div>
       <div class="sidebar__profile-name">{{ userData.username }}</div>
     </div>
@@ -49,7 +45,6 @@ export default defineComponent({
   setup() {
     const auth = useUserStore();
     const userData = computed(() => auth.userData);
-    const baseUrl = process.env.VUE_APP_SERVER_HOST;
     function logout() {
       auth.logout();
     }
@@ -65,7 +60,6 @@ export default defineComponent({
       userData,
       sidebarItems,
       logout,
-      baseUrl,
     };
   },
 });

@@ -8,7 +8,8 @@ const messages = {
   ru,
   enUS,
 };
-const locale = (localStorage.getItem('location') as string) || 'enUS';
+const navigatorLang = navigator.language.replace('-', '');
+const locale = (localStorage.getItem('location') as string) || navigatorLang || 'enUS';
 
 export const i18n = createI18n({
   locale,

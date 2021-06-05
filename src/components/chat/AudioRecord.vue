@@ -3,8 +3,12 @@
     <div class="audio-record__content" v-if="mediaRecorder">
       <div class="audio-record__overlay bg-blur" ref="overlay">
         <div class="waves">
-          <div class="sonar-emitter">
-            <div class="sonar-wave " :style="{ transform: `scale(${1 + volume / 50})` }"></div>
+          <div class="sonar-emitter" :style="{ transform: `scale(${1 + volume / 200})` }">
+            <!-- <div class="sonar-wave "
+            :style="{ transform: `scale(${1 + volume / 50})` }"></div> -->
+            <div class="sonar-wave"></div>
+            <div class="sonar-wave2 "></div>
+            <div class="sonar-wave3 "></div>
           </div>
         </div>
         <div class="flex " style="align-items: baseline">
@@ -204,6 +208,7 @@ export default {
     height: 400px;
     border-radius: 50%;
     background-color: transparent;
+    transition: all 0.2s;
   }
 
   .sonar-wave {
@@ -214,24 +219,85 @@ export default {
     height: 100%;
     border-radius: 50%;
     background-color: $primary;
-    opacity: 0.7;
+    opacity: 0.2;
     z-index: -1;
     pointer-events: none;
     transition: all 0.1s;
-    transform: scale(1);
-  }
-
-  .sonar-wave--anim {
-    animation: sonarWave 2s linear infinite;
-  }
-
-  @keyframes sonarWave {
-    from {
-      opacity: 0.7;
+    // transform: scale(1);
+    animation-duration: 4s;
+    animation-direction: alternate;
+    animation-name: matrix;
+    animation-iteration-count: infinite;
+    @keyframes matrix {
+      0% {
+        transform: matrix3d(1, 0, 0.05, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      }
+      50% {
+        transform: matrix3d(1, -0.1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      }
+      100% {
+        transform: matrix3d(1, 0.1, -0.05, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      }
     }
-    to {
-      transform: scale(2);
-      opacity: 0;
+  }
+  .sonar-wave2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: $primary;
+    opacity: 0.3;
+    z-index: -1;
+    pointer-events: none;
+    transition: all 0.1s;
+    // transform: scale(1);
+    animation-duration: 5s;
+    animation-direction: alternate;
+    animation-name: matrix2;
+    animation-iteration-count: infinite;
+
+    @keyframes matrix2 {
+      0% {
+        transform: matrix3d(1, 0, -0.1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      }
+      50% {
+        transform: matrix3d(1, 0.1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      }
+      100% {
+        transform: matrix3d(1, -0.1, 0.1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      }
+    }
+  }
+  .sonar-wave3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: $primary;
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
+    transition: all 0.1s;
+    // transform: scale(1);
+    animation-duration: 6s;
+    animation-direction: alternate;
+    animation-name: matrix2;
+    animation-iteration-count: infinite;
+
+    @keyframes matrix3 {
+      0% {
+        transform: matrix3d(1, -0.1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      }
+      50% {
+        transform: matrix3d(1, 0.1, -0.1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      }
+      100% {
+        transform: matrix3d(1, -0.1, 0.1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+      }
     }
   }
 }

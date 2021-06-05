@@ -22,7 +22,7 @@ export const useUserStore = defineStore({
             this.isLogged = true;
             setAuthHeader(res.data.accessToken);
 
-            if (this.userData === null) this.GET_USER_DATA();
+            if (this.userData === null) this.getUserData();
             resolve(res.data);
           })
           .catch(error => {

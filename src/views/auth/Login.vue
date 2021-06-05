@@ -49,22 +49,21 @@ export default defineComponent({
     );
 
     async function login() {
-      if (isValid) {
-        auth
-          .getAuth({
-            email: form.email,
-            password: form.password,
-          })
-          .then(() => {
-            notificationService.success('Authorized');
-            const next = route.query.next;
-            if (next && typeof next === 'string') {
-              router.push({ path: next });
-              return;
-            }
-            router.push({ name: 'Home' });
-          });
-      }
+      if (!isValid) return;
+      auth
+        .getAuth({
+          email: form.email,
+          password: form.password,
+        })
+        .then(() => {
+          notificationService.success('Authorized');
+          const next = route.query.next;
+          if (next && typeof next === 'string') {
+            router.push({ path: next });
+            return;
+          }
+          router.push({ name: 'Home' });
+        });
     }
 
     watch(form, () => {

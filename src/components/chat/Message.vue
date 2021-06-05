@@ -17,7 +17,7 @@
         <div class="message__attachments" v-if="hasAttachment">
           <ul>
             <li v-for="i in attachments" :key="i">
-              <img :src="baseUrl + '/' + i.file" alt="" v-if="i.type.includes('image')" />
+              <img :src="i.file" alt="" v-if="i.type.includes('image')" />
               <AudioPlayer
                 v-if="i.type.includes('audio')"
                 :src="audioSrc"
@@ -91,8 +91,6 @@ export default defineComponent({
       return file?.file?.replace('audio', 'audio/webm');
     });
 
-    const baseUrl = process.env.VUE_APP_SERVER_HOST;
-
     const createdAt = timeDistanceToNow(new Date(messageData.value.createdAt));
     const updatedAt = computed(
       () =>
@@ -111,7 +109,6 @@ export default defineComponent({
 
     return {
       activeMessageOptions,
-      baseUrl,
       createdAt,
       hideMessageOptions,
       hasAttachment,
