@@ -7,6 +7,7 @@ import { IAuth } from './types/user';
 import { state } from './state';
 import { getDefaultState } from './default-state';
 import { setAuthHeader } from '@/utils/axios';
+import { i18n } from '../../resource/i18n';
 
 export const useUserStore = defineStore({
   id: 'user',
@@ -26,6 +27,10 @@ export const useUserStore = defineStore({
             resolve(res.data);
           })
           .catch(error => {
+            if (error.response?.data?.statusCode === 400) {
+              this.logout();
+            }
+
             reject(error);
           });
         this.isLoading = false;
@@ -44,7 +49,13 @@ export const useUserStore = defineStore({
           .then(res => {
             this.userData = res.data;
           })
-          .catch(error => reject(error))
+          .catch(error => {
+            if (error.response?.data?.statusCode === 400) {
+              this.logout();
+            }
+
+            reject(error);
+          })
           .finally(() => {
             this.isLoading = false;
           });
@@ -62,9 +73,10 @@ export const useUserStore = defineStore({
         userAPI.register(payload).then(({ data }) => {
           this.userData = data.user;
           this.isLogged = true;
-          VueCookieNext.setCookie('accessToken', data.accessToken);
+          const token = data.accessToken;
+          VueCookieNext.setCookie('accessToken', token);
           router.push({ name: 'Home' });
-
+          setAuthHeader(token);
           resolve(data);
         });
 
@@ -72,15 +84,25 @@ export const useUserStore = defineStore({
       });
     },
     async uploadAvatar(payload: FormData) {
-      const { data } = await userAPI.uploadAvatar(payload);
-      this.userData = data;
+      try {
+        const { data } = await userAPI.uploadAvatar(payload);
+        this.userData = data;
+      } catch (error) {
+        if (error.response?.data?.statusCode === 400) {
+          this.logout();
+        }
+      }
     },
     async delete() {
       try {
         await userAPI.delete();
-        router.push({ name: 'Welcome' });
-        notificationService.default(this.$t('Account was deleted'));
-      } catch (error) {}
+        notificationService.default(i18n.global.t('Account was deleted'));
+        this.logout();
+      } catch (error) {
+        if (error.response?.data?.statusCode === 400) {
+          this.logout();
+        }
+      }
     },
   },
 });

@@ -1,7 +1,10 @@
 import notificationService from './notificationService';
 import { AxiosError } from 'axios';
 import statusCodes from '../resource/statusCodes.json';
+import { useRoute } from 'vue-router';
+import { useUserStore } from '@/store';
 
+const route = useRoute();
 export default class ErrorService {
   constructor() {}
 
@@ -10,7 +13,6 @@ export default class ErrorService {
   }
 
   static requestError(error: AxiosError | any) {
-    console.log('error', error);
     const errorCode = error.response?.status || error.statusCode;
     //@ts-ignore
 
