@@ -30,7 +30,7 @@ export const useChatStore = defineStore({
             router.push(`/chats/${res.data.id}`);
           } else {
             this.list = res.data;
-            router.push(`/chats/${res.data._id}`);
+            router.push(`/chats/${res.data.id}`);
           }
           resolve(res.data);
         } catch (error) {
@@ -42,7 +42,7 @@ export const useChatStore = defineStore({
       this.isLoading = true;
       try {
         const { data } = await chatAPI.getInvite(chat_id);
-        const chat = this.list.find((chat: IChatItem) => String(chat._id) === chat_id);
+        const chat = this.list.find((chat: IChatItem) => String(chat.id) === chat_id);
 
         if (data && chat) {
           chat.invite = data;
@@ -52,7 +52,7 @@ export const useChatStore = defineStore({
     },
     async CREATE_INVITE(id: string | string[], expiresAt?: number) {
       const { data } = await chatAPI.createInvite(id, expiresAt);
-      let chat = this.list.find((chat: IChatItem) => String(chat._id) === id);
+      let chat = this.list.find((chat: IChatItem) => String(chat.id) === id);
       if (chat) {
         chat.invite = data;
       }
@@ -60,7 +60,7 @@ export const useChatStore = defineStore({
 
     async UPDATE_INVITE(id: string | string[], expiresAt?: number) {
       const { data } = await chatAPI.updateInvite(id, expiresAt);
-      let chat = this.list.find((chat: IChatItem) => chat._id === id);
+      let chat = this.list.find((chat: IChatItem) => chat.id === id);
       if (chat) {
         chat.invite = data;
       }
@@ -101,7 +101,7 @@ export const useChatStore = defineStore({
     async GET_MESSAGES(chat_id: string | number | string[]) {
       try {
         const { data } = await chatAPI.getMessages(chat_id);
-        let currentChat = this.list.find((chat: IChatItem) => String(chat._id) === String(chat_id));
+        let currentChat = this.list.find((chat: IChatItem) => String(chat.id) === String(chat_id));
         if (currentChat) {
           currentChat.messages = data;
         }

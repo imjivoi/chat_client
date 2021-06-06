@@ -3,14 +3,14 @@
     <div class="participants">
       <h4>{{ $t('Participants') }}</h4>
       <ul class="participant-list">
-        <li v-for="participant in acceptedParticipants" :key="participant._id">
+        <li v-for="participant in acceptedParticipants" :key="participant.id">
           <UserItem
             :username="participant.user.username"
             :avatar="participant.user.avatar"
-            :is-admin="isAdmin(participant.user._id)"
-            :participant-id="participant._id"
+            :is-admin="isAdmin(participant.user.id)"
+            :participant-id="participant.id"
           />
-          <Popover v-if="imAdmin && !isAdmin(participant.user._id)">
+          <Popover v-if="imAdmin && !isAdmin(participant.user.id)">
             <div class="pop-item">{{ $t('block') }}</div>
           </Popover>
         </li>
@@ -20,19 +20,19 @@
       <div class="requests" v-if="requests.length">
         <h4>{{ $t('Requests') }}</h4>
         <ul class="participant-list">
-          <li v-for="participant in requests" :key="participant._id">
+          <li v-for="participant in requests" :key="participant.id">
             <UserItem
               :username="participant.user.username"
               :avatar="participant.user.avatar"
-              :participant-id="participant._id"
+              :participant-id="participant.id"
               :is-request="true"
               @update="updateParticipant"
             />
             <Popover>
-              <div class="pop-item " @click="acceptRequest(participant._id)">
+              <div class="pop-item " @click="acceptRequest(participant.id)">
                 {{ $t('accept') }}
               </div>
-              <div class="pop-item " @click="blockParticipant(participant._id)">
+              <div class="pop-item " @click="blockParticipant(participant.id)">
                 {{ $t('block') }}
               </div>
             </Popover>
@@ -104,15 +104,15 @@ export default defineComponent({
     } = useChatData();
 
     function isAdmin(userId: string) {
-      return userId === currentChat.value?.admin._id;
+      return userId === currentChat.value?.admin.id;
     }
 
-    function acceptRequest(participant_id: string | number) {
-      updateParticipant({ participant_id, accepted: true });
+    function acceptRequest(participantid: string | number) {
+      updateParticipant({ participantid, accepted: true });
     }
 
-    function blockParticipant(participant_id: string | number) {
-      updateParticipant({ participant_id, blocked: true });
+    function blockParticipant(participantid: string | number) {
+      updateParticipant({ participantid, blocked: true });
     }
 
     return {

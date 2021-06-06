@@ -19,15 +19,15 @@
         <transition-group name="fade-to-top">
           <Message
             v-for="message in chat.messages"
-            :key="message._id"
+            :key="message.id"
             :messageData="message"
-            :is-me="message.sender._id === currentParticipant._id"
-            :is-picked="pickedMsg?._id === message._id"
+            :is-me="message.sender.id === currentParticipant.id"
+            :is-picked="pickedMsg?.id === message.id"
             @pickMsg="pickMsg"
           />
         </transition-group>
         <TypingMessage
-          v-if="chat.typing?.status && typingUser._id !== currentParticipant._id"
+          v-if="chat.typing?.status && typingUser.id !== currentParticipant.id"
           :username="typingUser.user.username"
           :is-audio="chat.typing.isAudio"
         />
@@ -82,7 +82,7 @@ export default defineComponent({
 
     const typingUser = computed(() =>
       chat.value.participants.find(
-        participant => participant._id === chat.value.typing?.participant_id,
+        participant => participant.id === chat.value.typing?.participant_id,
       ),
     );
 
@@ -93,7 +93,7 @@ export default defineComponent({
     }
 
     function pickMsg(message: IMessage) {
-      if (pickedMsg.value?._id === message._id) {
+      if (pickedMsg.value?.id === message.id) {
         pickedMsg.value = null;
         return;
       }
@@ -101,8 +101,8 @@ export default defineComponent({
     }
 
     function deleteMsg() {
-      if (pickedMsg.value?._id && confirm('Do you really want to delete message?')) {
-        deleteMessage(pickedMsg.value._id);
+      if (pickedMsg.value?.id && confirm('Do you really want to delete message?')) {
+        deleteMessage(pickedMsg.value.id);
         pickedMsg.value = null;
         closeEditMsg();
       }

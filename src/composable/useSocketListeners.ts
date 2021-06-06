@@ -14,25 +14,25 @@ export default function() {
   const { currentChat: openedChat, currentParticipant } = useChatData();
 
   function getCurrentChat(id: string | number | undefined) {
-    return chatStore.list.find((chat: IChatItem) => chat._id === id);
+    return chatStore.list.find((chat: IChatItem) => chat.id === id);
   }
 
   function initListeners(socket: any) {
     if (state.initiated) return;
     state.initiated = true;
     socket.value.on(ChatSocketEvents.NEW_MESSAGE, ({ chat, ...data }: IMessage) => {
-      const currentChat = getCurrentChat(chat?._id);
+      const currentChat = getCurrentChat(chat?.id);
       currentChat?.messages?.push(data);
       if (
-        openedChat.value?._id === currentChat?._id &&
-        currentParticipant.value?._id !== data.sender?._id
+        openedChat.value?.id === currentChat?.id &&
+        currentParticipant.value?.id !== data.sender?.id
       ) {
-        socket.value.emit(ChatSocketEvents.READ_MESSAGES, { chat_id: currentChat?._id });
+        socket.value.emit(ChatSocketEvents.READ_MESSAGES, { chat_id: currentChat?.id });
       }
     });
     socket.value.on(ChatSocketEvents.CREATE_CHAT, (newChat: IChatItem) => {
       chatStore.list.push(newChat);
-      router.push({ name: 'Chat', params: { id: newChat._id } });
+      router.push({ name: 'Chat', params: { id: newChat.id } });
     });
     socket.value.on(ChatSocketEvents.FETCH_CHATS, ({ list, count }: IChatState) => {
       chatStore.$patch({
@@ -60,7 +60,7 @@ export default function() {
       }) => {
         const currentChat = getCurrentChat(chat_id);
         currentChat?.messages?.forEach((message: IMessage) => {
-          if (!message.isReaded && message.sender?._id !== participant_id) {
+          if (!message.isReaded && message.sender?.id !== participant_id) {
             message.isReaded = true;
           }
         });
@@ -73,22 +73,20 @@ export default function() {
         const currentChat = getCurrentChat(chat_id);
         if (currentChat)
           currentChat.messages = currentChat.messages?.filter(
-            (message: IMessage) => message._id !== message_id,
+            (message: IMessage) => message.id !== message_id,
           );
       },
     );
     socket.value.on(ChatSocketEvents.UPDATE_MESSAGE, (message: IMessage) => {
-      const currentChat = getCurrentChat(message.chat?._id);
-      const currentMessage = currentChat?.messages?.find(
-        (mes: IMessage) => message._id === mes._id,
-      );
+      const currentChat = getCurrentChat(message.chat?.id);
+      const currentMessage = currentChat?.messages?.find((mes: IMessage) => message.id === mes.id);
       if (currentMessage) {
         currentMessage.text = message.text;
         currentMessage.updatedAt = message.updatedAt;
       }
     });
     socket.value.on(ChatSocketEvents.DELETE_CHAT, (data: any) => {
-      chatStore.list = chatStore.list.filter((chat: IChatItem) => chat._id !== data.chat_id);
+      chatStore.list = chatStore.list.filter((chat: IChatItem) => chat.id !== data.chat_id);
     });
 
     socket.value.on(
@@ -103,7 +101,7 @@ export default function() {
         const chat = getCurrentChat(chat_id);
         if (!chat) return;
         chat.participants = chat.participants.filter((participant: IParticipant) => {
-          return participant._id !== participant_id;
+          return participant.id !== participant_id;
         });
       },
     );

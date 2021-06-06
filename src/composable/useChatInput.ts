@@ -60,7 +60,7 @@ export default function useChatInput() {
     const attachmentsResult = await getBase64ArrayAttachments();
     const data = {
       text: message.value,
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
       attachments: attachmentsResult,
     };
     console.log(data);
@@ -93,9 +93,9 @@ export default function useChatInput() {
 
   function sendTyping(status: boolean, isAudio: boolean) {
     socket.value.emit(ChatSocketEvents.TYPING_MESSAGE, {
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
       status,
-      participant_id: currentParticipant.value?._id,
+      participant_id: currentParticipant.value?.id,
       isAudio,
     });
   }
@@ -110,19 +110,19 @@ export default function useChatInput() {
 
   function readMessage(message_id: string | number) {
     socket.value.emit(ChatSocketEvents.READ_MESSAGE, {
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
       message_id,
     });
   }
 
   function readMessages() {
-    socket.value.emit(ChatSocketEvents.READ_MESSAGES, { chat_id: currentChat.value?._id });
+    socket.value.emit(ChatSocketEvents.READ_MESSAGES, { chat_id: currentChat.value?.id });
   }
 
   function deleteMessage(message_id: string | number) {
     socket.value.emit(ChatSocketEvents.DELETE_MESSAGE, {
       message_id,
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
     });
   }
 
@@ -134,9 +134,9 @@ export default function useChatInput() {
 
   function updateMessage() {
     socket.value.emit(ChatSocketEvents.UPDATE_MESSAGE, {
-      message_id: pickedMsg.value?._id,
+      message_id: pickedMsg.value?.id,
       text: message.value,
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
     });
     closeEditMsg();
   }

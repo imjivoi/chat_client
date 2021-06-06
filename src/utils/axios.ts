@@ -3,7 +3,7 @@ import appConfig from '@/app.config';
 import ErrorService from '@/services/errorService';
 
 export const HTTP = axios.create({
-  baseURL: appConfig.apiUrl,
+  baseURL: appConfig.apiUrl as string,
 });
 
 export const setAuthHeader = (token: string) => {

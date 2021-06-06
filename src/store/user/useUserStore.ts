@@ -1,4 +1,4 @@
-import authAPI from '@/services/api/userAPI';
+import userAPI from '@/services/api/userAPI';
 import { defineStore } from 'pinia';
 import { VueCookieNext } from 'vue-cookie-next';
 import notificationService from '@/services/notificationService';
@@ -15,7 +15,7 @@ export const useUserStore = defineStore({
     getAuth(payload: IAuth) {
       return new Promise((resolve, reject) => {
         this.isLoading = true;
-        authAPI
+        userAPI
           .getToken(payload)
           .then(res => {
             VueCookieNext.setCookie('accessToken', res.data.accessToken);
@@ -39,7 +39,7 @@ export const useUserStore = defineStore({
           return;
         }
         this.isLoading = true;
-        return authAPI
+        return userAPI
           .getUser()
           .then(res => {
             this.userData = res.data;
@@ -54,27 +54,33 @@ export const useUserStore = defineStore({
       router.push({ name: 'Welcome' });
       VueCookieNext.removeCookie('accessToken');
       this.$state = getDefaultState();
+      notificationService.default('You are signed out');
     },
     register(payload: IAuth) {
       return new Promise((resolve, reject) => {
         this.isLoading = true;
-        authAPI
-          .register(payload)
-          .then(({ data }) => {
-            this.userData = data.user;
-            this.isLogged = true;
-            VueCookieNext.setCookie('accessToken', data.accessToken);
-            router.push({ name: 'Home' });
+        userAPI.register(payload).then(({ data }) => {
+          this.userData = data.user;
+          this.isLogged = true;
+          VueCookieNext.setCookie('accessToken', data.accessToken);
+          router.push({ name: 'Home' });
 
-            resolve(data);
-          })
-          .catch(error => reject(error));
+          resolve(data);
+        });
+
         this.isLoading = false;
       });
     },
     async uploadAvatar(payload: FormData) {
-      const { data } = await authAPI.uploadAvatar(payload);
+      const { data } = await userAPI.uploadAvatar(payload);
       this.userData = data;
+    },
+    async delete() {
+      try {
+        await userAPI.delete();
+        router.push({ name: 'Welcome' });
+        notificationService.default(this.$t('Account was deleted'));
+      } catch (error) {}
     },
   },
 });

@@ -14,7 +14,7 @@
       <div
         class="chat-item__participant"
         v-for="participant in firstParticipants"
-        :key="participant._id"
+        :key="participant.id"
       >
         <Avatar :image="participant.user.avatar" :nickname="participant.user.username" />
         <p>{{ participant.user.username }}</p>

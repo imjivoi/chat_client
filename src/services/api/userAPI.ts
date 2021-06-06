@@ -1,4 +1,4 @@
-import { IAuth } from '@/store/auth/types/user';
+import { IAuth } from '@/store/user/types/user';
 import { TokenType } from '@/store/types/token';
 import { HTTP } from '../../utils/axios';
 
@@ -30,5 +30,8 @@ export default {
         'Content-Type': 'multipart/form-data',
       },
     });
+  },
+  delete() {
+    return HTTP.delete('users/me');
   },
 };

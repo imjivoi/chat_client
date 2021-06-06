@@ -11,14 +11,14 @@
       <div style="width:100%">
         <div class="mb-2">
           <transition-group name="fade" tag="div" class="chats__items">
-            <div class="chat-item-block" v-for="chat in chatsList" :key="chat._id">
+            <div class="chat-item-block" v-for="chat in chatsList" :key="chat.id">
               <ChatItem
-                :id="chat._id"
+                :id="chat.id"
                 :created="chat.createdAt"
                 :name="chat.name"
                 :participants="chat.participants"
-                @click="toChat(chat._id)"
-                @contextmenu="openContextMenu($event, chat._id)"
+                @click="toChat(chat.id)"
+                @contextmenu="openContextMenu($event, chat.id)"
               />
               <ContextMenu ref="contextMenu">
                 <template v-if="getImAdmin(contextChatId)">

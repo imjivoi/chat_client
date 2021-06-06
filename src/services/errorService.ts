@@ -9,11 +9,14 @@ export default class ErrorService {
     console.log(error);
   }
 
-  static requestError(error: AxiosError) {
-    const errorCode = error.response?.status;
-    if (errorCode) {
-      //@ts-ignore
-      const errorText = statusCodes[errorCode];
+  static requestError(error: AxiosError | any) {
+    console.log('error', error);
+    const errorCode = error.response?.status || error.statusCode;
+    //@ts-ignore
+
+    const errorText = statusCodes[errorCode];
+
+    if (errorCode && errorText) {
       notificationService.error(errorText);
     }
   }

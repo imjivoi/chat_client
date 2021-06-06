@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { Chats, Home, Logout, Notifications, Settings, User, Voices } from '@/components/icons';
-import { useUserStore } from '@/store/auth/useUserStore';
+import { useUserStore } from '@/store/';
 import { computed, defineComponent } from 'vue';
 import Avatar from '@/components/ui/Avatar.vue';
 

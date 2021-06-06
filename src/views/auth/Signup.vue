@@ -32,7 +32,7 @@ import Button from '@/components/ui/Button.vue';
 
 import { computed, defineComponent, reactive, watch } from 'vue';
 import notificationService from '@/services/notificationService';
-import { useUserStore } from '@/store/auth/useUserStore';
+import { useUserStore } from '@/store/';
 import useFormValidation from '@/composable/useFormValidation';
 
 export default defineComponent({

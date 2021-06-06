@@ -16,6 +16,9 @@
       </select> -->
       <Select @input="currentLocale = $event" :options="locales" />
     </div>
+    <div class="settings__item">
+      <Button :label="$t('Delete account')" @click="deleteUser" />
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -24,7 +27,7 @@ import Button from '@/components/ui/Button.vue';
 
 import { defineComponent } from 'vue';
 import { mapActions } from 'pinia';
-import { useUserStore } from '@/store/auth/useUserStore';
+import { useUserStore } from '@/store/';
 export default defineComponent({
   name: 'Settings',
   components: { Button, Select },
@@ -37,7 +40,7 @@ export default defineComponent({
     },
   },
   methods: {
-    ...mapActions(useUserStore, ['uploadAvatar']),
+    ...mapActions(useUserStore, ['uploadAvatar', 'delete']),
     onPickFile() {
       const input = this.$refs.fileInput as HTMLInputElement;
       input.click();
@@ -47,6 +50,9 @@ export default defineComponent({
       const formData = new FormData();
       formData.append('image', files[0]);
       await this.uploadAvatar(formData);
+    },
+    deleteUser() {
+      return this.delete();
     },
   },
   mounted() {

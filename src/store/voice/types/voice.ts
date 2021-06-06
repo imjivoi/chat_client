@@ -1,7 +1,7 @@
-import { IUserData } from '../../auth/types/user';
+import { IUserData } from '../../user/types/user';
 
 export interface IVoice {
-  _id: string | number;
+  id: string | number;
   name: string;
   admin: IUserData;
   createdAt: string;
