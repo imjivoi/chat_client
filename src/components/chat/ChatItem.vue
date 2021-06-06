@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="chat-item__header-right">
-        <p>Created:{{ createdAt }}</p>
+        <p>{{ $t('Created:') }}{{ createdAt }}</p>
       </div>
     </div>
     <div class="chat-item__participants">

@@ -1,62 +1,57 @@
 <template>
-  <div class="not-accepted"
-       v-if="currentParticipant && !currentParticipant.accepted">
-    You are not accepted
-    yet
+  <div class="not-accepted" v-if="currentParticipant && !currentParticipant.accepted">
+    {{ $t('You are not accepted yet') }}
   </div>
   <template v-else>
     <div class="flex justify-between" v-if="currentChat">
-
-      <ChatContainer :chat="currentChat"
-                     :current-participant="currentParticipant"/>
-      <ChatInfo/>
-
+      <ChatContainer :chat="currentChat" :current-participant="currentParticipant" />
+      <ChatInfo />
     </div>
   </template>
-
 </template>
 <script>
 //todo:emoji
 
-import ChatInfo from "@/components/chat/ChatInfo";
-import ChatContainer from "@/components/chat/ChatContainer";
+import ChatInfo from '@/components/chat/ChatInfo';
+import ChatContainer from '@/components/chat/ChatContainer';
 
-import {useChatData, useChatInput} from "@/composable";
+import { useChatData, useChatInput } from '@/composable';
 
-import {defineComponent, onUnmounted, watchEffect} from "vue";
+import { defineComponent, onUnmounted, watchEffect } from 'vue';
 
 export default defineComponent({
   name: 'Chat',
-  components: {ChatContainer, ChatInfo},
+  components: { ChatContainer, ChatInfo },
   setup() {
-
     const {
       user,
       currentChat,
       updateMessages,
       getInvite,
       currentParticipant,
-      unreadedMessages
-    } = useChatData()
-    const {readMessages, message} = useChatInput()
+      unreadedMessages,
+    } = useChatData();
+    const { readMessages, message } = useChatInput();
 
-
-    onUnmounted(() => message.value = '')
-    watchEffect(async () => {
-      await updateMessages()
-      await getInvite()
-      if (unreadedMessages.value?.length) {
-        readMessages()
-      }
-    }, {flush: 'post'})
+    onUnmounted(() => (message.value = ''));
+    watchEffect(
+      async () => {
+        await updateMessages();
+        await getInvite();
+        if (unreadedMessages.value?.length) {
+          readMessages();
+        }
+      },
+      { flush: 'post' },
+    );
 
     return {
-      user, currentChat, currentParticipant
-    }
+      user,
+      currentChat,
+      currentParticipant,
+    };
   },
-
-
-})
+});
 </script>
 <style>
 .not-accepted {
@@ -69,4 +64,3 @@ export default defineComponent({
   font-weight: 600;
 }
 </style>
-

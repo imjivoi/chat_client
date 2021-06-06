@@ -1,50 +1,47 @@
 <template>
-  <h4 class="mb-1">Enter chat name</h4>
-  <Input v-model:text="chatName" placeholder="Chat name" class="mb-1"
-         ref="input"
-         @keydown.enter.exact="create"/>
+  <h4 class="mb-1">{{ $t('Enter chat name') }}</h4>
+  <Input
+    v-model:text="chatName"
+    :placeholder="$t('Chat name')"
+    class="mb-1"
+    ref="input"
+    @keydown.enter.exact="create"
+  />
   <!--  <el-input v-model="chatName" class="mb-1" placeholder="Chat name"-->
   <!--            @keydown.enter.exact="create"-->
   <!--            ref="input"></el-input>-->
 
-  <Button style="width: 100%" :disabled="!chatName.length" label="Create"
-
-          @click="create"/>
-
-
+  <Button style="width: 100%" :disabled="!chatName.length" :label="$t('Create')" @click="create" />
 </template>
 <script lang="ts">
-import Input from '@/components/ui/Input.vue'
-import Button from "@/components/ui/Button.vue";
+import Input from '@/components/ui/Input.vue';
+import Button from '@/components/ui/Button.vue';
 
-import {defineComponent, nextTick, onMounted, ref} from "vue"
-import {useChatInput} from "@/composable";
-import {useModal} from "@/store";
-import notificationService from "@/services/notificationService";
+import { defineComponent, nextTick, onMounted, ref } from 'vue';
+import { useChatInput } from '@/composable';
+import { useModal } from '@/store';
+import notificationService from '@/services/notificationService';
 
 export default defineComponent({
-  name: "CreateChat",
-  components: {Button, Input},
+  name: 'CreateChat',
+  components: { Button, Input },
   setup(_) {
-    const isLoading = ref(false)
-    const chatName = ref('')
-    const input = ref()
-    const {createChat} = useChatInput()
-    const modal = useModal()
+    const isLoading = ref(false);
+    const chatName = ref('');
+    const input = ref();
+    const { createChat } = useChatInput();
+    const modal = useModal();
 
     async function create() {
-      if (!chatName.value) return
-      const {status, message} = await createChat(chatName.value)
-      if (!status) return notificationService.error(message)
-      modal.HIDE()
+      if (!chatName.value) return;
+      const { status, message } = await createChat(chatName.value);
+      if (!status) return notificationService.error(message);
+      modal.HIDE();
     }
 
-    onMounted(() =>
-      nextTick(() => input.value.focus()
-      )
-    )
+    onMounted(() => nextTick(() => input.value.focus()));
 
-    return {chatName, create, isLoading, input}
-  }
-})
+    return { chatName, create, isLoading, input };
+  },
+});
 </script>

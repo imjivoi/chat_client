@@ -3,17 +3,13 @@ import { VueCookieNext } from 'vue-cookie-next';
 import io from 'socket.io-client';
 import { useSocketListeners } from '@/composable/index';
 import { ref } from 'vue';
+import { SocketStatusConnect } from '@/store/chat/types/chat-socket';
 
 const socket = ref<any>();
+const connectionStatus = ref<SocketStatusConnect>(SocketStatusConnect.CONNECTING);
 
 export default function useSocket(url: string) {
   const token = VueCookieNext.getCookie('accessToken');
-  // const socket = io(url, {
-  //   reconnectionDelayMax: 10000,
-  //   query: {
-  //     token: token,
-  //   },
-  // });
   const { initListeners } = useSocketListeners();
 
   onMounted(() => {
@@ -24,11 +20,22 @@ export default function useSocket(url: string) {
       },
     });
     socket.value.connect();
-    socket.value.on('connect', () => initListeners(socket));
+    socket.value.on('connect', () => {
+      connectionStatus.value = SocketStatusConnect.OPEN;
+      initListeners(socket);
+    });
+    socket.value.on('connecting', () => (connectionStatus.value = SocketStatusConnect.CONNECTING));
+    socket.value.on('disconnect ', () => {
+      connectionStatus.value = SocketStatusConnect.CLOSED;
+    });
   });
-  onUnmounted(() => socket.value.disconnect());
+  onUnmounted(() => {
+    connectionStatus.value = SocketStatusConnect.CONNECTING;
+    socket.value.disconnect();
+  });
 
   return {
     socket,
+    connectionStatus,
   };
 }

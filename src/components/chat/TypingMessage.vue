@@ -1,23 +1,23 @@
 <template>
   <div class="typing-message">
-    {{ `${username} is ${isAudio ? 'recording audio' : 'typing message'} ...` }}
+    {{ `${username}  ${isAudio ? $t('recording audio') : $t('typing message')} ...` }}
   </div>
 </template>
 
 <script>
 export default {
-  name: "TypingMessage",
+  name: 'TypingMessage',
   props: {
     username: {
       type: String,
-      required: true
+      required: true,
     },
     isAudio: {
       type: Boolean,
-      default: false
-    }
-  }
-}
+      default: false,
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -30,7 +30,5 @@ export default {
   max-width: 80%;
   position: relative;
   color: $color_gray3;
-
-
 }
 </style>

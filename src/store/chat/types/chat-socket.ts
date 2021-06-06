@@ -22,6 +22,7 @@ export enum SocketStatusConnect {
   OPEN = 'OPEN',
   CONNECTING = 'CONNECTING',
   CLOSED = 'CLOSED',
+  CONNECT_ERROR = 'CONNECT_ERROR',
 }
 
 interface IChatSocketMesStatusResp {

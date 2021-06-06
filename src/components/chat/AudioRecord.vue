@@ -13,14 +13,14 @@
         </div>
         <div class="flex " style="align-items: baseline">
           <p class="mr-1">
-            Recording
+            {{ $t('Recording') }}
           </p>
           <div class="dot-pulse"></div>
         </div>
       </div>
 
       <div class="timer" v-if="!isSending">{{ minutes + ' : ' + seconds }}</div>
-      <div class="timer" v-else>Sending ...</div>
+      <div class="timer" v-else>{{ $t('Sending ...') }}</div>
       <div class="btns">
         <Button is-icon icon="send" @click="send" />
         <Button is-icon icon="micro-off" ref="stopBtn" @click="close" />
@@ -219,7 +219,7 @@ export default {
     height: 100%;
     border-radius: 50%;
     background-color: $primary;
-    opacity: 0.2;
+    opacity: 0.1;
     z-index: -1;
     pointer-events: none;
     transition: all 0.1s;
@@ -248,7 +248,7 @@ export default {
     height: 100%;
     border-radius: 50%;
     background-color: $primary;
-    opacity: 0.3;
+    opacity: 0.1;
     z-index: -1;
     pointer-events: none;
     transition: all 0.1s;

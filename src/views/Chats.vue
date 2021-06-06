@@ -22,11 +22,11 @@
               />
               <ContextMenu ref="contextMenu">
                 <template v-if="getImAdmin(contextChatId)">
-                  <div class="danger" @click="deleteChat">Delete</div>
-                  <div>Change name</div>
+                  <div class="danger" @click="deleteChat">{{ $t('Delete') }}</div>
+                  <div>{{ $t('Change name') }}</div>
                 </template>
 
-                <div class="danger" @click="quitChat" v-else>Quit</div>
+                <div class="danger" @click="quitChat" v-else>{{ $t('Quit') }}</div>
               </ContextMenu>
             </div>
           </transition-group>
@@ -34,8 +34,8 @@
       </div>
     </div>
     <div v-else class="mt-5" style="height:88%;text-align: center">
-      <h3>You have not chats yet</h3>
-      <Button style="margin: 20px auto 0" label="Create chat" @click="showModal" />
+      <h3>{{ $t('You have not chats yet') }}</h3>
+      <Button style="margin: 20px auto 0" :label="$t('Create chat')" @click="showModal" />
     </div>
   </template>
 </template>
