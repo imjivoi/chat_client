@@ -107,12 +107,12 @@ export default defineComponent({
       return userId === currentChat.value?.admin.id;
     }
 
-    function acceptRequest(participantid: string | number) {
-      updateParticipant({ participantid, accepted: true });
+    function acceptRequest(participant_id: string | number) {
+      updateParticipant({ participant_id, accepted: true });
     }
 
-    function blockParticipant(participantid: string | number) {
-      updateParticipant({ participantid, blocked: true });
+    function blockParticipant(participant_id: string | number) {
+      updateParticipant({ participant_id, blocked: true });
     }
 
     return {

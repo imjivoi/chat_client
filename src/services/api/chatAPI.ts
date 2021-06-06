@@ -1,4 +1,4 @@
-import { HTTP } from '../../utils/axios';
+import { HTTP } from '../../plugins/axios';
 
 const url = '/chats/';
 

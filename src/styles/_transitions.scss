@@ -13,14 +13,18 @@
 .fade-to-top {
   &-enter-active,
   &-leave-active {
-    transition: 0.3s;
-
+    transition: all 0.5s;
   }
-
+  &-leave-active {
+    position: absolute;
+    opacity: 0;
+  }
+  &-move {
+    transition: all 0.5s;
+  }
   &-leave-to,
   &-enter-from {
     transform: translateY(20px);
     opacity: 0;
   }
-
 }

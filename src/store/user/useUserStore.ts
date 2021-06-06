@@ -6,7 +6,7 @@ import router from '@/router';
 import { IAuth } from './types/user';
 import { state } from './state';
 import { getDefaultState } from './default-state';
-import { setAuthHeader } from '@/utils/axios';
+import { setAuthHeader } from '@/plugins/axios';
 import { i18n } from '../../resource/i18n';
 
 export const useUserStore = defineStore({

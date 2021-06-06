@@ -38,7 +38,7 @@
       </div>
       <div class="message__readed">
         <transition name="fade">
-          <i class="el-icon-check check" v-if="messageData.isReaded"></i>
+          <Checkmark v-if="messageData.isReaded" />
         </transition>
       </div>
     </div>
@@ -46,6 +46,7 @@
 </template>
 
 <script lang="ts">
+import { Checkmark } from '@/components/icons';
 import AudioPlayer from './AudioPlayer.vue';
 import Modal from '../common/Modal.vue';
 import Avatar from '@/components/ui/Avatar.vue';
@@ -58,7 +59,7 @@ import { IMessage } from '@/store/chat/types/message';
 
 export default defineComponent({
   name: 'Message',
-  components: { Avatar, Modal, AudioPlayer },
+  components: { Avatar, Modal, AudioPlayer, Checkmark },
   props: {
     messageData: {
       type: Object as PropType<IMessage>,
@@ -128,6 +129,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .message {
+  transition: all 0.5s;
+  display: block;
   &__container {
     margin: 0 auto 50px 0;
     display: flex;
@@ -170,14 +173,6 @@ export default defineComponent({
       .message__readed {
         left: -25px;
         right: auto;
-
-        .double-check {
-          right: 0;
-        }
-
-        .check {
-          right: 0;
-        }
       }
     }
   }
@@ -270,6 +265,10 @@ export default defineComponent({
     position: absolute;
     right: -25px;
     bottom: 0;
+    width: 20px;
+    svg {
+      fill: $primary;
+    }
 
     .check,
     .double-check {

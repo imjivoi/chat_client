@@ -1,4 +1,4 @@
-import { IMessage } from './message';
+import { IMessage, ITypingMessage } from './message';
 import { IUserData } from '../../user/types/user';
 
 export interface IChatItem {
@@ -8,7 +8,7 @@ export interface IChatItem {
   admin: IUserData;
   name: string | null;
   image?: string | null;
-  typing?: ITypingData | null;
+  typing?: ITypingMessage | null;
   invite?: IChatInvite | null;
   messages: IMessage[];
 }

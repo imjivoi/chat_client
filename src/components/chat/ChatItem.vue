@@ -70,7 +70,6 @@ export default defineComponent({
   transition: $transition;
   overflow: hidden;
   max-width: 300px;
-  margin: 0 10px 10px 0;
 
   &:hover {
     //background: $color_blue;

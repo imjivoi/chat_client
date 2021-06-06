@@ -12,7 +12,14 @@ export interface IMessage {
   isReaded?: boolean;
 }
 
+export interface ITypingMessage {
+  isAudio?: boolean;
+  participant_id?: string | number;
+  chat_id?: string | number;
+  status?: boolean;
+}
+
 export interface IMessagesList {
-  list: IMessage[];
+  list: IMessage[] | ITypingMessage[];
   count: number;
 }

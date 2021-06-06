@@ -174,6 +174,7 @@ export default {
       font-size: 48px;
       font-weight: 600;
       color: #9880ff;
+      z-index: 1;
     }
   }
 }

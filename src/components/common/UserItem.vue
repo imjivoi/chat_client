@@ -77,5 +77,8 @@ export default defineComponent({
 .user__name {
   font-weight: 600;
   font-size: 0.95em;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

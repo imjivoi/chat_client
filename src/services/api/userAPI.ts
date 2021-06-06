@@ -1,6 +1,6 @@
 import { IAuth } from '@/store/user/types/user';
 import { TokenType } from '@/store/types/token';
-import { HTTP } from '../../utils/axios';
+import { HTTP } from '../../plugins/axios';
 
 export default {
   getToken(data: IAuth) {

@@ -144,7 +144,7 @@ export default defineComponent({
     flex-wrap: wrap;
 
     .chat-item-block {
-      margin: 5px;
+      margin: 0 10px 10px 0;
       max-width: 300px;
       width: 100%;
     }

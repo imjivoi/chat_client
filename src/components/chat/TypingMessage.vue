@@ -1,15 +1,18 @@
 <template>
   <div class="typing-message">
-    {{ `${username}  ${isAudio ? $t('recording audio') : $t('typing message')} ...` }}
+    <Avatar class="mr-1" :image="user.avatar" :nickname="user.username" />
+    <span> {{ `${isAudio ? $t('recording audio') : $t('typing message')} ...` }} </span>
   </div>
 </template>
 
 <script>
+import Avatar from '@/components/ui/Avatar.vue';
 export default {
   name: 'TypingMessage',
+  components: { Avatar },
   props: {
-    username: {
-      type: String,
+    user: {
+      type: Object,
       required: true,
     },
     isAudio: {
@@ -24,11 +27,12 @@ export default {
 .typing-message {
   margin: 0 auto 10px 0;
   display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
+  align-items: baseline;
   width: fit-content;
   max-width: 80%;
   position: relative;
   color: $color_gray3;
+  font-size: 12px;
+  font-weight: 500;
 }
 </style>

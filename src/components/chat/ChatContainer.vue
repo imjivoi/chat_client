@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="chat__messages">
-      <div ref="content" class="chat__messages-content">
+      <div ref="content" class="chat__messages-content ">
         <transition-group name="fade-to-top">
           <Message
             v-for="message in chat.messages"
@@ -26,11 +26,13 @@
             @pickMsg="pickMsg"
           />
         </transition-group>
-        <TypingMessage
-          v-if="chat.typing?.status && typingUser.id !== currentParticipant.id"
-          :username="typingUser.user.username"
-          :is-audio="chat.typing.isAudio"
-        />
+        <transition name="fade-to-top">
+          <TypingMessage
+            v-if="chat.typing?.status && typingUser.id !== currentParticipant.id"
+            :user="typingUser.user"
+            :is-audio="chat.typing.isAudio"
+          />
+        </transition>
       </div>
     </div>
     <ChatInput />
@@ -82,7 +84,7 @@ export default defineComponent({
 
     const typingUser = computed(() =>
       chat.value.participants.find(
-        participant => participant.id === chat.value.typing?.participant_id,
+        participant => participant.id === chat.value?.typing?.participant_id,
       ),
     );
 
@@ -218,6 +220,7 @@ export default defineComponent({
 
 .chat__messages {
   position: relative;
+  transition: all 0.5s;
 
   padding: 10px 0 0 20px;
 
@@ -227,7 +230,7 @@ export default defineComponent({
     overflow-x: hidden;
     position: relative;
     padding: 80px 0 70px;
-
+    transition: all 0.5s;
     &::-webkit-scrollbar-track-piece {
       background-color: #fff;
       margin-top: 70px;

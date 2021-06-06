@@ -1,6 +1,6 @@
 import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
-import { IMessage } from '@/store/chat/types/message';
-import { IChatItem, IChatState, IParticipant, ITypingData } from '@/store/chat/types/chat';
+import { IMessage, ITypingMessage } from '@/store/chat/types/message';
+import { IChatItem, IChatState, IParticipant } from '@/store/chat/types/chat';
 import { useChatStore } from '@/store';
 import { reactive } from 'vue';
 import { onUnmounted } from '@vue/runtime-core';
@@ -44,9 +44,9 @@ export default function() {
       const currentChat = getCurrentChat(chat_id);
       currentChat?.participants.push(data);
     });
-    socket.value.on(ChatSocketEvents.TYPING_MESSAGE, ({ chat_id, ...data }: ITypingData) => {
+    socket.value.on(ChatSocketEvents.TYPING_MESSAGE, ({ chat_id, ...data }: ITypingMessage) => {
       const currentChat = getCurrentChat(chat_id);
-      currentChat!.typing = data;
+      if (currentChat) currentChat.typing = data;
     });
 
     socket.value.on(
@@ -73,6 +73,7 @@ export default function() {
         const currentChat = getCurrentChat(chat_id);
         if (currentChat)
           currentChat.messages = currentChat.messages?.filter(
+            //@ts-ignore
             (message: IMessage) => message.id !== message_id,
           );
       },
@@ -81,8 +82,8 @@ export default function() {
       const currentChat = getCurrentChat(message.chat?.id);
       const currentMessage = currentChat?.messages?.find((mes: IMessage) => message.id === mes.id);
       if (currentMessage) {
-        currentMessage.text = message.text;
-        currentMessage.updatedAt = message.updatedAt;
+        (currentMessage as IMessage).text = message.text;
+        (currentMessage as IMessage).updatedAt = message.updatedAt;
       }
     });
     socket.value.on(ChatSocketEvents.DELETE_CHAT, (data: any) => {
@@ -105,6 +106,15 @@ export default function() {
         });
       },
     );
+    socket.value.on(ChatSocketEvents.UPDATE_PARTICIPANT, (participant: IParticipant) => {
+      const chat = getCurrentChat(participant.chat_id);
+      if (!chat) return;
+      let currentParticipant = chat.participants.find(
+        (item: IParticipant) => item.id === participant.id,
+      );
+      if (!currentParticipant) return;
+      currentParticipant = participant;
+    });
   }
 
   onUnmounted(() => (state.initiated = false));

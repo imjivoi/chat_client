@@ -1,5 +1,5 @@
 import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
-import { toBase64 } from '@/utils/base64encryption';
+import { toBase64 } from '@/helpers/base64encryption';
 import { computed, inject, ref, Ref, watch } from 'vue';
 import { Socket } from 'socket.io';
 import notificationService from '@/services/notificationService';
@@ -97,6 +97,8 @@ export default function useChatInput() {
       status,
       participant_id: currentParticipant.value?.id,
       isAudio,
+      id: new Date().getTime(),
+      messageType: 'typing',
     });
   }
 

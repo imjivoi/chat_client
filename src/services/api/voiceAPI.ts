@@ -1,6 +1,6 @@
-import { HTTP } from "../../utils/axios";
+import { HTTP } from '../../plugins/axios';
 
-const url = "/voice";
+const url = '/voice';
 
 export default {
   create(name: string) {

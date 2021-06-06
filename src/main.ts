@@ -12,7 +12,7 @@ import '@/styles/main.scss';
 import App from './App.vue';
 import router from './router';
 import { useUserStore } from './store/';
-import { setAuthHeader } from './utils/axios';
+import { setAuthHeader } from './plugins/axios';
 import ErrorService from '@/services/errorService';
 
 const app = createApp(App);
