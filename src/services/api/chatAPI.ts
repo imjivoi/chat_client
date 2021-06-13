@@ -3,7 +3,7 @@ import { HTTP } from '../../plugins/axios';
 const url = '/chats/';
 
 export interface ICreateChatData {
-  title?: string;
+  title: string;
 }
 
 export interface IUpdateParticipant {
@@ -18,11 +18,11 @@ export default {
     if (id) return HTTP.get(`${url}?id=${id}`);
     return HTTP.get(url);
   },
-  createChat() {
-    return HTTP.post(url);
+  createChat(name: string) {
+    return HTTP.post(url, { name });
   },
   deleteChat(id: string | null) {
-    return HTTP.delete(`${url}?id=${id}`);
+    return HTTP.delete(`${url}${id}`);
   },
   exitFromChat(chat_id: string | number | null) {
     return HTTP.put(url + 'exit/', { chat_id: chat_id });

@@ -18,7 +18,7 @@ import Input from '@/components/ui/Input.vue';
 import Button from '@/components/ui/Button.vue';
 
 import { defineComponent, nextTick, onMounted, ref } from 'vue';
-import { useChatInput } from '@/composable';
+import { useChatData, useChatInput } from '@/composable';
 import { useModal } from '@/store';
 import notificationService from '@/services/notificationService';
 
@@ -29,14 +29,18 @@ export default defineComponent({
     const isLoading = ref(false);
     const chatName = ref('');
     const input = ref();
-    const { createChat } = useChatInput();
+    const { createChat } = useChatData();
     const modal = useModal();
 
     async function create() {
       if (!chatName.value) return;
-      const { status, message } = await createChat(chatName.value);
-      if (!status) return notificationService.error(message);
-      modal.HIDE();
+      try {
+        await createChat(chatName.value);
+      } catch (error) {
+        notificationService.error("Can't create chat");
+      } finally {
+        modal.HIDE();
+      }
     }
 
     onMounted(() => nextTick(() => input.value.focus()));

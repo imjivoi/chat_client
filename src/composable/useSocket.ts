@@ -5,18 +5,18 @@ import { useSocketListeners } from '@/composable/index';
 import { ref } from 'vue';
 import { SocketStatusConnect } from '@/store/chat/types/chat-socket';
 
-const socket = ref<any>();
-const connectionStatus = ref<SocketStatusConnect>(SocketStatusConnect.CONNECTING);
-
-export default function useSocket(url: string) {
+export default function useSocket(url: string, id: string) {
   const token = VueCookieNext.getCookie('accessToken');
   const { initListeners } = useSocketListeners();
+  const socket = ref<any>();
+  const connectionStatus = ref<SocketStatusConnect>(SocketStatusConnect.CONNECTING);
 
   onMounted(() => {
     socket.value = io(url, {
       reconnectionDelayMax: 10000,
       query: {
-        token: token,
+        token,
+        id,
       },
     });
     socket.value.connect();

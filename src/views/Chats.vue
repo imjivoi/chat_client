@@ -59,7 +59,6 @@ export default defineComponent({
   components: { Spinner, ChatItem, ContextMenu, Button },
   name: 'ChatItems',
   setup() {
-    const socket = inject('socket') as Ref<Socket>;
     const isLoading = ref(false);
     const contextMenu = ref();
     const router = useRouter();
@@ -85,24 +84,24 @@ export default defineComponent({
     }
 
     function deleteChat() {
-      socket.value.emit(
-        ChatSocketEvents.DELETE_CHAT,
-        { chat_id: contextChatId.value },
-        (response: IEmittedEventStatus) => {
-          if (!response.status) notificationService.error(response.message);
-        },
-      );
+      // socket.value.emit(
+      //   ChatSocketEvents.DELETE_CHAT,
+      //   { chat_id: contextChatId.value },
+      //   (response: IEmittedEventStatus) => {
+      //     if (!response.status) notificationService.error(response.message);
+      //   },
+      // );
       contextMenu.value.close();
     }
 
     function quitChat() {
-      socket.value.emit(
-        ChatSocketEvents.QUIT_CHAT,
-        { chat_id: contextChatId.value },
-        (response: IEmittedEventStatus) => {
-          if (!response.status) notificationService.error(response.message);
-        },
-      );
+      // socket.value.emit(
+      //   ChatSocketEvents.QUIT_CHAT,
+      //   { chat_id: contextChatId.value },
+      //   (response: IEmittedEventStatus) => {
+      //     if (!response.status) notificationService.error(response.message);
+      //   },
+      // );
       contextMenu.value.close();
     }
 

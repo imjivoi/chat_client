@@ -4,7 +4,7 @@ import { IUserData } from '../../user/types/user';
 export interface IChatItem {
   participants: Array<IParticipant>;
   createdAt: string;
-  id: string | number;
+  id: string;
   admin: IUserData;
   name: string | null;
   image?: string | null;
@@ -25,7 +25,7 @@ export interface IAttachments {
 }
 
 export interface IParticipant {
-  id: string | number;
+  id: string;
   accepted: boolean;
   blocked: boolean;
   user: IUserData;

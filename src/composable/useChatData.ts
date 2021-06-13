@@ -22,10 +22,10 @@ export default function useChatData() {
       (participant: IParticipant) => participant.user.id === user?.id,
     ),
   );
-  const acceptedParticipants = computed(() =>
-    currentChat.value?.participants
-      .sort((a: any, b: any) => (a.user.id === currentChat.value?.admin.id ? 1 : 0))
-      .filter((participant: IParticipant) => participant.accepted),
+  const participants = computed(() =>
+    currentChat.value?.participants.sort((a: any, b: any) =>
+      a.user.id === currentChat.value?.admin.id ? 1 : 0,
+    ),
   );
   const requests = computed(() =>
     currentChat.value?.participants.filter((participant: IParticipant) => !participant.accepted),
@@ -54,6 +54,13 @@ export default function useChatData() {
     if (!currentChat.value?.invite) {
       await chatStore.GET_INVITE(chatId.value);
     }
+  }
+  async function createChat(title: string) {
+    await chatStore.CREATE_CHAT({ title });
+  }
+  async function deleteChat() {
+    const id = currentChat.value?.id;
+    if (id) await chatStore.DELETE_CHAT(id);
   }
 
   function createInvite() {
@@ -90,11 +97,12 @@ export default function useChatData() {
     updateMessages,
     getInvite,
     user,
-    acceptedParticipants,
+    participants,
     requests,
     inviteLink,
     isValidInviteLink,
     createInvite,
+    createChat,
     updateInvite,
     copyLink,
     updateParticipant,
@@ -102,5 +110,6 @@ export default function useChatData() {
     imAdmin,
     unreadedMessages,
     getImAdmin,
+    deleteChat,
   };
 }

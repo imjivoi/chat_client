@@ -7,7 +7,7 @@
       <div class="top  mb-2 transition">
         <Back v-if="isRouteBack" @click="goBack" class="arrow-back mr-1 transition" />
         <h2 class="transition">{{ $t(routeTitle) }}</h2>
-        <transition name="fade">
+        <!-- <transition name="fade">
           <div
             class="connection"
             v-if="showConnectionStatus"
@@ -15,7 +15,7 @@
           >
             {{ $t(connectionText) }}
           </div>
-        </transition>
+        </transition> -->
       </div>
       <router-view />
     </div>
@@ -29,55 +29,34 @@ import SideBar from '@/components/common/Sidebar.vue';
 import Spinner from '@/components/common/Spinner.vue';
 import { Back } from '@/components/icons';
 
-import appConfig from '@/app.config';
-
-import { useSocket } from '@/composable';
 import { useRoute, useRouter } from 'vue-router';
-
-import { computed, defineComponent, provide, ref, watch } from 'vue';
-import { useUserStore } from '@/store';
-import { SocketStatusConnect } from '@/store/chat/types/chat-socket';
+import { computed, defineComponent, onBeforeMount, provide, ref, watch } from 'vue';
+import { useChatStore, useUserStore } from '@/store';
 
 export default defineComponent({
   name: 'AppMainLayout',
   components: { SideBar, Spinner, Modal, Back },
   setup() {
     const user = useUserStore();
-    const { socket, connectionStatus } = useSocket(appConfig.socketUrl);
-    const showConnectionStatus = ref(true);
+    const chat = useChatStore();
     const route = useRoute();
     const router = useRouter();
 
     const routeTitle = computed(() => route.meta.title);
     const isRouteBack = computed(() => route.meta.back);
     const isLoading = computed(() => user.isLoading);
-    const connectionText = computed(() =>
-      connectionStatus.value === SocketStatusConnect.OPEN ? 'Connected!' : 'Connecting ...',
-    );
 
-    provide('socket', socket);
+    onBeforeMount(() => chat.GET_CHATS());
 
     function goBack() {
       router.back();
     }
-
-    watch(connectionStatus, () => {
-      if (connectionStatus.value === SocketStatusConnect.OPEN) {
-        user.getUserData();
-        setTimeout(() => (showConnectionStatus.value = false), 3000);
-        return;
-      }
-      showConnectionStatus.value = true;
-    });
 
     return {
       routeTitle,
       isLoading,
       goBack,
       isRouteBack,
-      connectionText,
-      showConnectionStatus,
-      connectionStatus,
     };
   },
 });

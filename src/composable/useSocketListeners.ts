@@ -34,11 +34,12 @@ export default function() {
       chatStore.list.push(newChat);
       router.push({ name: 'Chat', params: { id: newChat.id } });
     });
-    socket.value.on(ChatSocketEvents.FETCH_CHATS, ({ list, count }: IChatState) => {
-      chatStore.$patch({
-        list,
-        count,
-      });
+    socket.value.on(ChatSocketEvents.FETCH_MESSAGES, (data: IMessage[]) => {
+      if (!data.length) return;
+      const chat = getCurrentChat(data[0].chat?.id);
+      if (chat) {
+        chat.messages = data;
+      }
     });
     socket.value.on(ChatSocketEvents.NEW_PARTICIPANT, ({ chat_id, ...data }: IParticipant) => {
       const currentChat = getCurrentChat(chat_id);

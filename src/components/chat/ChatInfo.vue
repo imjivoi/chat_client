@@ -3,7 +3,7 @@
     <div class="participants">
       <h4>{{ $t('Participants') }}</h4>
       <ul class="participant-list">
-        <li v-for="participant in acceptedParticipants" :key="participant.id">
+        <li v-for="participant in participants" :key="participant.id">
           <UserItem
             :username="participant.user.username"
             :avatar="participant.user.avatar"
@@ -17,29 +17,6 @@
       </ul>
     </div>
     <template v-if="imAdmin">
-      <div class="requests" v-if="requests.length">
-        <h4>{{ $t('Requests') }}</h4>
-        <ul class="participant-list">
-          <li v-for="participant in requests" :key="participant.id">
-            <UserItem
-              :username="participant.user.username"
-              :avatar="participant.user.avatar"
-              :participant-id="participant.id"
-              :is-request="true"
-              @update="updateParticipant"
-            />
-            <Popover>
-              <div class="pop-item " @click="acceptRequest(participant.id)">
-                {{ $t('accept') }}
-              </div>
-              <div class="pop-item " @click="blockParticipant(participant.id)">
-                {{ $t('block') }}
-              </div>
-            </Popover>
-          </li>
-        </ul>
-      </div>
-
       <div class="invite">
         <h4>{{ $t('Invite') }}</h4>
 
@@ -91,7 +68,7 @@ export default defineComponent({
   components: { UserItem, Spinner, Button, Input, Popover },
   setup() {
     const {
-      acceptedParticipants,
+      participants,
       requests,
       createInvite,
       currentChat,
@@ -107,16 +84,12 @@ export default defineComponent({
       return userId === currentChat.value?.admin.id;
     }
 
-    function acceptRequest(participant_id: string | number) {
-      updateParticipant({ participant_id, accepted: true });
-    }
-
     function blockParticipant(participant_id: string | number) {
       updateParticipant({ participant_id, blocked: true });
     }
 
     return {
-      acceptedParticipants,
+      participants,
       requests,
       createInvite,
       chat: currentChat,
@@ -126,7 +99,7 @@ export default defineComponent({
       updateInvite,
       imAdmin,
       isAdmin,
-      acceptRequest,
+
       blockParticipant,
     };
   },

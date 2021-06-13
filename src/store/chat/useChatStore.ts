@@ -12,9 +12,12 @@ export const useChatStore = defineStore({
       return new Promise(async (resolve, reject) => {
         try {
           this.isLoading = true;
-          const { data } = await chatAPI.getChats();
-          this.list = data;
-          resolve(data);
+          const {
+            data: { list, count },
+          } = await chatAPI.getChats();
+          this.list = list;
+          this.count = count;
+          resolve(list);
         } catch (error) {
           reject(error);
         }
@@ -25,7 +28,7 @@ export const useChatStore = defineStore({
     CREATE_CHAT(payload: ICreateChatData) {
       return new Promise(async (resolve, reject) => {
         try {
-          const res = await chatAPI.createChat();
+          const res = await chatAPI.createChat(payload.title);
           if (res.status === 226) {
             router.push(`/chats/${res.data.id}`);
           } else {
@@ -37,6 +40,9 @@ export const useChatStore = defineStore({
           reject(error);
         }
       });
+    },
+    async DELETE_CHAT(chat_id: string) {
+      await chatAPI.deleteChat(chat_id);
     },
     async GET_INVITE(chat_id: string | number | string[]) {
       this.isLoading = true;
@@ -85,7 +91,7 @@ export const useChatStore = defineStore({
               router.push({
                 name: 'Error',
                 query: {
-                  status: status,
+                  status,
                   message: data.message,
                 },
               });

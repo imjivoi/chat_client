@@ -220,7 +220,7 @@ export default {
     height: 100%;
     border-radius: 50%;
     background-color: $primary;
-    opacity: 0.1;
+    opacity: 0.05;
     z-index: -1;
     pointer-events: none;
     transition: all 0.1s;
@@ -249,7 +249,7 @@ export default {
     height: 100%;
     border-radius: 50%;
     background-color: $primary;
-    opacity: 0.1;
+    opacity: 0.05;
     z-index: -1;
     pointer-events: none;
     transition: all 0.1s;
@@ -279,7 +279,7 @@ export default {
     height: 100%;
     border-radius: 50%;
     background-color: $primary;
-    opacity: 0.1;
+    opacity: 0.05;
     z-index: -1;
     pointer-events: none;
     transition: all 0.1s;
