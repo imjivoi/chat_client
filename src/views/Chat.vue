@@ -17,7 +17,7 @@ import ChatContainer from '@/components/chat/ChatContainer';
 
 import { useChatData, useChatInput } from '@/composable';
 
-import { defineComponent, onUnmounted, watchEffect } from 'vue';
+import { defineComponent, onMounted, onUnmounted, watchEffect } from 'vue';
 
 export default defineComponent({
   name: 'Chat',
@@ -33,17 +33,16 @@ export default defineComponent({
     } = useChatData();
     const { readMessages, message } = useChatInput();
 
-    onUnmounted(() => (message.value = ''));
-    watchEffect(
-      async () => {
-        await updateMessages();
-        await getInvite();
-        if (unreadedMessages.value?.length) {
-          readMessages();
-        }
-      },
-      { flush: 'post' },
-    );
+    onUnmounted(() => {
+      message.value = '';
+    });
+    onMounted(async () => {
+      await updateMessages();
+      await getInvite();
+      if (unreadedMessages.value?.length) {
+        readMessages();
+      }
+    });
 
     return {
       user,

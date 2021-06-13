@@ -94,6 +94,7 @@ export const useChatStore = defineStore({
       });
     },
     async UPDATE_PARTICIPANT(participant: IUpdateParticipant) {
+      console.log(11);
       try {
         await chatAPI.updateParticipant(participant);
       } catch (e) {}

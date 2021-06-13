@@ -1,13 +1,16 @@
 <template>
-  <button :disabled="disabled" class="button"
-          :class="{
-              button__primary:color==='primary',
-              button__danger:color==='danger',
-              button__disabled:disabled,
-              button__icon:isIcon,
-              button__outline:type==='outline'
-          }">
-    <component class="icon" v-if="icon" :is="icon"/>
+  <button
+    :disabled="disabled"
+    class="button"
+    :class="{
+      button__primary: color === 'primary',
+      button__danger: color === 'danger',
+      button__disabled: disabled,
+      button__icon: isIcon,
+      button__outline: type === 'outline',
+    }"
+  >
+    <component class="icon" v-if="icon" :is="icon" />
     <span v-if="label">{{ label }}</span>
   </button>
 </template>
@@ -24,21 +27,21 @@ import {
   Play,
   Plus,
   SendIcon as send,
-  Trash
-} from "@/components/icons"
+  Trash,
+} from '@/components/icons';
 
-import {defineComponent, PropType} from "vue"
+import { defineComponent, PropType } from 'vue';
 
 type Icons =
-  'send'
+  | 'send'
   | 'plus'
   | 'micro'
   | 'cloud'
   | 'checkmark-circle'
   | 'cross-circle'
-  | 'micro-off'
+  | 'micro-off';
 
-type BtnType = 'outline' | ''
+type BtnType = 'outline' | '';
 export default defineComponent({
   name: 'Button',
   components: {
@@ -53,45 +56,44 @@ export default defineComponent({
     Trash,
     Play,
     Pause,
-    Close
+    Close,
   },
   props: {
     label: {
       type: String,
-      required: false
+      required: false,
     },
     disabled: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     color: {
       type: String as PropType<'primary' | 'danger'>,
       required: false,
-      default: 'primary'
+      default: 'primary',
     },
     size: {
       type: String as PropType<'small' | 'medium' | 'big'>,
-      default: 'medium'
+      default: 'medium',
     },
     icon: {
       type: String as PropType<'' | Icons>,
       default: '',
-      required: false
+      required: false,
     },
     isIcon: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     type: {
       type: String as PropType<BtnType>,
       required: false,
-      default: ''
-    }
+      default: '',
+    },
   },
-
-})
+});
 </script>
 <style scoped lang="scss">
 .button {
@@ -106,7 +108,7 @@ export default defineComponent({
   svg {
     color: white;
 
-    /deep/ path {
+    :deep() path {
       color: white;
     }
   }
@@ -119,7 +121,8 @@ export default defineComponent({
     opacity: 0.8;
   }
 
-  &:focus, &:active {
+  &:focus,
+  &:active {
     opacity: 1;
   }
 
@@ -157,13 +160,10 @@ export default defineComponent({
       width: 25px;
       fill: $primary;
 
-      /deep/ path {
+      :deep() path {
         fill: $primary;
-
       }
     }
   }
 }
-
-
 </style>

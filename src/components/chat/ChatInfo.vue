@@ -11,7 +11,7 @@
             :participant-id="participant.id"
           />
           <Popover v-if="imAdmin && !isAdmin(participant.user.id)">
-            <div class="pop-item">{{ $t('block') }}</div>
+            <div class="pop-item" @click="blockParticipant(participant.id)">{{ $t('block') }}</div>
           </Popover>
         </li>
       </ul>
