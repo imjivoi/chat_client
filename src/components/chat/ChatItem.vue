@@ -117,6 +117,9 @@ export default defineComponent({
       h3 {
         font-size: 14px;
         margin: 0 0 6px;
+        max-width: 130px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       p {
@@ -147,14 +150,11 @@ export default defineComponent({
     &:last-child {
       margin: 0;
     }
-  }
-}
-
-.el-avatar {
-  position: relative;
-
-  &:not(:first-child) {
-    //right: ;
+    p {
+      max-width: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 </style>

@@ -62,6 +62,8 @@ import Spinner from '@/components/common/Spinner.vue';
 
 import { defineComponent, inject } from 'vue';
 import { useChatData } from '@/composable';
+import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
+import { Socket } from 'socket.io';
 //todo:принять, блокировать запрос в чат, удалять юзера
 export default defineComponent({
   name: 'ChatInfo',
@@ -78,15 +80,12 @@ export default defineComponent({
       updateInvite,
       updateParticipant,
       imAdmin,
+      blockParticipant,
     } = useChatData();
-
     const socket = inject('socket');
+
     function isAdmin(userId: string) {
       return userId === currentChat.value?.admin.id;
-    }
-
-    function blockParticipant(participant_id: string | number) {
-      updateParticipant({ participant_id, blocked: true });
     }
 
     return {

@@ -32,7 +32,6 @@ export default defineComponent({
     const {
       user,
       currentChat,
-      updateMessages,
       getInvite,
       currentParticipant,
       unreadedMessages,
@@ -48,7 +47,6 @@ export default defineComponent({
       message.value = '';
     });
     onMounted(async () => {
-      await updateMessages();
       await getInvite();
       if (unreadedMessages.value?.length) {
         readMessages();

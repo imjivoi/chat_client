@@ -16,7 +16,7 @@ export default function() {
   function getCurrentChat(id: string | number | undefined) {
     return chatStore.list.find((chat: IChatItem) => chat.id === id);
   }
-
+  //todo:block user listener
   function initListeners(socket: any) {
     if (state.initiated) return;
     state.initiated = true;

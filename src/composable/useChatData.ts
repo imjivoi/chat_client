@@ -1,16 +1,19 @@
 import { useUserStore, useChatStore } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
-import { computed } from 'vue';
+import { computed, inject, Ref } from 'vue';
 import expiresDate from '@/helpers/expiresDate';
 import notificationService from '@/services/notificationService';
 import { IChatItem, IParticipant } from '@/store/chat/types/chat';
 import { IMessage } from '@/store/chat/types/message';
+import { Socket } from 'socket.io';
+import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
 
 export default function useChatData() {
   const chatStore = useChatStore();
   const route = useRoute();
   const router = useRouter();
   const userStore = useUserStore();
+  const socket = inject('socket') as Ref<Socket>;
 
   const user = userStore.userData;
 
@@ -99,7 +102,15 @@ export default function useChatData() {
     return chat?.admin?.id === user?.id;
   }
 
+  function blockParticipant(participant_id: string) {
+    socket.value.emit(ChatSocketEvents.BLOCK_USER, {
+      participant_id,
+      chat_id: currentChat.value?.id,
+    });
+  }
+
   return {
+    blockParticipant,
     currentChat,
     updateMessages,
     getInvite,
