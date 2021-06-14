@@ -6,7 +6,7 @@ import { ref } from 'vue';
 import { SocketStatusConnect } from '@/store/chat/types/chat-socket';
 
 export default function useSocket(url: string, id: string) {
-  const token = VueCookieNext.getCookie('accessToken');
+  const token = localStorage.getItem('accessToken');
   const { initListeners } = useSocketListeners();
   const socket = ref<any>();
   const connectionStatus = ref<SocketStatusConnect>(SocketStatusConnect.CONNECTING);

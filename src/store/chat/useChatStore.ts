@@ -30,10 +30,11 @@ export const useChatStore = defineStore({
         try {
           const res = await chatAPI.createChat(payload.title);
           if (res.status === 226) {
-            router.push(`/chats/${res.data.id}`);
+            router.push(`/app/chats/${res.data.id}`);
           } else {
-            this.list = res.data;
-            router.push(`/chats/${res.data.id}`);
+            this.list.push(res.data);
+            this.count++;
+            router.push(`/app/chats/${res.data.id}`);
           }
           resolve(res.data);
         } catch (error) {

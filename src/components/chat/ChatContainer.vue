@@ -139,7 +139,7 @@ export default defineComponent({
   position: relative;
   background: #fff;
   box-shadow: $box_shadow;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 160px);
   border-radius: 10px;
 }
 
@@ -226,7 +226,7 @@ export default defineComponent({
 
   &-content {
     overflow-y: scroll;
-    height: calc(100vh - 130px);
+    height: calc(100vh - 160px);
     overflow-x: hidden;
     position: relative;
     padding: 80px 0 70px;

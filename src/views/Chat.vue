@@ -3,9 +3,11 @@
     {{ $t('You are not accepted yet') }}
   </div>
   <template v-else>
-    <div class="flex justify-between" v-if="currentChat">
-      <ChatContainer :chat="currentChat" :current-participant="currentParticipant" />
-      <ChatInfo />
+    <div class="wrapper">
+      <div class="flex justify-between" v-if="currentChat">
+        <ChatContainer :chat="currentChat" :current-participant="currentParticipant" />
+        <ChatInfo />
+      </div>
     </div>
   </template>
 </template>
@@ -62,17 +64,17 @@ export default defineComponent({
       deleteChat,
     };
   },
-  async beforeRouteLeave(to, from, next) {
-    if (!this.imAdmin) return;
-    if (
-      this.imAdmin &&
-      confirm(this.$t('Are you really want to leave chat? All data of chat will be deleted'))
-    ) {
-      await this.deleteChat();
-      next();
-    }
-    next(false);
-  },
+  // async beforeRouteLeave(to, from, next) {
+  //   if (!this.imAdmin) return;
+  //   if (
+  //     this.imAdmin &&
+  //     confirm(this.$t('Are you really want to leave chat? All data of chat will be deleted'))
+  //   ) {
+  //     await this.deleteChat();
+  //     next();
+  //   }
+  //   next(false);
+  // },
 });
 </script>
 <style>

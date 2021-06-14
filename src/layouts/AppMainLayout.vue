@@ -2,11 +2,14 @@
   <Spinner v-if="isLoading" height="100vh" text="Loading..." width="100vw" />
 
   <div v-else class="content">
-    <SideBar />
+    <!-- <SideBar /> -->
+    <Header />
     <div class="wrapper">
       <div class="top  mb-2 transition">
-        <Back v-if="isRouteBack" @click="goBack" class="arrow-back mr-1 transition" />
-        <h2 class="transition">{{ $t(routeTitle) }}</h2>
+        <div class="back" @click="goBack">
+          <Back v-if="isRouteBack" class="arrow-back mr-1 transition" />
+          <h2 class="transition">{{ $t(routeTitle) }}</h2>
+        </div>
         <!-- <transition name="fade">
           <div
             class="connection"
@@ -17,13 +20,14 @@
           </div>
         </transition> -->
       </div>
-      <router-view />
     </div>
+    <router-view />
   </div>
   <Modal />
 </template>
 
 <script lang="ts">
+import Header from '@/components/common/MainHeader.vue';
 import Modal from '@/components/common/Modal.vue';
 import SideBar from '@/components/common/Sidebar.vue';
 import Spinner from '@/components/common/Spinner.vue';
@@ -35,7 +39,7 @@ import { useChatStore, useUserStore } from '@/store';
 
 export default defineComponent({
   name: 'AppMainLayout',
-  components: { SideBar, Spinner, Modal, Back },
+  components: { SideBar, Spinner, Modal, Back, Header },
   setup() {
     const user = useUserStore();
     const chat = useChatStore();
@@ -62,18 +66,20 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .top {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+}
+.back {
+  display: flex;
+  cursor: pointer;
 }
 .wrapper {
-  margin: 0 0 0 230px;
-  padding: 35px 35px 0 35px;
-  height: 100vh;
+  margin: 0 auto;
+  padding: 0 35px 0 35px;
   overflow: hidden;
   position: relative;
+  max-width: 1280px;
 
   h2 {
     font-size: 28px;

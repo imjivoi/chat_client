@@ -15,7 +15,7 @@ export interface IChatItem {
 
 export interface IChatState {
   list: Array<IChatItem>;
-  count: number | null;
+  count: number;
   isLoading?: boolean;
 }
 

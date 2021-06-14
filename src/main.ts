@@ -43,7 +43,7 @@ app
 
 //check jwt token
 const auth = useUserStore();
-const token = VueCookieNext.getCookie('accessToken');
+const token = localStorage.getItem('accessToken');
 if (token) {
   auth.$state.isLogged = true;
   setAuthHeader(token);

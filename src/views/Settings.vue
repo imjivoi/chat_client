@@ -14,7 +14,7 @@
       <!-- <select name="select" v-model="currentLocale">
         <option :value="locale" v-for="locale in locales" :key="locale">{{ locale }}</option>
       </select> -->
-      <Select @input="currentLocale = $event" :options="locales" />
+      <Select @input="currentLocale = $event" :default="currentLocale" :options="locales" />
     </div>
     <div class="settings__item">
       <Button :label="$t('Delete account')" @click="deleteUser" />

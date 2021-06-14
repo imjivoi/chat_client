@@ -1,6 +1,5 @@
 import userAPI from '@/services/api/userAPI';
 import { defineStore } from 'pinia';
-import { VueCookieNext } from 'vue-cookie-next';
 import notificationService from '@/services/notificationService';
 import router from '@/router';
 import { IAuth } from './types/user';
@@ -19,7 +18,7 @@ export const useUserStore = defineStore({
         userAPI
           .getToken(payload)
           .then(res => {
-            VueCookieNext.setCookie('accessToken', res.data.accessToken);
+            localStorage.setItem('accessToken', res.data.accessToken);
             this.isLogged = true;
             setAuthHeader(res.data.accessToken);
 
@@ -38,7 +37,7 @@ export const useUserStore = defineStore({
     },
     getUserData() {
       return new Promise((resolve, reject) => {
-        const token = VueCookieNext.getCookie('accessToken');
+        const token = localStorage.getItem('accessToken');
         if (!token) {
           reject('Token is empty');
           return;
@@ -63,7 +62,7 @@ export const useUserStore = defineStore({
     },
     logout() {
       router.push({ name: 'Welcome' });
-      VueCookieNext.removeCookie('accessToken');
+      localStorage.removeItem('accessToken');
       this.$state = getDefaultState();
       notificationService.default('You are signed out');
     },
@@ -74,7 +73,7 @@ export const useUserStore = defineStore({
           this.userData = data.user;
           this.isLogged = true;
           const token = data.accessToken;
-          VueCookieNext.setCookie('accessToken', token);
+          localStorage.setItem('accessToken', token);
           router.push({ name: 'Home' });
           setAuthHeader(token);
           resolve(data);
