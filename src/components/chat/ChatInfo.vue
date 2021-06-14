@@ -60,7 +60,7 @@ import Button from '@/components/ui/Button.vue';
 import UserItem from '@/components/common/UserItem.vue';
 import Spinner from '@/components/common/Spinner.vue';
 
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
 import { useChatData } from '@/composable';
 //todo:принять, блокировать запрос в чат, удалять юзера
 export default defineComponent({
@@ -80,6 +80,7 @@ export default defineComponent({
       imAdmin,
     } = useChatData();
 
+    const socket = inject('socket');
     function isAdmin(userId: string) {
       return userId === currentChat.value?.admin.id;
     }
@@ -149,18 +150,5 @@ export default defineComponent({
 
 h4 {
   color: $color_gray;
-}
-
-.pop-item {
-  margin: 0 0 10px;
-  font-size: 18px;
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  &:last-child {
-    margin: 0;
-  }
 }
 </style>

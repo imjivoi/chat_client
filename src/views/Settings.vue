@@ -1,23 +1,25 @@
 <template>
   <div class="settings">
-    <div class="settings__item">
-      {{ $t('Avatar') }}<Button :label="$t('Upload')" @click="onPickFile" /><input
-        type="file"
-        style="display: none"
-        ref="fileInput"
-        accept="image/*"
-        @change="onFilePicked"
-      />
-    </div>
-    <div class="settings__item">
-      {{ $t('Change language') }}
-      <!-- <select name="select" v-model="currentLocale">
+    <div class="wrapper">
+      <div class="settings__item">
+        {{ $t('Avatar') }}<Button :label="$t('Upload')" @click="onPickFile" /><input
+          type="file"
+          style="display: none"
+          ref="fileInput"
+          accept="image/*"
+          @change="onFilePicked"
+        />
+      </div>
+      <div class="settings__item">
+        {{ $t('Change language') }}
+        <!-- <select name="select" v-model="currentLocale">
         <option :value="locale" v-for="locale in locales" :key="locale">{{ locale }}</option>
       </select> -->
-      <Select @input="currentLocale = $event" :default="currentLocale" :options="locales" />
-    </div>
-    <div class="settings__item">
-      <Button :label="$t('Delete account')" @click="deleteUser" />
+        <Select @input="currentLocale = $event" :default="currentLocale" :options="locales" />
+      </div>
+      <div class="settings__item">
+        <Button :label="$t('Delete account')" @click="deleteUser" />
+      </div>
     </div>
   </div>
 </template>

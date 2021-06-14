@@ -1,5 +1,5 @@
 import { useUserStore, useChatStore } from '@/store';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
 import expiresDate from '@/helpers/expiresDate';
 import notificationService from '@/services/notificationService';
@@ -9,6 +9,7 @@ import { IMessage } from '@/store/chat/types/message';
 export default function useChatData() {
   const chatStore = useChatStore();
   const route = useRoute();
+  const router = useRouter();
   const userStore = useUserStore();
 
   const user = userStore.userData;
@@ -61,6 +62,12 @@ export default function useChatData() {
   async function deleteChat(chat_id: string) {
     const id = chat_id || currentChat.value?.id;
     if (id) await chatStore.DELETE_CHAT(id);
+    if (route.name === 'Chat') router.push({ name: 'Home' });
+  }
+
+  async function updateChat(title: string) {
+    const id = currentChat.value?.id;
+    if (id) await chatStore.updateChat(id, title);
   }
 
   function createInvite() {
@@ -111,5 +118,6 @@ export default function useChatData() {
     unreadedMessages,
     getImAdmin,
     deleteChat,
+    updateChat,
   };
 }

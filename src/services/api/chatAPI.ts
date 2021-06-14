@@ -36,10 +36,10 @@ export default {
       chat_id: chat_id,
     });
   },
-  changeChatTitle(chat_id: string | number, title: string) {
+  updateChat(id: string | number, name: string) {
     return HTTP.put(url, {
-      title: title,
-      chat_id: chat_id,
+      id,
+      name,
     });
   },
   getMessages(chat_id: string | number | string[]) {

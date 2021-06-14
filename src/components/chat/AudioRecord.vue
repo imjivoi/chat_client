@@ -225,7 +225,7 @@ export default {
     pointer-events: none;
     transition: all 0.1s;
     // transform: scale(1);
-    animation-duration: 4s;
+    animation-duration: 7s;
     animation-direction: alternate;
     animation-name: matrix;
     animation-iteration-count: infinite;
@@ -254,7 +254,7 @@ export default {
     pointer-events: none;
     transition: all 0.1s;
     // transform: scale(1);
-    animation-duration: 5s;
+    animation-duration: 8s;
     animation-direction: alternate;
     animation-name: matrix2;
     animation-iteration-count: infinite;

@@ -13,6 +13,12 @@
         <Button is-icon icon="edit" @click="openEditMessage" />
         <Button is-icon icon="trash" @click="deleteMsg" />
       </div>
+      <div class="chat__options" v-else>
+        <PopOver>
+          <div class="pop-item" @click="removeChat">{{ $t('Delete chat') }}</div>
+          <div class="pop-item" @click="updChat">{{ $t('Rename chat') }}</div>
+        </PopOver>
+      </div>
     </div>
     <div class="chat__messages">
       <div ref="content" class="chat__messages-content ">
@@ -42,6 +48,7 @@
 </template>
 
 <script lang="ts">
+import PopOver from '@/components/ui/Popover.vue';
 import TypingMessage from './TypingMessage.vue';
 import OptionsIcon from '../icons/Options.vue';
 import AdjustmentIcon from '../icons/Adjustment.vue';
@@ -52,9 +59,10 @@ import ChatInput from '../chat/ChatInput.vue';
 import { computed, defineComponent, nextTick, PropType, ref, toRefs, watch } from 'vue';
 import { IChatItem, IParticipant } from '@/store/chat/types/chat';
 import { onMounted } from '@vue/runtime-core';
-import { useChatInput } from '@/composable';
+import { useChatData, useChatInput } from '@/composable';
 import { IMessage } from '@/store/chat/types/message';
 import Button from '@/components/ui/Button.vue';
+import { i18n } from '@/resource/i18n';
 
 export default defineComponent({
   name: 'ChatContainer',
@@ -66,6 +74,7 @@ export default defineComponent({
     AdjustmentIcon,
     OptionsIcon,
     TypingMessage,
+    PopOver,
   },
   props: {
     chat: {
@@ -81,6 +90,7 @@ export default defineComponent({
     const { chat } = toRefs(props);
     const content = ref();
     const { pickedMsg, deleteMessage, openEditMessage, closeEditMsg } = useChatInput();
+    const { deleteChat, updateChat } = useChatData();
 
     const typingUser = computed(() =>
       chat.value.participants.find(
@@ -110,6 +120,16 @@ export default defineComponent({
       }
     }
 
+    function removeChat() {
+      if (confirm(i18n.global.t('Are you really want to delete this chat?')))
+        deleteChat(chat.value.id);
+    }
+
+    function updChat() {
+      const name = prompt(i18n.global.t('Enter new chat name'));
+      if (name) updateChat(name);
+    }
+
     onMounted(() => toBottom());
 
     watch(
@@ -127,6 +147,8 @@ export default defineComponent({
       pickMsg,
       deleteMsg,
       openEditMessage,
+      removeChat,
+      updChat,
     };
   },
 });

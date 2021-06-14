@@ -34,7 +34,7 @@ import Spinner from '@/components/common/Spinner.vue';
 import { Back } from '@/components/icons';
 
 import { useRoute, useRouter } from 'vue-router';
-import { computed, defineComponent, onBeforeMount, provide, ref, watch } from 'vue';
+import { computed, defineComponent, onBeforeMount } from 'vue';
 import { useChatStore, useUserStore } from '@/store';
 
 export default defineComponent({
@@ -50,7 +50,7 @@ export default defineComponent({
     const isRouteBack = computed(() => route.meta.back);
     const isLoading = computed(() => user.isLoading);
 
-    onBeforeMount(() => chat.GET_CHATS());
+    onBeforeMount(async () => await chat.GET_CHATS());
 
     function goBack() {
       router.back();
@@ -79,7 +79,7 @@ export default defineComponent({
   padding: 0 35px 0 35px;
   overflow: hidden;
   position: relative;
-  max-width: 1280px;
+  max-width: 1360px;
 
   h2 {
     font-size: 28px;

@@ -5,28 +5,28 @@
   <template v-else>
     <div class="wrapper">
       <div class="flex justify-between" v-if="currentChat">
+        <!-- <VoiceRoom /> -->
         <ChatContainer :chat="currentChat" :current-participant="currentParticipant" />
         <ChatInfo />
       </div>
     </div>
   </template>
 </template>
-<script>
+<script lang="ts">
 //todo:emoji
-
-import ChatInfo from '@/components/chat/ChatInfo';
-import ChatContainer from '@/components/chat/ChatContainer';
+import VoiceRoom from '@/components/voice/VoiceRoom.vue';
+import ChatInfo from '@/components/chat/ChatInfo.vue';
+import ChatContainer from '@/components/chat/ChatContainer.vue';
 
 import { useChatData, useChatInput, useSocket } from '@/composable';
 
 import { defineComponent, onMounted, onUnmounted, provide } from 'vue';
 import appConfig from '@/app.config';
-import { onBeforeRouteLeave, useRoute } from 'vue-router';
-import { i18n } from '@/resource/i18n';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'Chat',
-  components: { ChatContainer, ChatInfo },
+  components: { ChatContainer, ChatInfo, VoiceRoom },
   setup() {
     const route = useRoute();
     const {
@@ -37,10 +37,9 @@ export default defineComponent({
       currentParticipant,
       unreadedMessages,
       imAdmin,
-      deleteChat,
     } = useChatData();
     const { readMessages, message } = useChatInput();
-    const id = route.params.id;
+    const id = route.params.id as string;
     const { socket } = useSocket(appConfig.socketUrl + '/chat', id);
 
     provide('socket', socket);
@@ -61,20 +60,8 @@ export default defineComponent({
       currentChat,
       currentParticipant,
       imAdmin,
-      deleteChat,
     };
   },
-  // async beforeRouteLeave(to, from, next) {
-  //   if (!this.imAdmin) return;
-  //   if (
-  //     this.imAdmin &&
-  //     confirm(this.$t('Are you really want to leave chat? All data of chat will be deleted'))
-  //   ) {
-  //     await this.deleteChat();
-  //     next();
-  //   }
-  //   next(false);
-  // },
 });
 </script>
 <style>

@@ -43,7 +43,20 @@ export const useChatStore = defineStore({
       });
     },
     async DELETE_CHAT(chat_id: string) {
-      await chatAPI.deleteChat(chat_id);
+      try {
+        await chatAPI.deleteChat(chat_id);
+        this.list = this.list.filter((chat: IChatItem) => chat.id !== chat_id);
+        this.count--;
+      } catch (error) {}
+    },
+    async updateChat(chat_id: string, name: string) {
+      try {
+        const { data } = await chatAPI.updateChat(chat_id, name);
+        let currentChat = this.list.find((chat: IChatItem) => chat.id === chat_id);
+        if (currentChat) {
+          currentChat.name = data.name;
+        }
+      } catch (e) {}
     },
     async GET_INVITE(chat_id: string | number | string[]) {
       this.isLoading = true;
