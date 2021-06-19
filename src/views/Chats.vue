@@ -23,7 +23,6 @@
               <ContextMenu ref="contextMenu">
                 <template v-if="getImAdmin(contextChatId)">
                   <div class="danger" @click="deleteChat">{{ $t('Delete') }}</div>
-                  <div>{{ $t('Change name') }}</div>
                 </template>
 
                 <div class="danger" @click="quitChat" v-else>{{ $t('Quit') }}</div>

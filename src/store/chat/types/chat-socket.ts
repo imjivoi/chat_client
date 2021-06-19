@@ -19,6 +19,7 @@ export enum ChatSocketEvents {
   UPDATE_MESSAGE = 'CHAT:UPDATE_MESSAGE',
   DELETE_CHAT = 'CHAT:DELETE_CHAT',
   QUIT_CHAT = 'CHAT:QUIT_CHAT',
+  JOIN_CHAT = 'CHAT:JOIN_CHAT',
 }
 
 export enum SocketStatusConnect {

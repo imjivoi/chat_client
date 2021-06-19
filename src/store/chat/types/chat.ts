@@ -26,8 +26,6 @@ export interface IAttachments {
 
 export interface IParticipant {
   id: string;
-  accepted: boolean;
-  blocked: boolean;
   user: IUserData;
   chat_id?: string;
 }

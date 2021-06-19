@@ -2,10 +2,11 @@ import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
 import { IMessage, ITypingMessage } from '@/store/chat/types/message';
 import { IChatItem, IChatState, IParticipant } from '@/store/chat/types/chat';
 import { useChatStore } from '@/store';
-import { reactive } from 'vue';
+import { reactive, Ref } from 'vue';
 import { onUnmounted } from '@vue/runtime-core';
 import { useChatData } from '@/composable/index';
 import { useRouter } from 'vue-router';
+import { Socket } from 'socket.io';
 
 export default function() {
   const state = reactive({ initiated: false });
@@ -17,7 +18,7 @@ export default function() {
     return chatStore.list.find((chat: IChatItem) => chat.id === id);
   }
   //todo:block user listener
-  function initListeners(socket: any) {
+  function initListeners(socket: Ref<Socket>) {
     if (state.initiated) return;
     state.initiated = true;
     socket.value.on(ChatSocketEvents.NEW_MESSAGE, ({ chat, ...data }: IMessage) => {
@@ -115,6 +116,24 @@ export default function() {
       );
       if (!currentParticipant) return;
       currentParticipant = participant;
+    });
+    socket.value.on(
+      ChatSocketEvents.BLOCK_USER,
+      ({ chat_id, participant_id }: { chat_id: string; participant_id: string }) => {
+        const chat = getCurrentChat(chat_id);
+        if (!chat) return;
+        chat.participants = chat.participants.filter(
+          (participant: IParticipant) => participant.id !== participant_id,
+        );
+      },
+    );
+    socket.value.on(ChatSocketEvents.JOIN_CHAT, (participant: IParticipant) => {
+      console.log(participant);
+      const chat = getCurrentChat(participant.chat_id);
+      const hasParticipant = chat?.participants.some(
+        (item: IParticipant) => item.id === participant.id,
+      );
+      if (!hasParticipant) chat!.participants = [...chat!.participants, participant];
     });
   }
 

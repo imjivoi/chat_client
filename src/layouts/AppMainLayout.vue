@@ -6,8 +6,8 @@
     <Header />
     <div class="wrapper">
       <div class="top  mb-2 transition">
-        <div class="back" @click="goBack">
-          <Back v-if="isRouteBack" class="arrow-back mr-1 transition" />
+        <div class="back">
+          <Back v-if="isRouteBack" class="arrow-back mr-1 transition" @click="goBack" />
           <h2 class="transition">{{ $t(routeTitle) }}</h2>
         </div>
         <!-- <transition name="fade">
@@ -34,9 +34,13 @@ import Spinner from '@/components/common/Spinner.vue';
 import { Back } from '@/components/icons';
 
 import { useRoute, useRouter } from 'vue-router';
-import { computed, defineComponent, onBeforeMount } from 'vue';
+import { computed, ComputedRef, defineComponent, onBeforeMount } from 'vue';
 import { useChatStore, useUserStore } from '@/store';
 
+interface IBackLink {
+  name: string;
+  link?: string;
+}
 export default defineComponent({
   name: 'AppMainLayout',
   components: { SideBar, Spinner, Modal, Back, Header },
@@ -49,10 +53,15 @@ export default defineComponent({
     const routeTitle = computed(() => route.meta.title);
     const isRouteBack = computed(() => route.meta.back);
     const isLoading = computed(() => user.isLoading);
+    const backLink = computed(() => route.meta.backLink) as ComputedRef<IBackLink>;
 
     onBeforeMount(async () => await chat.GET_CHATS());
 
     function goBack() {
+      if (backLink.value.name) {
+        console.log(11);
+        router.push({ name: backLink.value.name });
+      }
       router.back();
     }
 
@@ -72,12 +81,10 @@ export default defineComponent({
 }
 .back {
   display: flex;
-  cursor: pointer;
 }
 .wrapper {
   margin: 0 auto;
   padding: 0 35px 0 35px;
-  overflow: hidden;
   position: relative;
   max-width: 1360px;
 

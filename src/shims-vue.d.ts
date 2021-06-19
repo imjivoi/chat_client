@@ -1,3 +1,4 @@
+
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'
   const component: DefineComponent<{}, {}, any>
@@ -8,3 +9,9 @@ declare module '*.json'{
   const value: any;
   export default value;
 }
+
+interface IBackLink{
+  name:string,
+  link?:string
+}
+

@@ -71,7 +71,6 @@ export default defineComponent({
   setup() {
     const {
       participants,
-      requests,
       createInvite,
       currentChat,
       inviteLink,
@@ -90,7 +89,6 @@ export default defineComponent({
 
     return {
       participants,
-      requests,
       createInvite,
       chat: currentChat,
       inviteLink,
