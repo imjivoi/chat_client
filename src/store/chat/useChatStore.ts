@@ -3,6 +3,7 @@ import chatAPI, { ICreateChatData, IUpdateParticipant } from '@/services/api/cha
 import { defineStore } from 'pinia';
 import { state } from './state';
 import { IChatItem } from '@/store/chat/types/chat';
+import { AxiosResponse } from 'axios';
 
 export const useChatStore = defineStore({
   id: 'chat',
@@ -25,10 +26,10 @@ export const useChatStore = defineStore({
       });
     },
 
-    CREATE_CHAT(payload: ICreateChatData) {
+    CREATE_CHAT(payload: ICreateChatData): Promise<IChatItem> {
       return new Promise(async (resolve, reject) => {
         try {
-          const res = await chatAPI.createChat(payload.title);
+          const res: AxiosResponse<IChatItem> = await chatAPI.createChat(payload.title);
           if (res.status === 226) {
             router.push(`/app/chats/${res.data.id}`);
           } else {
@@ -121,13 +122,22 @@ export const useChatStore = defineStore({
       } catch (e) {}
     },
     async GET_MESSAGES(chat_id: string | number | string[]) {
+      let currentChat = this.list.find((chat: IChatItem) => String(chat.id) === String(chat_id));
+      if (currentChat?.initiatedMessages) return;
       try {
         const { data } = await chatAPI.getMessages(chat_id);
-        let currentChat = this.list.find((chat: IChatItem) => String(chat.id) === String(chat_id));
         if (currentChat) {
           currentChat.messages = data;
+          currentChat.initiatedMessages = true;
         }
       } catch (e) {}
+    },
+    async EXIT_FROM_CHAT(chat_id: string) {
+      try {
+        await chatAPI.exitFromChat(chat_id);
+        this.list = this.list.filter((chat: IChatItem) => chat.id !== chat_id);
+        this.count--;
+      } catch (error) {}
     },
   },
 });

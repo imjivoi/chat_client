@@ -25,7 +25,7 @@ export default {
     return HTTP.delete(`${url}${id}`);
   },
   exitFromChat(chat_id: string | number | null) {
-    return HTTP.put(url + 'exit/', { chat_id: chat_id });
+    return HTTP.delete(url + 'exit/' + chat_id);
   },
   deleteUserFromChat(chat_id: string | number, user_id: string | number) {
     return HTTP.delete(`${url}+delete/?chat_id=${chat_id}&user_id=${user_id}`);

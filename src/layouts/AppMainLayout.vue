@@ -34,8 +34,10 @@ import Spinner from '@/components/common/Spinner.vue';
 import { Back } from '@/components/icons';
 
 import { useRoute, useRouter } from 'vue-router';
-import { computed, ComputedRef, defineComponent, onBeforeMount } from 'vue';
+import { computed, ComputedRef, defineComponent, onBeforeMount, provide } from 'vue';
 import { useChatStore, useUserStore } from '@/store';
+import { useSocket } from '@/composable';
+import appConfig from '@/app.config';
 
 interface IBackLink {
   name: string;
@@ -55,12 +57,14 @@ export default defineComponent({
     const isLoading = computed(() => user.isLoading);
     const backLink = computed(() => route.meta.backLink) as ComputedRef<IBackLink>;
 
+    const { socket } = useSocket(appConfig.socketUrl + '/chat');
+    provide('socket', socket);
+
     onBeforeMount(async () => await chat.GET_CHATS());
 
     function goBack() {
       if (backLink.value.name) {
-        console.log(11);
-        router.push({ name: backLink.value.name });
+        return router.push({ name: backLink.value.name });
       }
       router.back();
     }

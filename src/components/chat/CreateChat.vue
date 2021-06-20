@@ -17,10 +17,12 @@
 import Input from '@/components/ui/Input.vue';
 import Button from '@/components/ui/Button.vue';
 
-import { defineComponent, nextTick, onMounted, ref } from 'vue';
+import { defineComponent, inject, nextTick, onMounted, Ref, ref } from 'vue';
 import { useChatData, useChatInput } from '@/composable';
 import { useModal } from '@/store';
 import notificationService from '@/services/notificationService';
+import { Socket } from 'socket.io';
+import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
 
 export default defineComponent({
   name: 'CreateChat',
@@ -31,11 +33,12 @@ export default defineComponent({
     const input = ref();
     const { createChat } = useChatData();
     const modal = useModal();
-
+    const socket = inject('socket') as Ref<Socket>;
     async function create() {
       if (!chatName.value) return;
       try {
-        await createChat(chatName.value);
+        const data = await createChat(chatName.value);
+        socket.value.emit(ChatSocketEvents.JOIN_CHAT, { chat_id: data.id });
       } catch (error) {
         notificationService.error("Can't create chat");
       } finally {

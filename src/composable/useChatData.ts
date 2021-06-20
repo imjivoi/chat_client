@@ -53,8 +53,8 @@ export default function useChatData() {
       await chatStore.GET_INVITE(chatId.value);
     }
   }
-  async function createChat(title: string) {
-    await chatStore.CREATE_CHAT({ title });
+  async function createChat(title: string): Promise<IChatItem> {
+    return await chatStore.CREATE_CHAT({ title });
   }
   async function deleteChat(chat_id: string) {
     const id = chat_id || currentChat.value?.id;
@@ -103,6 +103,10 @@ export default function useChatData() {
     });
   }
 
+  async function getMessages(id: string) {
+    await chatStore.GET_MESSAGES(id);
+  }
+
   return {
     blockParticipant,
     currentChat,
@@ -123,5 +127,6 @@ export default function useChatData() {
     getImAdmin,
     deleteChat,
     updateChat,
+    getMessages,
   };
 }

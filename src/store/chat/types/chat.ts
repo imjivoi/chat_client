@@ -11,6 +11,7 @@ export interface IChatItem {
   typing?: ITypingMessage | null;
   invite?: IChatInvite | null;
   messages: IMessage[];
+  initiatedMessages?: boolean;
 }
 
 export interface IChatState {
@@ -28,6 +29,7 @@ export interface IParticipant {
   id: string;
   user: IUserData;
   chat_id?: string;
+  isOnline?: boolean;
 }
 
 export interface IChatInvite {

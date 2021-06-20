@@ -82,19 +82,19 @@ export default defineComponent({
     }
 
     async function removeChat() {
-      await deleteChat(contextChatId.value);
-      contextMenu.value.close();
+      try {
+        await deleteChat(contextChatId.value);
+      } catch (error) {
+        contextMenu.value.close();
+      }
     }
 
-    function quitChat() {
-      // socket.value.emit(
-      //   ChatSocketEvents.QUIT_CHAT,
-      //   { chat_id: contextChatId.value },
-      //   (response: IEmittedEventStatus) => {
-      //     if (!response.status) notificationService.error(response.message);
-      //   },
-      // );
-      contextMenu.value.close();
+    async function quitChat() {
+      try {
+        await chat.EXIT_FROM_CHAT(contextChatId.value);
+      } catch (error) {
+        contextMenu.value.close();
+      }
     }
 
     return {

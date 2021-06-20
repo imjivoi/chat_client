@@ -8,6 +8,11 @@ import { useChatData } from '@/composable/index';
 import { useRouter } from 'vue-router';
 import { Socket } from 'socket.io';
 
+interface ICommonEventData {
+  participant_id?: string;
+  chat_id?: string;
+}
+
 export default function() {
   const state = reactive({ initiated: false });
   const chatStore = useChatStore();
@@ -128,12 +133,21 @@ export default function() {
       },
     );
     socket.value.on(ChatSocketEvents.JOIN_CHAT, (participant: IParticipant) => {
-      console.log(participant);
       const chat = getCurrentChat(participant.chat_id);
-      const hasParticipant = chat?.participants.some(
+      const foundedParticipant = chat?.participants.find(
         (item: IParticipant) => item.id === participant.id,
       );
-      if (!hasParticipant) chat!.participants = [...chat!.participants, participant];
+      if (!foundedParticipant) {
+        chat!.participants = [...chat!.participants, { ...participant, isOnline: true }];
+        return;
+      }
+    });
+    socket.value.on(ChatSocketEvents.LEAVE_CHAT, (data: ICommonEventData) => {
+      const chat = getCurrentChat(data.chat_id);
+      const participant = chat?.participants.find(
+        (participant: IParticipant) => participant.id === data.participant_id,
+      );
+      if (participant) participant.isOnline = false;
     });
   }
 

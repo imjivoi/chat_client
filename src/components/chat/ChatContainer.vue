@@ -14,7 +14,7 @@
         <Button is-icon icon="trash" @click="deleteMsg" />
       </div>
       <div class="chat__options" v-else>
-        <PopOver>
+        <PopOver v-if="imAdmin">
           <div class="pop-item" @click="removeChat">{{ $t('Delete chat') }}</div>
           <div class="pop-item" @click="updChat">{{ $t('Rename chat') }}</div>
         </PopOver>
@@ -90,7 +90,7 @@ export default defineComponent({
     const { chat } = toRefs(props);
     const content = ref();
     const { pickedMsg, deleteMessage, openEditMessage, closeEditMsg } = useChatInput();
-    const { deleteChat, updateChat } = useChatData();
+    const { deleteChat, updateChat, imAdmin } = useChatData();
 
     const typingUser = computed(() =>
       chat.value.participants.find(
@@ -149,6 +149,7 @@ export default defineComponent({
       openEditMessage,
       removeChat,
       updChat,
+      imAdmin,
     };
   },
 });

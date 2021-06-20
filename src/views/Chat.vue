@@ -20,9 +20,11 @@ import ChatContainer from '@/components/chat/ChatContainer.vue';
 
 import { useChatData, useChatInput, useSocket } from '@/composable';
 
-import { defineComponent, onMounted, onUnmounted, provide } from 'vue';
+import { defineComponent, inject, onMounted, onUnmounted, Ref, nextTick, watch } from 'vue';
 import appConfig from '@/app.config';
 import { useRoute } from 'vue-router';
+import { Socket } from 'socket.io';
+import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
 
 export default defineComponent({
   name: 'Chat',
@@ -36,17 +38,20 @@ export default defineComponent({
       currentParticipant,
       unreadedMessages,
       imAdmin,
+      getMessages,
     } = useChatData();
     const { readMessages, message } = useChatInput();
     const id = route.params.id as string;
-    const { socket } = useSocket(appConfig.socketUrl + '/chat', id);
 
-    provide('socket', socket);
+    const socket = inject('socket') as Ref<Socket>;
 
     onUnmounted(() => {
       message.value = '';
     });
     onMounted(async () => {
+      setTimeout(async () => {
+        if (currentChat?.value?.id) await getMessages(currentChat?.value?.id);
+      }, 1000);
       await getInvite();
       if (unreadedMessages.value?.length) {
         readMessages();

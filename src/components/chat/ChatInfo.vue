@@ -3,7 +3,11 @@
     <div class="participants">
       <h4>{{ $t('Participants') }}</h4>
       <ul class="participant-list">
-        <li v-for="participant in participants" :key="participant.id">
+        <li
+          v-for="participant in participants"
+          :key="participant.id"
+          :class="{ online: participant.isOnline }"
+        >
           <UserItem
             :username="participant.user.username"
             :avatar="participant.user.avatar"
@@ -60,7 +64,7 @@ import Button from '@/components/ui/Button.vue';
 import UserItem from '@/components/common/UserItem.vue';
 import Spinner from '@/components/common/Spinner.vue';
 
-import { defineComponent, inject } from 'vue';
+import { computed, defineComponent, inject } from 'vue';
 import { useChatData } from '@/composable';
 import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
 import { Socket } from 'socket.io';
@@ -81,7 +85,6 @@ export default defineComponent({
       imAdmin,
       blockParticipant,
     } = useChatData();
-    const socket = inject('socket');
 
     function isAdmin(userId: string) {
       return userId === currentChat.value?.admin.id;
@@ -137,6 +140,9 @@ export default defineComponent({
       margin: 0;
     }
   }
+}
+.online {
+  border: 1px solid $primary;
 }
 
 .invite {

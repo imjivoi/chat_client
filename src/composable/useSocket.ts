@@ -5,7 +5,7 @@ import { useSocketListeners } from '@/composable/index';
 import { ref } from 'vue';
 import { SocketStatusConnect } from '@/store/chat/types/chat-socket';
 
-export default function useSocket(url: string, id: string) {
+export default function useSocket(url: string) {
   const token = localStorage.getItem('accessToken');
   const { initListeners } = useSocketListeners();
   const socket = ref<any>();
@@ -16,7 +16,6 @@ export default function useSocket(url: string, id: string) {
       reconnectionDelayMax: 10000,
       query: {
         token,
-        id,
       },
     });
     socket.value.connect();
