@@ -5,8 +5,9 @@
   <template v-else>
     <div class="wrapper">
       <div class="flex justify-between" v-if="currentChat">
-        <!-- <VoiceRoom /> -->
         <ChatContainer :chat="currentChat" :current-participant="currentParticipant" />
+        <VoiceRoom />
+
         <ChatInfo />
       </div>
     </div>
@@ -20,7 +21,16 @@ import ChatContainer from '@/components/chat/ChatContainer.vue';
 
 import { useChatData, useChatInput, useSocket } from '@/composable';
 
-import { defineComponent, inject, onMounted, onUnmounted, Ref, nextTick, watch } from 'vue';
+import {
+  defineComponent,
+  inject,
+  onMounted,
+  onUnmounted,
+  Ref,
+  nextTick,
+  watch,
+  onBeforeMount,
+} from 'vue';
 import appConfig from '@/app.config';
 import { useRoute } from 'vue-router';
 import { Socket } from 'socket.io';
@@ -48,9 +58,13 @@ export default defineComponent({
     onUnmounted(() => {
       message.value = '';
     });
+    onBeforeMount(() => {});
     onMounted(async () => {
       setTimeout(async () => {
-        if (currentChat?.value?.id) await getMessages(currentChat?.value?.id);
+        if (currentChat?.value?.id) {
+          await getMessages(currentChat?.value?.id);
+          socket.value.emit(ChatSocketEvents.JOIN_CHAT, { chat_id: currentChat.value?.id });
+        }
       }, 1000);
       await getInvite();
       if (unreadedMessages.value?.length) {

@@ -52,6 +52,7 @@ export default {
   z-index: 10;
   max-height: 300px;
   height: fit-content;
+  width: max-content;
   padding: 10px;
   text-align: center;
 }
@@ -59,9 +60,24 @@ export default {
 .pop-item {
   margin: 0 0 10px;
   font-size: 18px;
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: $primary;
+    opacity: 0;
+  }
 
   &:hover {
     opacity: 0.8;
+
+    &::after {
+      opacity: 1;
+    }
   }
 
   &:last-child {

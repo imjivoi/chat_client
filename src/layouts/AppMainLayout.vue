@@ -59,7 +59,6 @@ export default defineComponent({
 
     const { socket } = useSocket(appConfig.socketUrl + '/chat');
     provide('socket', socket);
-
     onBeforeMount(async () => await chat.GET_CHATS());
 
     function goBack() {

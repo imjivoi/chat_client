@@ -28,7 +28,10 @@ export default function() {
     state.initiated = true;
     socket.value.on(ChatSocketEvents.NEW_MESSAGE, ({ chat, ...data }: IMessage) => {
       const currentChat = getCurrentChat(chat?.id);
-      currentChat?.messages?.push(data);
+      if (currentChat) {
+        currentChat?.messages?.push(data);
+        currentChat.lastMessage = data;
+      }
       if (
         openedChat.value?.id === currentChat?.id &&
         currentParticipant.value?.id !== data.sender?.id
@@ -47,8 +50,8 @@ export default function() {
         chat.messages = data;
       }
     });
-    socket.value.on(ChatSocketEvents.NEW_PARTICIPANT, ({ chat_id, ...data }: IParticipant) => {
-      const currentChat = getCurrentChat(chat_id);
+    socket.value.on(ChatSocketEvents.NEW_PARTICIPANT, ({ chatId, ...data }: IParticipant) => {
+      const currentChat = getCurrentChat(chatId);
       currentChat?.participants.push(data);
     });
     socket.value.on(ChatSocketEvents.TYPING_MESSAGE, ({ chat_id, ...data }: ITypingMessage) => {
@@ -114,7 +117,7 @@ export default function() {
       },
     );
     socket.value.on(ChatSocketEvents.UPDATE_PARTICIPANT, (participant: IParticipant) => {
-      const chat = getCurrentChat(participant.chat_id);
+      const chat = getCurrentChat(participant.chatId);
       if (!chat) return;
       let currentParticipant = chat.participants.find(
         (item: IParticipant) => item.id === participant.id,
@@ -133,12 +136,12 @@ export default function() {
       },
     );
     socket.value.on(ChatSocketEvents.JOIN_CHAT, (participant: IParticipant) => {
-      const chat = getCurrentChat(participant.chat_id);
+      const chat = getCurrentChat(participant.chatId);
       const foundedParticipant = chat?.participants.find(
         (item: IParticipant) => item.id === participant.id,
       );
       if (!foundedParticipant) {
-        chat!.participants = [...chat!.participants, { ...participant, isOnline: true }];
+        chat!.participants = [...chat!.participants, participant];
         return;
       }
     });
@@ -147,7 +150,6 @@ export default function() {
       const participant = chat?.participants.find(
         (participant: IParticipant) => participant.id === data.participant_id,
       );
-      if (participant) participant.isOnline = false;
     });
   }
 

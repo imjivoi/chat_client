@@ -1,5 +1,5 @@
 <template>
-  <audio autoplay ref="audio"></audio>
+  <audio autoplay ref="audio" />
 </template>
 
 <script>
@@ -10,7 +10,7 @@ export default {
     },
   },
   mounted() {
-    this.peer.on("stream", (stream) => {
+    this.peer.on('stream', stream => {
       this.$refs.audio.srcObject = stream;
     });
   },

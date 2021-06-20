@@ -37,8 +37,7 @@ export default defineComponent({
     async function create() {
       if (!chatName.value) return;
       try {
-        const data = await createChat(chatName.value);
-        socket.value.emit(ChatSocketEvents.JOIN_CHAT, { chat_id: data.id });
+        await createChat(chatName.value);
       } catch (error) {
         notificationService.error("Can't create chat");
       } finally {

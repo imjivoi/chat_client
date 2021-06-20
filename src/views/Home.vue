@@ -18,6 +18,7 @@
                   :created="chat.createdAt"
                   :name="chat.name"
                   :participants="chat.participants"
+                  :last-message="chat.lastMessage"
                   @click="toChat(chat.id)"
                   @contextmenu="openContextMenu($event, chat.id)"
                 />

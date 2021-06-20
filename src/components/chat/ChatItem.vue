@@ -10,16 +10,25 @@
         <p>{{ $t('Created:') }}{{ createdAt }}</p>
       </div>
     </div>
-    <div class="chat-item__participants">
+    <div class="last-message">
+      <template v-if="lastMessage && lastMessage.sender">
+        <Avatar
+          :image="lastMessage.sender.user.avatar"
+          :nickname="lastMessage.sender.user.nickname"
+        />
+        <p>{{ lastMessage.text }}</p>
+      </template>
+      <template v-else>{{ $t('This chat has no message yet') }}</template>
+    </div>
+    <!-- <div class="chat-item__participants">
       <div
         class="chat-item__participant"
         v-for="participant in firstParticipants"
         :key="participant.id"
       >
         <Avatar :image="participant.user.avatar" :nickname="participant.user.username" />
-        <p>{{ participant.user.username }}</p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -28,6 +37,7 @@ import { format } from 'date-fns';
 import { defineComponent, PropType } from 'vue';
 import { IParticipant } from '@/store/chat/types/chat';
 import Avatar from '@/components/ui/Avatar.vue';
+import { IMessage } from '@/store/chat/types/message';
 
 export default defineComponent({
   components: { Avatar },
@@ -46,6 +56,10 @@ export default defineComponent({
     participants: {
       type: Array as PropType<IParticipant[]>,
       default: [],
+    },
+    lastMessage: {
+      type: Object as PropType<IMessage>,
+      required: false,
     },
   },
 
@@ -70,6 +84,7 @@ export default defineComponent({
   transition: $transition;
   overflow: hidden;
   max-width: 300px;
+  min-height: 86.8px;
 
   &:hover {
     //background: $color_blue;
@@ -155,6 +170,20 @@ export default defineComponent({
       overflow: hidden;
       text-overflow: ellipsis;
     }
+  }
+}
+
+.last-message {
+  display: flex;
+  align-items: center;
+  .avatar {
+    margin: 0 10px 0 0;
+  }
+  p {
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 </style>

@@ -15,6 +15,7 @@
       </div>
       <div class="chat__options" v-else>
         <PopOver v-if="imAdmin">
+          <div class="pop-item">{{ $t('Create voice room') }}</div>
           <div class="pop-item" @click="removeChat">{{ $t('Delete chat') }}</div>
           <div class="pop-item" @click="updChat">{{ $t('Rename chat') }}</div>
         </PopOver>

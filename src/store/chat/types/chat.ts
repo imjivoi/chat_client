@@ -12,6 +12,7 @@ export interface IChatItem {
   invite?: IChatInvite | null;
   messages: IMessage[];
   initiatedMessages?: boolean;
+  lastMessage?: IMessage;
 }
 
 export interface IChatState {
@@ -28,8 +29,7 @@ export interface IAttachments {
 export interface IParticipant {
   id: string;
   user: IUserData;
-  chat_id?: string;
-  isOnline?: boolean;
+  chatId?: string;
 }
 
 export interface IChatInvite {
