@@ -90,13 +90,13 @@ export default function useVoice() {
   }
 
   onMounted(() => {
-    const url = appConfig.socketVoiceUrl + '/voice';
-    socket.value! = io(url, {
-      reconnectionDelayMax: 10000,
-      query: {
-        token,
-      },
-    });
+    // const url = appConfig.socketVoiceUrl + '/voice';
+    // socket.value! = io(url, {
+    //   reconnectionDelayMax: 10000,
+    //   query: {
+    //     token,
+    //   },
+    // });
   });
 
   onUnmounted(() => leaveVoice());

@@ -3,9 +3,9 @@ import { HTTP } from '../../plugins/axios';
 const url = '/voice';
 
 export default {
-  create(name: string) {
+  create(chat_id: string) {
     return HTTP.post(url, {
-      name,
+      chat_id,
     });
   },
   getAll() {

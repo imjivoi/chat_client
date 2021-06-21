@@ -1,11 +1,9 @@
+import { IChatItem } from '@/store/chat/types/chat';
 import { IUserData } from '../../user/types/user';
 
 export interface IVoice {
-  id: string | number;
-  name: string;
-  admin: IUserData;
-  createdAt: string;
-  updatedAt: string;
+  id: string;
+  chat: IChatItem | null;
 }
 
 export interface IVoiceState {

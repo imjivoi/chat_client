@@ -15,7 +15,7 @@
       </div>
       <div class="chat__options" v-else>
         <PopOver v-if="imAdmin">
-          <div class="pop-item">{{ $t('Create voice room') }}</div>
+          <div class="pop-item" @click="createVoice">{{ $t('Create voice room') }}</div>
           <div class="pop-item" @click="removeChat">{{ $t('Delete chat') }}</div>
           <div class="pop-item" @click="updChat">{{ $t('Rename chat') }}</div>
         </PopOver>
@@ -64,6 +64,7 @@ import { useChatData, useChatInput } from '@/composable';
 import { IMessage } from '@/store/chat/types/message';
 import Button from '@/components/ui/Button.vue';
 import { i18n } from '@/resource/i18n';
+import { useVoiceStore } from '@/store';
 
 export default defineComponent({
   name: 'ChatContainer',
@@ -89,6 +90,7 @@ export default defineComponent({
   },
   setup(props) {
     const { chat } = toRefs(props);
+    const voice = useVoiceStore();
     const content = ref();
     const { pickedMsg, deleteMessage, openEditMessage, closeEditMsg } = useChatInput();
     const { deleteChat, updateChat, imAdmin } = useChatData();
@@ -98,6 +100,9 @@ export default defineComponent({
         participant => participant.id === chat.value?.typing?.participant_id,
       ),
     );
+    async function createVoice() {
+      await voice.CREATE_VOICE(chat.value.id);
+    }
 
     function toBottom() {
       nextTick(() => {
@@ -151,6 +156,7 @@ export default defineComponent({
       removeChat,
       updChat,
       imAdmin,
+      createVoice,
     };
   },
 });
