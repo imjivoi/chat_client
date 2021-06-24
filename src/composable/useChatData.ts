@@ -1,59 +1,70 @@
-import { useAuthStore, useChatStore } from '@/store';
-import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { useUserStore, useChatStore } from '@/store';
+import { useRoute, useRouter } from 'vue-router';
+import { computed, inject, Ref } from 'vue';
 import expiresDate from '@/helpers/expiresDate';
 import notificationService from '@/services/notificationService';
 import { IChatItem, IParticipant } from '@/store/chat/types/chat';
 import { IMessage } from '@/store/chat/types/message';
+import { Socket } from 'socket.io';
+import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
 
 export default function useChatData() {
   const chatStore = useChatStore();
   const route = useRoute();
-  const userStore = useAuthStore();
+  const router = useRouter();
+  const userStore = useUserStore();
+  const socket = inject('socket') as Ref<Socket>;
 
   const user = userStore.userData;
 
   const chatId = computed(() => route.params.id);
   const currentChat = computed(() =>
-    chatStore.list.find((chat: IChatItem) => String(chat._id) === chatId.value),
+    chatStore.list.find((chat: IChatItem) => String(chat.id) === chatId.value),
   );
   const currentParticipant = computed(() =>
     currentChat.value?.participants.find(
-      (participant: IParticipant) => participant.user._id === user?._id,
+      (participant: IParticipant) => participant.user.id === user?.id,
     ),
   );
-  const acceptedParticipants = computed(() =>
-    currentChat.value?.participants
-      .sort((a: any, b: any) => (a.user._id === currentChat.value?.admin._id ? 1 : 0))
-      .filter((participant: IParticipant) => participant.accepted),
-  );
-  const requests = computed(() =>
-    currentChat.value?.participants.filter((participant: IParticipant) => !participant.accepted),
+  const participants = computed(() =>
+    currentChat.value?.participants.sort((a: any, b: any) =>
+      a.user.id === currentChat.value?.admin.id ? 1 : 0,
+    ),
   );
   const inviteKey = computed(() => currentChat.value?.invite?.unique_key);
   const inviteLink = computed(() => `${window.location.origin}/app/invite/${inviteKey.value}`);
   const isValidInviteLink = computed(() => expiresDate(currentChat.value?.invite?.expiresAt));
-  const imAdmin = computed(() => currentChat.value?.admin._id === user?._id);
-  const imAccepted = computed(() => currentParticipant.value?.accepted);
+  const imAdmin = computed(() => currentChat.value?.admin.id === user?.id);
   const unreadedMessages = computed(() =>
     currentChat.value?.messages?.filter(
       (message: IMessage) =>
-        !message.isReaded && message.sender?._id !== currentParticipant.value?._id,
+        !message.isReaded && message.sender?.id !== currentParticipant.value?.id,
     ),
   );
 
   async function updateMessages() {
-    if (!imAccepted) return;
     if (!currentChat.value?.messages) {
       await chatStore.GET_MESSAGES(chatId.value);
     }
   }
 
   async function getInvite() {
-    if (!imAccepted) return;
     if (!currentChat.value?.invite) {
       await chatStore.GET_INVITE(chatId.value);
     }
+  }
+  async function createChat(title: string): Promise<IChatItem> {
+    return await chatStore.CREATE_CHAT({ title });
+  }
+  async function deleteChat(chat_id: string) {
+    const id = chat_id || currentChat.value?.id;
+    if (id) await chatStore.DELETE_CHAT(id);
+    if (route.name === 'Chat') router.push({ name: 'Home' });
+  }
+
+  async function updateChat(title: string) {
+    const id = currentChat.value?.id;
+    if (id) await chatStore.updateChat(id, title);
   }
 
   function createInvite() {
@@ -81,20 +92,32 @@ export default function useChatData() {
   }
 
   function getImAdmin(chatId: string) {
-    const chat = chatStore.list.find((chat: IChatItem) => chat._id === chatId);
-    return chat?.admin?._id === user?._id;
+    const chat = chatStore.list.find((chat: IChatItem) => chat.id === chatId);
+    return chat?.admin?.id === user?.id;
+  }
+
+  function blockParticipant(participant_id: string) {
+    socket.value.emit(ChatSocketEvents.BLOCK_USER, {
+      participant_id,
+      chat_id: currentChat.value?.id,
+    });
+  }
+
+  async function getMessages(id: string) {
+    await chatStore.GET_MESSAGES(id);
   }
 
   return {
+    blockParticipant,
     currentChat,
     updateMessages,
     getInvite,
     user,
-    acceptedParticipants,
-    requests,
+    participants,
     inviteLink,
     isValidInviteLink,
     createInvite,
+    createChat,
     updateInvite,
     copyLink,
     updateParticipant,
@@ -102,5 +125,8 @@ export default function useChatData() {
     imAdmin,
     unreadedMessages,
     getImAdmin,
+    deleteChat,
+    updateChat,
+    getMessages,
   };
 }

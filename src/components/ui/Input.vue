@@ -4,12 +4,14 @@
       <div class="icon">
         <slot name="icon"></slot>
       </div>
-      <input type="text"
-             :placeholder="placeholder"
-             :value="text"
-             :disabled="disabled"
-             @input="onInput"
-             ref="input"/>
+      <input
+        :type="type"
+        :placeholder="placeholder"
+        :value="text"
+        :disabled="disabled"
+        @input="onInput"
+        ref="input"
+      />
     </div>
     <p class="input-error">{{ error }}</p>
   </div>
@@ -17,43 +19,47 @@
 
 <script>
 export default {
-  name: "Input",
+  name: 'Input',
   model: {
     prop: 'text',
-    event: 'update'
+    event: 'update',
   },
   props: {
     placeholder: {
       type: String,
-      default: "",
+      default: '',
     },
     text: {
       type: String,
-      default: ''
+      default: '',
     },
     error: {
-      type: String, required: false
+      type: String,
+      required: false,
     },
     disabled: {
       type: Boolean,
       default: false,
-      required: false
-    }
+      required: false,
+    },
+    type: {
+      type: String,
+      required: false,
+      default: 'text',
+    },
   },
   emits: {
-    'update:text': null
+    'update:text': null,
   },
-
 
   methods: {
     focus() {
-      this.$refs.input.focus()
+      this.$refs.input.focus();
     },
     onInput(event) {
-      this.$emit('update:text', event.target.value)
-    }
+      this.$emit('update:text', event.target.value);
+    },
   },
-
 };
 </script>
 
@@ -75,10 +81,10 @@ input {
 
   ::placeholder {
     color: $color_gray;
-
   }
 
-  &:focus, &:active {
+  &:focus,
+  &:active {
     outline: none;
     box-shadow: 0 0px 4px #66b1ff;
     border-color: #66b1ff;

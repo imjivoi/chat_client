@@ -1,5 +1,5 @@
 import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
-import { toBase64 } from '@/utils/base64encryption';
+import { toBase64 } from '@/helpers/base64encryption';
 import { computed, inject, ref, Ref, watch } from 'vue';
 import { Socket } from 'socket.io';
 import notificationService from '@/services/notificationService';
@@ -27,9 +27,7 @@ export default function useChatInput() {
   const { currentParticipant, currentChat } = useChatData();
 
   const attachmentsUrl = computed(() => {
-    console.log(attachments.value);
     const result = attachments.value?.map((attachment: any) => {
-      console.log(attachment.type);
       if (attachment.type.includes('image')) {
         return URL.createObjectURL(attachment);
       }
@@ -49,7 +47,6 @@ export default function useChatInput() {
   }
 
   async function sendMessage(e: any): Promise<IEmittedEventStatus | any> {
-    console.log(11);
     if (!e?.shiftKey && e?.which === 13) {
       e.preventDefault();
     }
@@ -63,7 +60,7 @@ export default function useChatInput() {
     const attachmentsResult = await getBase64ArrayAttachments();
     const data = {
       text: message.value,
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
       attachments: attachmentsResult,
     };
     console.log(data);
@@ -78,7 +75,7 @@ export default function useChatInput() {
   }
 
   function setAttachments(files: any) {
-    if (files.length > 5) return notificationService.error('Can be uploaded more 5 images');
+    if (files.length > 5) return notificationService.error('Cannot be uploaded more 5 images');
     if (files.length && files[0]) {
       attachments.value = [].concat(...files);
     } else {
@@ -96,10 +93,12 @@ export default function useChatInput() {
 
   function sendTyping(status: boolean, isAudio: boolean) {
     socket.value.emit(ChatSocketEvents.TYPING_MESSAGE, {
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
       status,
-      participant_id: currentParticipant.value?._id,
+      participant_id: currentParticipant.value?.id,
       isAudio,
+      id: new Date().getTime(),
+      messageType: 'typing',
     });
   }
 
@@ -113,19 +112,19 @@ export default function useChatInput() {
 
   function readMessage(message_id: string | number) {
     socket.value.emit(ChatSocketEvents.READ_MESSAGE, {
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
       message_id,
     });
   }
 
   function readMessages() {
-    socket.value.emit(ChatSocketEvents.READ_MESSAGES, { chat_id: currentChat.value?._id });
+    socket.value.emit(ChatSocketEvents.READ_MESSAGES, { chat_id: currentChat.value?.id });
   }
 
   function deleteMessage(message_id: string | number) {
     socket.value.emit(ChatSocketEvents.DELETE_MESSAGE, {
       message_id,
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
     });
   }
 
@@ -137,9 +136,9 @@ export default function useChatInput() {
 
   function updateMessage() {
     socket.value.emit(ChatSocketEvents.UPDATE_MESSAGE, {
-      message_id: pickedMsg.value?._id,
+      message_id: pickedMsg.value?.id,
       text: message.value,
-      chat_id: currentChat.value?._id,
+      chat_id: currentChat.value?.id,
     });
     closeEditMsg();
   }

@@ -1,11 +1,9 @@
-import { IUserData } from '../../auth/types/user';
+import { IChatItem } from '@/store/chat/types/chat';
+import { IUserData } from '../../user/types/user';
 
 export interface IVoice {
-  _id: string | number;
-  name: string;
-  admin: IUserData;
-  createdAt: string;
-  updatedAt: string;
+  id: string;
+  chat: IChatItem | null;
 }
 
 export interface IVoiceState {
@@ -19,10 +17,8 @@ export enum VoiceIoEvents {
   DELETE_VOICE = 'DELETE_VOICE',
   JOIN_VOICE = 'JOIN_VOICE',
   LEAVE_VOICE = 'LEAVE_VOICE',
-  BLOCK_USER = 'BLOCK_USER',
-  CREATE_INVITE = 'CREATE_INVITE',
-  NEW_INVITE = 'NEW_INVITE',
-  CALL_USER = 'CALL_USER',
-  ANSWER_CALL = 'ANSWER_CALL',
-  CALL_ACCEPTED = 'CALL_ACCEPTED',
+  USER_JOINED = 'USER_JOINED',
+  SENDING_SIGNAL = 'SENDING_SIGNAL',
+  RETURNING_SIGNAL = 'RETURNING_SIGNAL',
+  RECEIVING_RETURNED_SIGNAL = 'RECEIVING_RETURNED_SIGNAL',
 }

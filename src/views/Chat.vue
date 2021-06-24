@@ -1,62 +1,85 @@
 <template>
-  <div class="not-accepted"
-       v-if="currentParticipant && !currentParticipant.accepted">
-    You are not accepted
-    yet
+  <div class="not-accepted" v-if="!currentParticipant">
+    {{ $t('You are not accepted yet') }}
   </div>
   <template v-else>
-    <div class="flex justify-between" v-if="currentChat">
+    <div class="wrapper">
+      <div class="flex justify-between" v-if="currentChat">
+        <ChatContainer :chat="currentChat" :current-participant="currentParticipant" />
+        <VoiceRoom />
 
-      <ChatContainer :chat="currentChat"
-                     :current-participant="currentParticipant"/>
-      <ChatInfo/>
-
+        <ChatInfo />
+      </div>
     </div>
   </template>
-
 </template>
-<script>
+<script lang="ts">
 //todo:emoji
+import VoiceRoom from '@/components/voice/VoiceRoom.vue';
+import ChatInfo from '@/components/chat/ChatInfo.vue';
+import ChatContainer from '@/components/chat/ChatContainer.vue';
 
-import ChatInfo from "@/components/chat/ChatInfo";
-import ChatContainer from "@/components/chat/ChatContainer";
+import { useChatData, useChatInput, useSocket } from '@/composable';
 
-import {useChatData, useChatInput} from "@/composable";
-
-import {defineComponent, onUnmounted, watchEffect} from "vue";
+import {
+  defineComponent,
+  inject,
+  onMounted,
+  onUnmounted,
+  Ref,
+  nextTick,
+  watch,
+  onBeforeMount,
+} from 'vue';
+import appConfig from '@/app.config';
+import { useRoute } from 'vue-router';
+import { Socket } from 'socket.io';
+import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
 
 export default defineComponent({
   name: 'Chat',
-  components: {ChatContainer, ChatInfo},
+  components: { ChatContainer, ChatInfo, VoiceRoom },
   setup() {
-
+    const route = useRoute();
     const {
       user,
       currentChat,
-      updateMessages,
       getInvite,
       currentParticipant,
-      unreadedMessages
-    } = useChatData()
-    const {readMessages, message} = useChatInput()
+      unreadedMessages,
+      imAdmin,
+      getMessages,
+    } = useChatData();
+    const { readMessages, message } = useChatInput();
+    const id = route.params.id as string;
 
+    const socket = inject('socket') as Ref<Socket>;
 
-    onUnmounted(() => message.value = '')
-    watchEffect(async () => {
-      await updateMessages()
-      await getInvite()
+    onUnmounted(() => {
+      message.value = '';
+    });
+    onBeforeMount(() => {});
+    onMounted(async () => {
+      setTimeout(async () => {
+        if (currentChat?.value?.id) {
+          await getMessages(currentChat?.value?.id);
+          socket.value.emit(ChatSocketEvents.JOIN_CHAT, { chat_id: currentChat.value?.id });
+        }
+      }, 1000);
+      await getInvite();
       if (unreadedMessages.value?.length) {
-        readMessages()
+        readMessages();
       }
-    }, {flush: 'post'})
+    });
 
     return {
-      user, currentChat, currentParticipant
-    }
+      user,
+      currentChat,
+      currentParticipant,
+      imAdmin,
+    };
   },
-
-
-})
+});
 </script>
 <style>
 .not-accepted {
@@ -69,4 +92,3 @@ export default defineComponent({
   font-weight: 600;
 }
 </style>
-

@@ -1,24 +1,24 @@
 <template>
   <div class="item flex align-center ">
     <div class="flex align-center">
-      <Avatar :image="hasAvatar" class="mr-1"/>
+      <Avatar :image="hasAvatar" class="mr-1" />
       <div class="user__name">{{ username }}</div>
     </div>
-    <span class="role" v-if="isAdmin">Admin</span>
+    <span class="role" v-if="isAdmin">{{ $t('Admin') }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import Avatar from "@/components/ui/Avatar.vue"
+import Avatar from '@/components/ui/Avatar.vue';
 
-import {defineComponent} from "vue";
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  components: {Avatar},
+  components: { Avatar },
   props: {
     participantId: {
       type: String,
-      require: true
+      require: true,
     },
     username: {
       type: String,
@@ -29,14 +29,14 @@ export default defineComponent({
     },
     isAdmin: {
       type: Boolean,
-      required: false
+      required: false,
     },
-    isRequest: {type: Boolean, default: false}
+    isRequest: { type: Boolean, default: false },
   },
   computed: {
     hasAvatar(): string {
-      return this.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
-    }
+      return this.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png';
+    },
   },
 });
 </script>
@@ -58,7 +58,6 @@ export default defineComponent({
     .options {
       opacity: 1;
     }
-
   }
 }
 
@@ -73,11 +72,13 @@ export default defineComponent({
   justify-content: center;
   z-index: 1;
   opacity: 0;
-
 }
 
 .user__name {
   font-weight: 600;
   font-size: 0.95em;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

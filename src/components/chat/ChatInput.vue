@@ -1,67 +1,73 @@
 <template>
   <div class="imgs-preview bg-blur" v-if="attachmentsUrl?.length">
-    <div class="img-container" v-for="(imgUrl,idx) in attachmentsUrl"
-         :key="imgUrl"
-         @click="deleteFile(idx)">
-      <img :src="imgUrl" alt="">
-      <span>Remove</span>
-    </div>
-    <div class="img-container" :class="{'remove-all':attachmentsUrl.length>1}"
-         v-if="attachmentsUrl.length>1"
-         @click="deleteFile('all')"
+    <div
+      class="img-container"
+      v-for="(imgUrl, idx) in attachmentsUrl"
+      :key="imgUrl"
+      @click="deleteFile(idx)"
     >
-      <span>Remove all</span>
+      <img :src="imgUrl" alt="" />
+      <span>{{ $t('Remove') }}</span>
     </div>
-
+    <div
+      class="img-container"
+      :class="{ 'remove-all': attachmentsUrl.length > 1 }"
+      v-if="attachmentsUrl.length > 1"
+      @click="deleteFile('all')"
+    >
+      <span>{{ $t('Remove all') }}</span>
+    </div>
   </div>
   <div class="input-block" v-click-outside="hideEmojiPicker">
     <div class="upload" v-if="!isEditMsgOpen">
-      <input type="file" accept="image/*" multiple
-             @change="setImages" ref="upload">
-      <Button is-icon icon="cloud" @click="chooseFiles"/>
+      <input type="file" accept="image/*" multiple @change="setImages" ref="upload" />
+      <Button is-icon icon="cloud" @click="chooseFiles" />
     </div>
-    <textarea placeholder="Type your message here"
-              v-model="message"
-              @keypress.enter.exact="send"
-              ref="textarea"/>
+    <textarea
+      :placeholder="$t('Type your message here')"
+      v-model="message"
+      @keypress.enter.exact="send"
+      ref="textarea"
+    />
     <template v-if="isEditMsgOpen">
-      <Button is-icon icon="checkmark-circle" @click="updateMessage"/>
-      <Button is-icon icon="cross-circle" @click="closeEditMsg"/>
+      <Button is-icon icon="checkmark-circle" @click="updateMessage" />
+      <Button is-icon icon="cross-circle" @click="closeEditMsg" />
     </template>
     <template v-else>
       <transition name="fade-to-top">
-        <Button is-icon icon="send" class="send"
-                @click="send"
-                v-if="message || attachments?.length"/>
-        <Button is-icon icon="micro" class="send"
-                @click="activeAudioRecord = true" v-else/>
-
+        <Button
+          is-icon
+          icon="send"
+          class="send"
+          @click="send"
+          v-if="message || attachments?.length"
+        />
+        <Button is-icon icon="micro" class="send" @click="activeAudioRecord = true" v-else />
       </transition>
       <transition name="fade">
-        <AudioRecord v-if="activeAudioRecord"
-                     @closeAudioRecord="canselAudiorecord"
-                     @setAttachments="setAudio"
-                     @sendMessage="send"/>
-
+        <AudioRecord
+          v-if="activeAudioRecord"
+          @closeAudioRecord="canselAudiorecord"
+          @setAttachments="setAudio"
+          @sendMessage="send"
+        />
       </transition>
     </template>
-
   </div>
-
 </template>
 
 <script lang="ts">
-import Button from "@/components/ui/Button.vue";
-import AudioRecord from "@/components/chat/AudioRecord.vue"
-import EmojiPicker from "./EmojiPicker.vue";
+import Button from '@/components/ui/Button.vue';
+import AudioRecord from '@/components/chat/AudioRecord.vue';
+import EmojiPicker from './EmojiPicker.vue';
 
-import {defineComponent, ref, watch} from "vue";
-import {useChatInput} from "@/composable";
-import notificationService from "@/services/notificationService";
+import { defineComponent, onMounted, ref, watch } from 'vue';
+import { useChatInput } from '@/composable';
+import notificationService from '@/services/notificationService';
 
 export default defineComponent({
   name: 'ChatInput',
-  components: {EmojiPicker, Button, AudioRecord},
+  components: { EmojiPicker, Button, AudioRecord },
   setup() {
     const {
       setAttachments,
@@ -78,13 +84,14 @@ export default defineComponent({
       updateMessage,
       closeEditMsg,
       timeout,
-      sendTyping, typing
+      sendTyping,
+      typing,
     } = useChatInput();
-    const upload = ref<any>()
-    const isSending = ref(false)
+    const upload = ref<any>();
+    const isSending = ref(false);
 
     function chooseFiles() {
-      upload.value.click()
+      upload.value.click();
     }
 
     function hideEmojiPicker() {
@@ -92,35 +99,33 @@ export default defineComponent({
     }
 
     async function send(e: any) {
-      isSending.value = true
+      isSending.value = true;
       activeAudioRecord.value = false;
       try {
-        const {status, message} = await sendMessage(e)
-        if (!status) notificationService.error(message)
-
+        const { status, message } = await sendMessage(e);
+        if (!status) notificationService.error(message);
       } catch (e) {
-        console.log(e)
-        notificationService.error('Something went wrong')
+        console.log(e);
+        notificationService.error('Something went wrong');
       }
-      isSending.value = false
-
+      isSending.value = false;
     }
 
     function setImages(e: any) {
-      setAttachments(e.target.files)
+      setAttachments(e.target.files);
     }
 
     function setAudio(e: any) {
-      setAttachments(e)
+      setAttachments(e);
     }
 
     function canselAudiorecord() {
       activeAudioRecord.value = false;
-      attachments.value = []
+      attachments.value = [];
     }
 
     watch(message, () => {
-      message.value === "" ? (message.value = null) : message.value;
+      message.value === '' ? (message.value = null) : message.value;
       clearInterval(timeout.value);
       if (!typing.value) {
         sendTyping(true, false);
@@ -132,7 +137,7 @@ export default defineComponent({
         sendTyping(false, false);
       }, 3000);
     });
-
+    onMounted(() => textarea.value.focus());
 
     return {
       message,
@@ -145,15 +150,17 @@ export default defineComponent({
       chooseFiles,
       attachmentsUrl,
       attachments,
-      deleteFile, activeAudioRecord,
-      setImages, setAudio, canselAudiorecord,
+      deleteFile,
+      activeAudioRecord,
+      setImages,
+      setAudio,
+      canselAudiorecord,
       isEditMsgOpen,
       updateMessage,
       closeEditMsg,
-      isSending
+      isSending,
     };
   },
-
 });
 </script>
 
@@ -175,15 +182,12 @@ export default defineComponent({
 
     &:last-child {
       margin: 0;
-
-
     }
 
     &.remove-all {
       span {
         opacity: 1;
         position: relative;
-
       }
     }
 
@@ -213,13 +217,9 @@ export default defineComponent({
     &:hover {
       span {
         opacity: 1;
-
       }
     }
-
   }
-
-
 }
 
 .upload {

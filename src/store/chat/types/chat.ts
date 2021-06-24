@@ -1,21 +1,23 @@
-import { IMessage } from './message';
-import { IUserData } from '../../auth/types/user';
+import { IMessage, ITypingMessage } from './message';
+import { IUserData } from '../../user/types/user';
 
 export interface IChatItem {
   participants: Array<IParticipant>;
   createdAt: string;
-  _id: string | number;
+  id: string;
   admin: IUserData;
   name: string | null;
   image?: string | null;
-  typing?: ITypingData | null;
+  typing?: ITypingMessage | null;
   invite?: IChatInvite | null;
-  messages?: IMessage[];
+  messages: IMessage[];
+  initiatedMessages?: boolean;
+  lastMessage?: IMessage;
 }
 
 export interface IChatState {
   list: Array<IChatItem>;
-  count: number | null;
+  count: number;
   isLoading?: boolean;
 }
 
@@ -25,15 +27,13 @@ export interface IAttachments {
 }
 
 export interface IParticipant {
-  _id: string | number;
-  accepted: boolean;
-  blocked: boolean;
+  id: string;
   user: IUserData;
-  chat_id?: string;
+  chatId?: string;
 }
 
 export interface IChatInvite {
-  _id: string | number;
+  id: string | number;
   createdAt: string;
   expiresAt: string;
   unique_key: string;

@@ -1,10 +1,11 @@
-import {createToastInterface} from "vue-toastification";
+import { createToastInterface } from 'vue-toastification';
 
 const options = {
-  timeout: 2000
+  timeout: 2000,
+  hideProgressBar: true,
 };
 
-const toast = createToastInterface(options)
+const toast = createToastInterface(options);
 
 export default {
   error(message: string) {

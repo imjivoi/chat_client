@@ -13,24 +13,33 @@
         <Button is-icon icon="edit" @click="openEditMessage" />
         <Button is-icon icon="trash" @click="deleteMsg" />
       </div>
+      <div class="chat__options" v-else>
+        <PopOver v-if="imAdmin">
+          <div class="pop-item" @click="createVoice">{{ $t('Create voice room') }}</div>
+          <div class="pop-item" @click="removeChat">{{ $t('Delete chat') }}</div>
+          <div class="pop-item" @click="updChat">{{ $t('Rename chat') }}</div>
+        </PopOver>
+      </div>
     </div>
     <div class="chat__messages">
-      <div ref="content" class="chat__messages-content">
+      <div ref="content" class="chat__messages-content ">
         <transition-group name="fade-to-top">
           <Message
             v-for="message in chat.messages"
-            :key="message._id"
+            :key="message.id"
             :messageData="message"
-            :is-me="message.sender._id === currentParticipant._id"
-            :is-picked="pickedMsg?._id === message._id"
+            :is-me="message.sender.id === currentParticipant.id"
+            :is-picked="pickedMsg?.id === message.id"
             @pickMsg="pickMsg"
           />
         </transition-group>
-        <TypingMessage
-          v-if="chat.typing?.status && typingUser._id !== currentParticipant._id"
-          :username="typingUser.user.username"
-          :is-audio="chat.typing.isAudio"
-        />
+        <transition name="fade-to-top">
+          <TypingMessage
+            v-if="chat.typing?.status && typingUser.id !== currentParticipant.id"
+            :user="typingUser.user"
+            :is-audio="chat.typing.isAudio"
+          />
+        </transition>
       </div>
     </div>
     <ChatInput />
@@ -40,6 +49,7 @@
 </template>
 
 <script lang="ts">
+import PopOver from '@/components/ui/Popover.vue';
 import TypingMessage from './TypingMessage.vue';
 import OptionsIcon from '../icons/Options.vue';
 import AdjustmentIcon from '../icons/Adjustment.vue';
@@ -50,9 +60,11 @@ import ChatInput from '../chat/ChatInput.vue';
 import { computed, defineComponent, nextTick, PropType, ref, toRefs, watch } from 'vue';
 import { IChatItem, IParticipant } from '@/store/chat/types/chat';
 import { onMounted } from '@vue/runtime-core';
-import { useChatInput } from '@/composable';
+import { useChatData, useChatInput } from '@/composable';
 import { IMessage } from '@/store/chat/types/message';
 import Button from '@/components/ui/Button.vue';
+import { i18n } from '@/resource/i18n';
+import { useVoiceStore } from '@/store';
 
 export default defineComponent({
   name: 'ChatContainer',
@@ -64,6 +76,7 @@ export default defineComponent({
     AdjustmentIcon,
     OptionsIcon,
     TypingMessage,
+    PopOver,
   },
   props: {
     chat: {
@@ -77,14 +90,19 @@ export default defineComponent({
   },
   setup(props) {
     const { chat } = toRefs(props);
+    const voice = useVoiceStore();
     const content = ref();
     const { pickedMsg, deleteMessage, openEditMessage, closeEditMsg } = useChatInput();
+    const { deleteChat, updateChat, imAdmin } = useChatData();
 
     const typingUser = computed(() =>
       chat.value.participants.find(
-        participant => participant._id === chat.value.typing?.participant_id,
+        participant => participant.id === chat.value?.typing?.participant_id,
       ),
     );
+    async function createVoice() {
+      await voice.CREATE_VOICE(chat.value.id);
+    }
 
     function toBottom() {
       nextTick(() => {
@@ -93,7 +111,7 @@ export default defineComponent({
     }
 
     function pickMsg(message: IMessage) {
-      if (pickedMsg.value?._id === message._id) {
+      if (pickedMsg.value?.id === message.id) {
         pickedMsg.value = null;
         return;
       }
@@ -101,11 +119,21 @@ export default defineComponent({
     }
 
     function deleteMsg() {
-      if (pickedMsg.value?._id && confirm('Do you really want to delete message?')) {
-        deleteMessage(pickedMsg.value._id);
+      if (pickedMsg.value?.id && confirm('Do you really want to delete message?')) {
+        deleteMessage(pickedMsg.value.id);
         pickedMsg.value = null;
         closeEditMsg();
       }
+    }
+
+    function removeChat() {
+      if (confirm(i18n.global.t('Are you really want to delete this chat?')))
+        deleteChat(chat.value.id);
+    }
+
+    function updChat() {
+      const name = prompt(i18n.global.t('Enter new chat name'));
+      if (name) updateChat(name);
     }
 
     onMounted(() => toBottom());
@@ -125,6 +153,10 @@ export default defineComponent({
       pickMsg,
       deleteMsg,
       openEditMessage,
+      removeChat,
+      updChat,
+      imAdmin,
+      createVoice,
     };
   },
 });
@@ -137,7 +169,7 @@ export default defineComponent({
   position: relative;
   background: #fff;
   box-shadow: $box_shadow;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 160px);
   border-radius: 10px;
 }
 
@@ -218,16 +250,17 @@ export default defineComponent({
 
 .chat__messages {
   position: relative;
+  transition: all 0.5s;
 
   padding: 10px 0 0 20px;
 
   &-content {
     overflow-y: scroll;
-    height: calc(100vh - 130px);
+    height: calc(100vh - 160px);
     overflow-x: hidden;
     position: relative;
     padding: 80px 0 70px;
-
+    transition: all 0.5s;
     &::-webkit-scrollbar-track-piece {
       background-color: #fff;
       margin-top: 70px;

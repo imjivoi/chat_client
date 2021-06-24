@@ -1,4 +1,4 @@
-import { IChatState } from "./types/chat";
+import { IChatState } from './types/chat';
 
 export const state: IChatState = {
   list: [],

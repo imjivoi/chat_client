@@ -1,4 +1,4 @@
-import { IAuthState } from "@/store/auth/types/auth-state";
+import { IAuthState } from '@/store/user/types/auth-state';
 
 export const state: IAuthState = {
   userData: null,

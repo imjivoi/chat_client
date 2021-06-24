@@ -17,7 +17,7 @@
         <div class="message__attachments" v-if="hasAttachment">
           <ul>
             <li v-for="i in attachments" :key="i">
-              <img :src="baseUrl + '/' + i.file" alt="" v-if="i.type.includes('image')" />
+              <img :src="i.file" alt="" v-if="i.type.includes('image')" />
               <AudioPlayer
                 v-if="i.type.includes('audio')"
                 :src="audioSrc"
@@ -38,7 +38,7 @@
       </div>
       <div class="message__readed">
         <transition name="fade">
-          <i class="el-icon-check check" v-if="messageData.isReaded"></i>
+          <Checkmark v-if="messageData.isReaded" />
         </transition>
       </div>
     </div>
@@ -46,19 +46,20 @@
 </template>
 
 <script lang="ts">
+import { Checkmark } from '@/components/icons';
 import AudioPlayer from './AudioPlayer.vue';
 import Modal from '../common/Modal.vue';
-import { formatDistanceToNow } from 'date-fns';
+import Avatar from '@/components/ui/Avatar.vue';
+
 //@ts-ignore
 import ClickOutside from 'vue-click-outside';
-
+import { timeDistanceToNow } from '@/helpers/date';
 import { computed, defineComponent, PropType, ref, toRefs } from 'vue';
 import { IMessage } from '@/store/chat/types/message';
-import Avatar from '@/components/ui/Avatar.vue';
 
 export default defineComponent({
   name: 'Message',
-  components: { Avatar, Modal, AudioPlayer },
+  components: { Avatar, Modal, AudioPlayer, Checkmark },
   props: {
     messageData: {
       type: Object as PropType<IMessage>,
@@ -91,12 +92,10 @@ export default defineComponent({
       return file?.file?.replace('audio', 'audio/webm');
     });
 
-    const baseUrl = process.env.VUE_APP_SERVER_HOST;
-
-    const createdAt = formatDistanceToNow(new Date(messageData.value.createdAt));
+    const createdAt = timeDistanceToNow(new Date(messageData.value.createdAt));
     const updatedAt = computed(
       () =>
-        messageData.value.updatedAt && formatDistanceToNow(new Date(messageData.value!.updatedAt!)),
+        messageData.value.updatedAt && timeDistanceToNow(new Date(messageData.value!.updatedAt)),
     );
 
     function hideMessageOptions() {
@@ -111,7 +110,6 @@ export default defineComponent({
 
     return {
       activeMessageOptions,
-      baseUrl,
       createdAt,
       hideMessageOptions,
       hasAttachment,
@@ -131,6 +129,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .message {
+  transition: all 0.5s;
+  display: block;
   &__container {
     margin: 0 auto 50px 0;
     display: flex;
@@ -173,14 +173,6 @@ export default defineComponent({
       .message__readed {
         left: -25px;
         right: auto;
-
-        .double-check {
-          right: 0;
-        }
-
-        .check {
-          right: 0;
-        }
       }
     }
   }
@@ -273,6 +265,10 @@ export default defineComponent({
     position: absolute;
     right: -25px;
     bottom: 0;
+    width: 20px;
+    svg {
+      fill: $primary;
+    }
 
     .check,
     .double-check {

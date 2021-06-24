@@ -1,9 +1,9 @@
-import { HTTP } from '../../utils/axios';
+import { HTTP } from '../../plugins/axios';
 
 const url = '/chats/';
 
 export interface ICreateChatData {
-  title?: string;
+  title: string;
 }
 
 export interface IUpdateParticipant {
@@ -18,14 +18,14 @@ export default {
     if (id) return HTTP.get(`${url}?id=${id}`);
     return HTTP.get(url);
   },
-  createChat() {
-    return HTTP.post(url);
+  createChat(name: string) {
+    return HTTP.post(url, { name });
   },
   deleteChat(id: string | null) {
-    return HTTP.delete(`${url}?id=${id}`);
+    return HTTP.delete(`${url}${id}`);
   },
   exitFromChat(chat_id: string | number | null) {
-    return HTTP.put(url + 'exit/', { chat_id: chat_id });
+    return HTTP.delete(url + 'exit/' + chat_id);
   },
   deleteUserFromChat(chat_id: string | number, user_id: string | number) {
     return HTTP.delete(`${url}+delete/?chat_id=${chat_id}&user_id=${user_id}`);
@@ -36,10 +36,10 @@ export default {
       chat_id: chat_id,
     });
   },
-  changeChatTitle(chat_id: string | number, title: string) {
+  updateChat(id: string | number, name: string) {
     return HTTP.put(url, {
-      title: title,
-      chat_id: chat_id,
+      id,
+      name,
     });
   },
   getMessages(chat_id: string | number | string[]) {
