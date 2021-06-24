@@ -35,7 +35,9 @@ import appConfig from '@/app.config';
 import { useRoute } from 'vue-router';
 import { Socket } from 'socket.io';
 import { ChatSocketEvents } from '@/store/chat/types/chat-socket';
-
+//todo:вход выход в голосовой чат
+//удаление
+//получение пользователей в голосовом чате
 export default defineComponent({
   name: 'Chat',
   components: { ChatContainer, ChatInfo, VoiceRoom },
