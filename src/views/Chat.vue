@@ -6,7 +6,7 @@
     <div class="wrapper">
       <div class="flex justify-between" v-if="currentChat">
         <ChatContainer :chat="currentChat" :current-participant="currentParticipant" />
-        <VoiceRoom />
+        <!-- <VoiceRoom /> -->
 
         <ChatInfo />
       </div>
@@ -62,6 +62,8 @@ export default defineComponent({
     });
     onBeforeMount(() => {});
     onMounted(async () => {
+      console.log(socket.value);
+
       setTimeout(async () => {
         if (currentChat?.value?.id) {
           await getMessages(currentChat?.value?.id);

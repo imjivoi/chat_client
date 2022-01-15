@@ -5,7 +5,7 @@
 
   <template v-else>
     <div v-if="chatCount" style="height:88%">
-      <div class="chats__header flex justify-between align-center mb-1">
+      <div class="chats__header flex justify-between align-center mb-10">
         <Button icon="plus" :label="$t('Create chat')" @click="showModal" />
       </div>
       <div style="width:100%">
@@ -15,7 +15,7 @@
               <ChatItem
                 :id="chat.id"
                 :created="chat.createdAt"
-                :name="chat.name"
+                :name="chat.name || '' "
                 :participants="chat.participants"
                 @click="toChat(chat.id)"
                 @contextmenu="openContextMenu($event, chat.id)"

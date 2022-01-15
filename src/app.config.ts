@@ -1,6 +1,6 @@
 export default {
-  serverHost: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_SERVER_HOST : '',
-  apiUrl: process.env.NODE_ENV === 'development' ? process.env.VUE_APP_BASE_URL : '/api',
-  socketUrl: process.env.VUE_APP_SOCKET_URL || '',
-  socketVoiceUrl: process.env.VUE_APP_SOCKET_VOICE_URL || '',
+  serverHost: import.meta.env.DEV  ? import.meta.env.VITE_SERVER_HOST : '',
+  apiUrl: import.meta.env.DEV  ? import.meta.env.VITE_BASE_URL : '/api',
+  socketUrl: import.meta.env.VITE_SOCKET_URL || '',
+  socketVoiceUrl: import.meta.env.VITE_SOCKET_VOICE_URL || '',
 };

@@ -5,9 +5,9 @@
     <!-- <SideBar /> -->
     <Header />
     <div class="wrapper">
-      <div class="top  mb-2 transition">
+      <div class="top  mb-20 transition">
         <div class="back">
-          <Back v-if="isRouteBack" class="arrow-back mr-1 transition" @click="goBack" />
+          <Back v-if="isRouteBack" class="arrow-back mr-10 transition" @click="goBack" />
           <h2 class="transition">{{ $t(routeTitle) }}</h2>
         </div>
         <!-- <transition name="fade">

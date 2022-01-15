@@ -49,7 +49,7 @@ export const useUserStore = defineStore({
             this.userData = res.data;
           })
           .catch(error => {
-            if (error.response?.data?.statusCode === 400) {
+            if ([400,401].includes(error.response?.data?.statusCode)) {
               this.logout();
             }
 

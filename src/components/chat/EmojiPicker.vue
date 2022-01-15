@@ -1,22 +1,19 @@
 <template>
   <Modal>
     <div class="emoji-picker">
-      <span
-        v-for="(emoji, index) in emojis"
-        :key="index"
-        @click="$emit('setEmoji', emoji)"
-        >{{ emoji }}</span
-      >
+      <span v-for="(emoji, index) in emojis" :key="index" @click="$emit('setEmoji', emoji)">{{
+        emoji
+      }}</span>
     </div>
   </Modal>
 </template>
 
-<script>
-import Modal from "../common/Modal";
+<script lang="ts">
+import Modal from '../common/Modal.vue';
 
-const emojis = require("emoji.json/emoji-compact.json");
+import emojis from 'emoji.json/emoji-compact.json';
 export default {
-  emit: ["setEmoji"],
+  emit: ['setEmoji'],
   components: { Modal },
   data: () => ({
     emojis: emojis,
